@@ -4,20 +4,20 @@
 //  Available under the 3-clause BSD license
 //  See the LICENSE file for full details
 //===========================================
-#ifndef _LUMINA_CONFIG_PAGE_MAIN_H
-#define _LUMINA_CONFIG_PAGE_MAIN_H
+#ifndef _LUMINA_CONFIG_PAGE_AUTOSTART_H
+#define _LUMINA_CONFIG_PAGE_AUTOSTART_H
 #include "../globals.h"
 #include "PageWidget.h"
 
 namespace Ui{
-	class page_main;
+	class page_autostart;
 };
 
-class page_main : public PageWidget{
+class page_autostart : public PageWidget{
 	Q_OBJECT
 public:
-	page_main(QWidget *parent);
-	~page_main();
+	page_autostart(QWidget *parent);
+	~page_autostart();
 
 public slots:
 	void SaveSettings();
@@ -25,13 +25,14 @@ public slots:
 	void updateIcons();
 
 private:
-	Ui::page_main *ui;
-	QList<PAGEINFO> INFO;
+	Ui::page_autostart *ui;
 
-	void UpdateItems(QString search);
+	XDGDesktop getSysApp(bool allowreset);
 
 private slots:
-	void itemTriggered(QTreeWidgetItem*);
-	void searchChanged(QString);
+	void rmsessionstartitem();
+	void addsessionstartapp();
+	void addsessionstartbin();
+	void addsessionstartfile();
 };
 #endif
