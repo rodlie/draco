@@ -31,6 +31,23 @@ LIconCache *ICONS = 0;
 
 LSession::LSession(int &argc, char ** argv) : LSingleApplication(argc, argv, "lumina-desktop"){
  xchange = false;
+
+ //  [1.0.0 -> 1000000], [1.2.3 -> 1002003], [0.6.1 -> 6001]
+ qDebug() << "[Lumina] Checking User Files";
+ QSettings sset("lumina-desktop", "sessionsettings");
+ QString OVS = sset.value("DesktopVersion","0").toString(); //Old Version String
+ qDebug() << " - Old Version:" << OVS;
+ qDebug() << " - Current Version:" << LDesktopUtils::LuminaDesktopVersion();
+ bool changed = LDesktopUtils::checkUserFiles(OVS, LDesktopUtils::LuminaDesktopVersion());
+ qDebug() << " - Made Changes:" << changed;
+ if(changed){
+   //Save the current version of the session to the settings file (for next time)
+   sset.setValue("DesktopVersion", LDesktopUtils::LuminaDesktopVersion());
+ }
+ qDebug() << "Finished with user files check";
+
+ QIcon::setThemeName("Adwaita");
+
  if(this->isPrimaryProcess()){
   connect(this, SIGNAL(InputsAvailable(QStringList)), this, SLOT(NewCommunication(QStringList)) );
   this->setApplicationName("Lumina Desktop Environment");
@@ -78,6 +95,8 @@ LSession::LSession(int &argc, char ** argv) : LSingleApplication(argc, argv, "lu
   ignoreClipboard = false;
   qRegisterMetaType<QClipboard::Mode>("QClipboard::Mode");
   connect(QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)), this, SLOT(handleClipboard(QClipboard::Mode)));
+
+  setupSession();
  } //end check for primary process
 }
 
@@ -97,81 +116,30 @@ LSession::~LSession(){
 
 //Static function so everything can get the same icon name
 QString LSession::batteryIconName(int charge, bool charging){
-  int icon = -1;
-  if (charge > 90) { icon = 4; }
-  else if (charge > 70) { icon = 3; }
-  else if (charge > 20) { icon = 2; }
-  else if (charge > 5) { icon = 1; }
-  else if (charge > 0 ) { icon = 0; }
-  if(charging){ icon = icon+10; }
-  QStringList iconList;
-    switch (icon) {
-      case 0:
-        iconList << "battery-20" << "battery-020" << "battery-empty" << "battery-caution";
-        break;
-      case 1:
-        iconList << "battery-40" << "battery-040" << "battery-low" << "battery-caution";
-        break;
-      case 2:
-        iconList << "battery-60" << "battery-060" << "battery-good";
-        break;
-      case 3:
-        iconList << "battery-80" << "battery-080" << "battery-good";
-        break;
-      case 4:
-        iconList << "battery-100" << "battery-full";
-        break;
-      case 10:
-        iconList << "battery-20-charging" << "battery-020-charging" << "battery-empty-charging" << "battery-caution-charging"
-		<< "battery-charging-20" << "battery-charging-020" << "battery-charging-empty" << "battery-charging-caution";
-        break;
-      case 11:
-        iconList << "battery-40-charging" << "battery-040-charging" << "battery-low-charging" << "battery-caution-charging"
-		<< "battery-charging-40" << "battery-charging-040" << "battery-charging-low" << "battery-charging-caution";
-        break;
-      case 12:
-        iconList << "battery-60-charging" << "battery-060-charging" << "battery-good-charging"
-		<< "battery-charging-60" << "battery-charging-060" << "battery-charging-good";
-        break;
-      case 13:
-        iconList << "battery-80-charging" << "battery-080-charging" << "battery-good-charging"
-		<< "battery-charging-80" << "battery-charging-080" << "battery-charging-good";
-        break;
-      case 14:
-        if(charge==100){ iconList << "battery-full-charged"; }
-        iconList << "battery-100-charging" << "battery-full-charging"
-		<< "battery-charging-100" << "battery-charging-full";
-        break;
-      default:
-        iconList << "battery-unknown" << "battery-missing";
-        break;
-    }
-    iconList << "battery"; //generic battery icon
-    for(int i=0; i<iconList.length(); i++){
-      if( QIcon::hasThemeIcon(iconList[i]) ){ return iconList[i]; }
-    }
-    return ""; //no icon found
+    Q_UNUSED(charge)
+    Q_UNUSED(charging)
+    return "battery";
 }
 
 void LSession::setupSession(){
   //Seed random number generator (if needed)
   qsrand( QTime::currentTime().msec() );
 
-  currTranslator = LUtils::LoadTranslation(this, "lumina-desktop");
-  BootSplash splash;
-    splash.showScreen("init");
+  //currTranslator = LUtils::LoadTranslation(this, "lumina-desktop");
+  //BootSplash splash;
+    //splash.showScreen("init");
   qDebug() << "Initializing Session";
   if(QFile::exists("/tmp/.luminastopping")){ QFile::remove("/tmp/.luminastopping"); }
   QTime* timer = 0;
-  if(DEBUG){ timer = new QTime(); timer->start(); qDebug() << " - Init srand:" << timer->elapsed();}
+  //if(DEBUG){ timer = new QTime(); timer->start(); qDebug() << " - Init srand:" << timer->elapsed();}
 
   //Setup the QSettings default paths
-    splash.showScreen("settings");
-  if(DEBUG){ qDebug() << " - Init QSettings:" << timer->elapsed();}
+   // splash.showScreen("settings");
+ // if(DEBUG){ qDebug() << " - Init QSettings:" << timer->elapsed();}
   sessionsettings = new QSettings("lumina-desktop", "sessionsettings");
   DPlugSettings = new QSettings("lumina-desktop","pluginsettings/desktopsettings");
   //Load the proper translation files
-  if(sessionsettings->value("ForceInitialLocale",false).toBool()){
+  /*if(sessionsettings->value("ForceInitialLocale",false).toBool()){
     //Some system locale override it in place - change the env first
     LUtils::setLocaleEnv( sessionsettings->value("InitLocale/LANG","").toString(), \
 				sessionsettings->value("InitLocale/LC_MESSAGES","").toString(), \
@@ -180,7 +148,7 @@ void LSession::setupSession(){
 				sessionsettings->value("InitLocale/LC_MONETARY","").toString(), \
 				sessionsettings->value("InitLocale/LC_COLLATE","").toString(), \
 				sessionsettings->value("InitLocale/LC_CTYPE","").toString() );
-  }
+  }*/
 //use the system settings
   //Setup the user's lumina settings directory as necessary
     //splash.showScreen("user");
@@ -191,40 +159,40 @@ void LSession::setupSession(){
   DESKTOPS.clear();
 
   //Start the background system tray
-    splash.showScreen("systray");
-  if(DEBUG){ qDebug() << " - Init System Tray:" << timer->elapsed();}
+   // splash.showScreen("systray");
+  //if(DEBUG){ qDebug() << " - Init System Tray:" << timer->elapsed();}
   startSystemTray();
 
   //Initialize the global menus
-  qDebug() << " - Initialize system menus";
-    splash.showScreen("apps");
-  if(DEBUG){ qDebug() << " - Init AppMenu:" << timer->elapsed();}
+ // qDebug() << " - Initialize system menus";
+  //  splash.showScreen("apps");
+  //if(DEBUG){ qDebug() << " - Init AppMenu:" << timer->elapsed();}
   appmenu = new AppMenu();
 
-    splash.showScreen("menus");
-  if(DEBUG){ qDebug() << " - Init SettingsMenu:" << timer->elapsed();}
+ //   splash.showScreen("menus");
+ // if(DEBUG){ qDebug() << " - Init SettingsMenu:" << timer->elapsed();}
   settingsmenu = new SettingsMenu();
-  if(DEBUG){ qDebug() << " - Init SystemWindow:" << timer->elapsed();}
+  //if(DEBUG){ qDebug() << " - Init SystemWindow:" << timer->elapsed();}
   sysWindow = new SystemWindow();
 
   //Initialize the desktops
-    splash.showScreen("desktop");
-  if(DEBUG){ qDebug() << " - Init Desktops:" << timer->elapsed();}
+  //  splash.showScreen("desktop");
+  //if(DEBUG){ qDebug() << " - Init Desktops:" << timer->elapsed();}
   desktopFiles = QDir(LUtils::standardDirectory(LUtils::Desktop)).entryInfoList(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs, QDir::Name | QDir::IgnoreCase | QDir::DirsFirst);
   updateDesktops();
   //if(DEBUG){ qDebug() << " - Process Events (6x):" << timer->elapsed();}
   //for(int i=0; i<6; i++){ LSession::processEvents(); } //Run through this a few times so the interface systems get up and running
 
   //Now setup the system watcher for changes
-    splash.showScreen("final");
+    //splash.showScreen("final");
   //qDebug() << " - Initialize file system watcher";
-  if(DEBUG){ qDebug() << " - Init QFileSystemWatcher:" << timer->elapsed();}
+  //if(DEBUG){ qDebug() << " - Init QFileSystemWatcher:" << timer->elapsed();}
   watcher = new QFileSystemWatcher(this);
     QString confdir = sessionsettings->fileName().section("/",0,-2);
     watcherChange(sessionsettings->fileName() );
     watcherChange( confdir+"/desktopsettings.conf" );
-    watcherChange( confdir+"/fluxbox-init" );
-    watcherChange( confdir+"/fluxbox-keys" );
+    //watcherChange( confdir+"/fluxbox-init" );
+    //watcherChange( confdir+"/fluxbox-keys" );
     watcherChange( confdir+"/favorites.list" );
     //Try to watch the localized desktop folder too
     watcherChange( LUtils::standardDirectory(LUtils::Desktop) );
@@ -240,16 +208,16 @@ void LSession::setupSession(){
   connect(this, SIGNAL(aboutToQuit()), this, SLOT(SessionEnding()) );
   //if(DEBUG){ qDebug() << " - Process Events (4x):" << timer->elapsed();}
   //for(int i=0; i<4; i++){ LSession::processEvents(); } //Again, just a few event loops here so thing can settle before we close the splash screen
-  if(DEBUG){ qDebug() << " - Launch Startup Apps:" << timer->elapsed();}
+  //if(DEBUG){ qDebug() << " - Launch Startup Apps:" << timer->elapsed();}
   //launchStartupApps();
-  QTimer::singleShot(500, this, SLOT(launchStartupApps()) );
+  //QTimer::singleShot(500, this, SLOT(launchStartupApps()) );
   //if(DEBUG){ qDebug() << " - Hide Splashscreen:" << timer->elapsed();}
   //splash.hide();
   //LSession::processEvents();
-  if(DEBUG){ qDebug() << " - Close Splashscreen:" << timer->elapsed();}
-  splash.close();
+  //if(DEBUG){ qDebug() << " - Close Splashscreen:" << timer->elapsed();}
+  //splash.close();
   //LSession::processEvents();
-  if(DEBUG){ qDebug() << " - Init Finished:" << timer->elapsed(); delete timer;}
+  //if(DEBUG){ qDebug() << " - Init Finished:" << timer->elapsed(); delete timer;}
 }
 
 void LSession::CleanupSession(){
@@ -260,14 +228,14 @@ void LSession::CleanupSession(){
   //Create a temporary flag to prevent crash dialogs from opening during cleanup
   LUtils::writeFile("/tmp/.luminastopping",QStringList() << "yes", true);
   //Start the logout chimes (if necessary)
-  int vol = LOS::audioVolume();
-  if(vol>=0){ sessionsettings->setValue("last_session_state/audio_volume", vol); }
-  bool playaudio = sessionsettings->value("PlayLogoutAudio",true).toBool();
-  if( playaudio ){
+  //int vol = LOS::audioVolume();
+ // if(vol>=0){ sessionsettings->setValue("last_session_state/audio_volume", vol); }
+  //bool playaudio = sessionsettings->value("PlayLogoutAudio",true).toBool();
+  /*if( playaudio ){
       QString sfile = sessionsettings->value("audiofiles/logout", "").toString();
        if(sfile.isEmpty() || !QFile::exists(sfile)){ sfile = LOS::LuminaShare()+"Logout.ogg"; }
       playAudioFile(sfile);
-  }
+  }*/
   //Stop the background system tray (detaching/closing apps as necessary)
   stopSystemTray(!cleansession);
   //Now perform any other cleanup
@@ -302,7 +270,7 @@ void LSession::CleanupSession(){
     // this will leave the wallpapers up for a few moments (preventing black screens)
   }
   //Now wait a moment for things to close down before quitting
-  if(playaudio && mediaObj!=0){
+ /* if(playaudio && mediaObj!=0){
     //wait a max of 5 seconds for audio to finish
     bool waitmore = true;
     for(int i=0; i<100 && waitmore; i++){
@@ -311,9 +279,9 @@ void LSession::CleanupSession(){
       LSession::processEvents();
     }
     if(waitmore){ mediaObj->stop(); } //timed out
-  }else{
+  }else{*/
     for(int i=0; i<20; i++){ LSession::processEvents(); usleep(25000); } //1/2 second pause
-  }
+  //}
   //Clean up the temporary flag
   if(QFile::exists("/tmp/.luminastopping")){ QFile::remove("/tmp/.luminastopping"); }
 }
@@ -345,36 +313,36 @@ void LSession::NewCommunication(QStringList list){
 
 void LSession::launchStartupApps(){
   //First start any system-defined startups, then do user defined
-  qDebug() << "Launching startup applications";
+ // qDebug() << "Launching startup applications";
   //Enable Numlock
-  if(LUtils::isValidBinary("numlockx")){ //make sure numlockx is installed
+  /*if(LUtils::isValidBinary("numlockx")){ //make sure numlockx is installed
     if(sessionsettings->value("EnableNumlock",false).toBool()){
       QProcess::startDetached("numlockx on");
     }else{
       QProcess::startDetached("numlockx off");
     }
-  }
-  int tmp = LOS::ScreenBrightness();
-  if(tmp>0){
+  }*/
+  //int tmp = LOS::ScreenBrightness();
+  /*if(tmp>0){
     LOS::setScreenBrightness( tmp );
     qDebug() << " - - Screen Brightness:" << QString::number(tmp)+"%";
-  }
+  }*/
   //QProcess::startDetached("nice lumina-open -autostart-apps");
-  ExternalProcess::launch("lumina-open", QStringList() << "-autostart-apps", false);
+  //ExternalProcess::launch("lumina-open", QStringList() << "-autostart-apps", false);
 
   //Re-load the screen brightness and volume settings from the previous session
   // Wait until after the XDG-autostart functions, since the audio system might be started that way
-  qDebug() << " - Loading previous settings";
-  tmp = sessionsettings->value("last_session_state/audio_volume",50).toInt();
-  if(tmp>=0){ LOS::setAudioVolume(tmp); }
-  qDebug() << " - - Audio Volume:" << QString::number(tmp)+"%";
+  //qDebug() << " - Loading previous settings";
+  //tmp = sessionsettings->value("last_session_state/audio_volume",50).toInt();
+  //if(tmp>=0){ LOS::setAudioVolume(tmp); }
+  //qDebug() << " - - Audio Volume:" << QString::number(tmp)+"%";
 
   //Now play the login music since we are finished
-  if(sessionsettings->value("PlayStartupAudio",true).toBool()){
+  /*if(sessionsettings->value("PlayStartupAudio",true).toBool()){
      QString sfile = sessionsettings->value("audiofiles/login", "").toString();
      if(sfile.isEmpty() || !QFile::exists(sfile)){ sfile = LOS::LuminaShare()+"Login.ogg"; }
      playAudioFile(sfile);
-  }
+  }*/
   //qDebug() << "[DESKTOP INIT FINISHED]";
 }
 
@@ -481,7 +449,7 @@ bool LSession::checkUserFiles(){
 }
 
 void LSession::refreshWindowManager(){
-  LUtils::runCmd("touch \""+QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/fluxbox-init\"" );
+  //LUtils::runCmd("touch \""+QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/fluxbox-init\"" );
 }
 
 void LSession::updateDesktops(){
@@ -758,7 +726,7 @@ void LSession::systemWindow(){
 
 //Play System Audio
 void LSession::playAudioFile(QString filepath){
-  if( !QFile::exists(filepath) ){ return; }
+  /*if( !QFile::exists(filepath) ){ return; }
   //Setup the audio output systems for the desktop
   if(DEBUG){ qDebug() << "Play Audio File"; }
   if(mediaObj==0){   qDebug() << " - Initialize media player"; mediaObj = new QMediaPlayer(); }
@@ -769,7 +737,7 @@ void LSession::playAudioFile(QString filepath){
     mediaObj->play();
     LSession::processEvents();
   }
-  if(DEBUG){ qDebug() << " - Done with Audio File"; }
+  if(DEBUG){ qDebug() << " - Done with Audio File"; }*/
 }
 // =======================
 //  XCB EVENT FILTER FUNCTIONS

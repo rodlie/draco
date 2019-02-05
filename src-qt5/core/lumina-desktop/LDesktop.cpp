@@ -23,6 +23,7 @@ LDesktop::LDesktop(int deskNum, bool setdefault) : QObject(){
   DPREFIX = "desktop-"+screenID+"/";
   i_dlg_folder = true;
   inputDLG = 0;
+  if (deskNum==0) { setdefault = true;}
   defaultdesktop = setdefault; //(desktop->screenGeometry(desktopnumber).x()==0);
   //desktoplocked = true;
   issyncing = bgupdating = false;
@@ -449,7 +450,8 @@ void LDesktop::DecreaseDesktopPluginIcons(){
 void LDesktop::UpdatePanels(){
   if(DEBUG){ qDebug() << " - Update Panels For Screen:" << Screen(); }
   int panels = settings->value(DPREFIX+"panels", -1).toInt();
-  //if(panels==-1 && defaultdesktop){ panels=1; } //need at least 1 panel on the primary desktop
+  qDebug() << "PANELS!!!" << panels;
+  if(panels==-1 && defaultdesktop){ panels=1; } //need at least 1 panel on the primary desktop
   //Remove all extra panels
   for(int i=0; i<PANELS.length(); i++){
     if(panels <= PANELS[i]->number()){
