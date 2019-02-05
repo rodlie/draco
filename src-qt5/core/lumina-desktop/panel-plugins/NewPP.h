@@ -18,15 +18,14 @@
 #include "spacer/LSpacer.h"
 #include "line/LLine.h"
 #include "clock/LClock.h"
-#include "battery/LBattery.h"
 #include "desktopswitcher/LDesktopSwitcher.h"
 #include "taskmanager/LTaskManagerPlugin.h"
 #include "systemdashboard/LSysDashboard.h"
 #include "showdesktop/LHomeButton.h"
 #include "appmenu/LAppMenuPlugin.h"
 #include "applauncher/AppLaunchButton.h"
-#include "systemstart/LStartButton.h"
-#include "audioplayer/LPAudioPlayer.h"
+//#include "systemstart/LStartButton.h"
+//#include "audioplayer/LPAudioPlayer.h"
 #include "jsonmenu/PPJsonMenu.h"
 //#include "quickcontainer/QuickPPlugin.h"
 #include "systemtray/LSysTray.h" //must be last due to X11 compile issues
@@ -53,19 +52,19 @@ public:
 	    plug = new LSysTray(parent, plugin, horizontal);
 	  }else if(plugin.startsWith("desktopswitcher---")){
 	    plug = new LDesktopSwitcher(parent, plugin, horizontal);
-	  }else if(plugin.startsWith("battery---") && LOS::hasBattery()){
+      }/*else if(plugin.startsWith("battery---") && LOS::hasBattery()){
 	    plug = new LBattery(parent, plugin, horizontal);
-	  }else if(plugin.startsWith("clock---")){
+      }*/else if(plugin.startsWith("clock---")){
 	    plug = new LClock(parent, plugin, horizontal);
 	  }else if(plugin.startsWith("systemdashboard---")){
 	    plug = new LSysDashboard(parent, plugin, horizontal);
 	  }else if(plugin.startsWith("appmenu---")){
 	    plug = new LAppMenuPlugin(parent, plugin, horizontal);
-	  }else if(plugin.startsWith("systemstart---")){
+      }/*else if(plugin.startsWith("systemstart---")){
 	    plug = new LStartButtonPlugin(parent, plugin, horizontal);
-	  }else if(plugin.startsWith("audioplayer---")){
+      }else if(plugin.startsWith("audioplayer---")){
 	    plug = new LPAudioPlayer(parent, plugin, horizontal);
-	  }else if(plugin.section("::::",0,0)=="jsonmenu" && plugin.split("::::").length()>=3 ){
+      }*/else if(plugin.section("::::",0,0)=="jsonmenu" && plugin.split("::::").length()>=3 ){
 	    plug = new LPJsonMenu(parent, plugin, horizontal);
 	  }else if(plugin.section("---",0,0).section("::",0,0)=="applauncher"){
 	    plug = new AppLaunchButtonPlugin(parent, plugin, horizontal);
