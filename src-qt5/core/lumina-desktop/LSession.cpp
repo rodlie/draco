@@ -654,8 +654,8 @@ void LSession::storeClipboard(QString text, QClipboard::Mode mode){
 //===============
 void LSession::LaunchApplication(QString cmd){
   //LSession::setOverrideCursor(QCursor(Qt::BusyCursor));
-  ExternalProcess::launch(cmd, QStringList(), true);
-  //QProcess::startDetached(cmd);
+  //ExternalProcess::launch(cmd, QStringList(), true);
+  QProcess::startDetached(cmd);
 }
 
 QFileInfoList LSession::DesktopFiles(){

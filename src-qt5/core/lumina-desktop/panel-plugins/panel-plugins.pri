@@ -10,7 +10,6 @@ SOURCES += $$PWD/userbutton/LUserButton.cpp \
 	$$PWD/systemtray/TrayIcon.cpp \
 	$$PWD/clock/LClock.cpp \
 	$$PWD/desktopswitcher/LDesktopSwitcher.cpp \
-	$$PWD/systemdashboard/LSysDashboard.cpp \
 	$$PWD/showdesktop/LHomeButton.cpp \
 	$$PWD/appmenu/LAppMenuPlugin.cpp \
 	$$PWD/applauncher/AppLaunchButton.cpp \
@@ -30,7 +29,6 @@ HEADERS += $$PWD/RotateToolButton.h \
 	$$PWD/desktopswitcher/LDesktopSwitcher.h \
 	$$PWD/taskmanager/LTaskManagerPlugin.h \
 	$$PWD/taskmanager/LTaskButton.h \
-	$$PWD/systemdashboard/LSysDashboard.h \
 	$$PWD/showdesktop/LHomeButton.h \
 	$$PWD/appmenu/LAppMenuPlugin.h \
 	$$PWD/applauncher/AppLaunchButton.h \

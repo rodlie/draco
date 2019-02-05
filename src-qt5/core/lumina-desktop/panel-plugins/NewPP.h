@@ -20,7 +20,7 @@
 #include "clock/LClock.h"
 #include "desktopswitcher/LDesktopSwitcher.h"
 #include "taskmanager/LTaskManagerPlugin.h"
-#include "systemdashboard/LSysDashboard.h"
+//#include "systemdashboard/LSysDashboard.h"
 #include "showdesktop/LHomeButton.h"
 #include "appmenu/LAppMenuPlugin.h"
 #include "applauncher/AppLaunchButton.h"
@@ -56,9 +56,9 @@ public:
 	    plug = new LBattery(parent, plugin, horizontal);
       }*/else if(plugin.startsWith("clock---")){
 	    plug = new LClock(parent, plugin, horizontal);
-	  }else if(plugin.startsWith("systemdashboard---")){
+      }/*else if(plugin.startsWith("systemdashboard---")){
 	    plug = new LSysDashboard(parent, plugin, horizontal);
-	  }else if(plugin.startsWith("appmenu---")){
+      }*/else if(plugin.startsWith("appmenu---")){
 	    plug = new LAppMenuPlugin(parent, plugin, horizontal);
       }/*else if(plugin.startsWith("systemstart---")){
 	    plug = new LStartButtonPlugin(parent, plugin, horizontal);
