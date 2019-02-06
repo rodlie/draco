@@ -9,7 +9,7 @@
 #include "LUtils.h"
 #include <QObject>
 #include <QTimer>
-#include <QMediaPlayer>
+//#include <QMediaPlayer>
 #include <QSvgRenderer>
 
 static QStringList mimeglobs;

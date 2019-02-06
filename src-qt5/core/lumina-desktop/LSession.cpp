@@ -12,12 +12,12 @@
 #include <QtConcurrent>
 #include <QMimeData>
 #include "LXcbEventFilter.h"
-#include "BootSplash.h"
+//#include "BootSplash.h"
 
 //LibLumina X11 class
 #include <LuminaX11.h>
 #include <LUtils.h>
-#include <ExternalProcess.h>
+//#include <ExternalProcess.h>
 #include <LIconCache.h>
 
 #include <unistd.h> //for usleep() usage
@@ -82,7 +82,7 @@ LSession::LSession(int &argc, char ** argv) : LSingleApplication(argc, argv, "lu
   appmenu = 0;
   settingsmenu = 0;
   currTranslator=0;
-  mediaObj=0;
+  //mediaObj=0;
   sessionsettings=0;
   //Setup the event filter for Qt5
   evFilter =  new XCBEventFilter(this);
@@ -110,7 +110,7 @@ LSession::~LSession(){
   settingsmenu->deleteLater();
   appmenu->deleteLater();
   delete currTranslator;
-  if(mediaObj!=0){delete mediaObj;}
+  //if(mediaObj!=0){delete mediaObj;}
  }
 }
 

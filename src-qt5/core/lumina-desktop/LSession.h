@@ -18,7 +18,7 @@
 #include <QDesktopWidget>
 #include <QList>
 #include <QThread>
-#include <QMediaPlayer>
+//#include <QMediaPlayer>
 #include <QThread>
 #include <QUrl>
 #include <QClipboard>
@@ -122,7 +122,7 @@ private:
 	SettingsMenu *settingsmenu;
 	SystemWindow *sysWindow;
 	QTranslator *currTranslator;
-	QMediaPlayer *mediaObj;
+//	QMediaPlayer *mediaObj;
 	QSettings *sessionsettings, *DPlugSettings;
 	bool cleansession;
 	//QList<QRect> savedScreens;
