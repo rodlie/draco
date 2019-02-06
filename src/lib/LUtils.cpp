@@ -235,7 +235,7 @@ QStringList LUtils::systemApplicationDirs(){
   //Returns a list of all the directories where *.desktop files can be found
   QStringList appDirs = QString(getenv("XDG_DATA_HOME")).split(":");
   appDirs << QString(getenv("XDG_DATA_DIRS")).split(":");
-  if(appDirs.isEmpty()){ appDirs << "/usr/local/share" << "/usr/share" << LOS::AppPrefix()+"/share" << LOS::SysPrefix()+"/share" << L_SHAREDIR; }
+  if(appDirs.isEmpty()){ appDirs << "/usr/local/share" << "/usr/share" << LOS::AppPrefix()+"/share" << LOS::SysPrefix()+"/share" /*<< L_SHAREDIR*/; }
   appDirs.removeDuplicates();
   //Now create a valid list
   QStringList out;

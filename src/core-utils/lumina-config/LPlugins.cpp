@@ -122,7 +122,7 @@ void LPlugins::LoadPanelPlugins(){
     info.name = QObject::tr("System Dashboard");
     info.description = QObject::tr("View or change system settings (audio volume, screen brightness, battery life, virtual desktops).");
     info.ID = "systemdashboard";
-    info.icon = "arrow-down-drop-circle";
+    info.icon = "applications-system";
   PANEL.insert(info.ID, info);  
   //Task Manager
   info = LPI(); //clear it
@@ -263,14 +263,14 @@ void LPlugins::LoadMenuPlugins(){
     info.name = QObject::tr("Browse Files");
     info.description = QObject::tr("Browse the system with the default file manager.");
     info.ID = "filemanager";
-    info.icon = "Insight-FileManager";
+    info.icon = "user-home";
   MENU.insert(info.ID, info);
   //Applications
   info = LPI(); //clear it
     info.name = QObject::tr("Applications");
     info.description = QObject::tr("Show the system applications menu.");
     info.ID = "applications";
-    info.icon = "system-run";
+    info.icon = "applications-other";
   MENU.insert(info.ID, info);
   //Line seperator
   info = LPI(); //clear it
