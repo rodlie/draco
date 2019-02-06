@@ -1,8 +1,6 @@
 #Lumina Desktop Panel Plugin files
 
-SOURCES += $$PWD/userbutton/LUserButton.cpp \
-	$$PWD/userbutton/UserWidget.cpp \
-	$$PWD/userbutton/UserItemWidget.cpp \
+SOURCES += \
 	$$PWD/desktopbar/LDeskBar.cpp \
 	$$PWD/taskmanager/LTaskManagerPlugin.cpp \
 	$$PWD/taskmanager/LTaskButton.cpp \
@@ -13,12 +11,8 @@ SOURCES += $$PWD/userbutton/LUserButton.cpp \
 	$$PWD/showdesktop/LHomeButton.cpp \
 	$$PWD/appmenu/LAppMenuPlugin.cpp \
 	$$PWD/applauncher/AppLaunchButton.cpp \
-	$$PWD/systemstart/ItemWidget.cpp \
 	
 HEADERS += $$PWD/RotateToolButton.h \
-	$$PWD/userbutton/LUserButton.h \
-	$$PWD/userbutton/UserWidget.h \
-	$$PWD/userbutton/UserItemWidget.h \
 	$$PWD/desktopbar/LDeskBar.h \
 	$$PWD/systemtray/LSysTray.h \
 	$$PWD/systemtray/TrayIcon.h \
@@ -31,7 +25,6 @@ HEADERS += $$PWD/RotateToolButton.h \
 	$$PWD/showdesktop/LHomeButton.h \
 	$$PWD/appmenu/LAppMenuPlugin.h \
 	$$PWD/applauncher/AppLaunchButton.h \
-	$$PWD/systemstart/ItemWidget.h \
 
-FORMS +=	 $$PWD/userbutton/UserWidget.ui
+
 	

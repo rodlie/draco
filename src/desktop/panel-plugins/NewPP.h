@@ -13,21 +13,16 @@
 
 //List all the individual plugin includes here
 #include "LPPlugin.h"
-#include "userbutton/LUserButton.h"
+//#include "userbutton/LUserButton.h"
 #include "desktopbar/LDeskBar.h"
 #include "spacer/LSpacer.h"
 #include "line/LLine.h"
 #include "clock/LClock.h"
 #include "desktopswitcher/LDesktopSwitcher.h"
 #include "taskmanager/LTaskManagerPlugin.h"
-//#include "systemdashboard/LSysDashboard.h"
 #include "showdesktop/LHomeButton.h"
 #include "appmenu/LAppMenuPlugin.h"
 #include "applauncher/AppLaunchButton.h"
-//#include "systemstart/LStartButton.h"
-//#include "audioplayer/LPAudioPlayer.h"
-//#include "jsonmenu/PPJsonMenu.h"
-//#include "quickcontainer/QuickPPlugin.h"
 #include "systemtray/LSysTray.h" //must be last due to X11 compile issues
 
 
@@ -35,9 +30,9 @@ class NewPP{
 public:
 	static LPPlugin* createPlugin(QString plugin, QWidget* parent = 0, bool horizontal = true){
 	  LPPlugin *plug = 0;
-	  if(plugin.startsWith("userbutton---")){
+      /*if(plugin.startsWith("userbutton---")){
 	    plug = new LUserButtonPlugin(parent, plugin, horizontal);
-	  }else if(plugin.startsWith("homebutton---")){
+      }else*/ if(plugin.startsWith("homebutton---")){
 	    plug = new LHomeButtonPlugin(parent, plugin, horizontal);
 	  }else if(plugin.startsWith("desktopbar---")){
 	    plug = new LDeskBarPlugin(parent, plugin, horizontal);
