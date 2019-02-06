@@ -7,8 +7,8 @@
 //  This class governs all the xcb/randr interactions
 //  and provides simpler Qt-based functions for use elsewhere
 //===========================================
-#ifndef _LUMINA_LIBRARY_RANDR_MONITORS_H
-#define _LUMINA_LIBRARY_RANDR_MONITORS_H
+#ifndef LUMINA_LIBRARY_RANDR_MONITORS_H
+#define LUMINA_LIBRARY_RANDR_MONITORS_H
 
 //Qt includes
 #include <QSize>

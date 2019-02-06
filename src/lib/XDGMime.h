@@ -10,8 +10,8 @@
 //    (APPLICATIONS) https://www.freedesktop.org/wiki/Specifications/mime-apps-spec/
 // Mime Application Version Compliance: 1.0.1 (11/14/14) (Skips random *.desktop parsing: ~80% compliant)
 //===========================================
-#ifndef _LUMINA_LIBRARY_XDG_MIME_CLASS_H
-#define _LUMINA_LIBRARY_XDG_MIME_CLASS_H
+#ifndef LUMINA_LIBRARY_XDG_MIME_CLASS_H
+#define LUMINA_LIBRARY_XDG_MIME_CLASS_H
 
 #include <QFile>
 #include <QDir>

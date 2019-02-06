@@ -32,7 +32,7 @@ SystemWindow::SystemWindow() : QDialog(), ui(new Ui::SystemWindow){
   connect(ui->tool_restart_updates, SIGNAL(clicked()), this, SLOT(sysUpdate()) );
   //Disable buttons if necessary
   updateWindow();
-  ui->tool_suspend->setVisible(LOS::systemCanSuspend()); //does not change with time - just do a single check
+  ui->tool_suspend->setVisible(/*LOS::systemCanSuspend()*/ false); //does not change with time - just do a single check
   connect(QApplication::instance(), SIGNAL(LocaleChanged()), this, SLOT(updateWindow()) );
   connect(QApplication::instance(), SIGNAL(IconThemeChanged()), this, SLOT(updateWindow()) );
 }
@@ -44,17 +44,17 @@ SystemWindow::~SystemWindow(){
 void SystemWindow::updateWindow(){
   //Disable the shutdown/restart buttons if necessary
   ui->retranslateUi(this);
-  bool ok = LOS::userHasShutdownAccess();
+  bool ok = /*LOS::userHasShutdownAccess();*/false;
     ui->tool_restart->setEnabled(ok);
     ui->tool_shutdown->setEnabled(ok);
-  ui->frame_update->setVisible( !LOS::systemPendingUpdates().isEmpty() );
+  //ui->frame_update->setVisible( !LOS::systemPendingUpdates().isEmpty() );
   //Center this window on the current screen
   QPoint center = QApplication::desktop()->screenGeometry(QCursor::pos()).center(); //get the center of the current screen
   this->move(center.x() - this->width()/2, center.y() - this->height()/2);
 }
 
 bool SystemWindow::promptAboutUpdates(bool &skip){
-  QString pending = LOS::systemPendingUpdates();
+  /*QString pending = LOS::systemPendingUpdates();
   if(pending.isEmpty()){ skip = false; } //continue without skip
   else{
     QMessageBox dlg(QMessageBox::Question, tr("Apply Updates?"), tr("You have system updates waiting to be applied! Do you wish to install them now?"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
@@ -68,7 +68,8 @@ bool SystemWindow::promptAboutUpdates(bool &skip){
     if(ret == QMessageBox::Cancel){ return false; } //do not continue
     else{ skip = (ret==QMessageBox::No); }
   }
-  return true;
+  return true;*/
+    return false;
 }
 
 void SystemWindow::sysLogout(){
@@ -107,7 +108,7 @@ void SystemWindow::sysSuspend(){
   //Make sure to lock the system first (otherwise anybody can access it again)
   LUtils::runCmd("xscreensaver-command -lock");
   //Now suspend the system
-  LOS::systemSuspend();
+  //LOS::systemSuspend();
 }
 
 void SystemWindow::sysLock(){

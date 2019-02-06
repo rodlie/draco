@@ -7,8 +7,8 @@
 // File Information simplification class (combine QFileInfo with XDGDesktop)
 //  Need some extra information not usually available by a QFileInfo
 // ========================
-#ifndef _LUMINA_LIBRARY_FILE_INFO_H
-#define _LUMINA_LIBRARY_FILE_INFO_H
+#ifndef LUMINA_LIBRARY_FILE_INFO_H
+#define LUMINA_LIBRARY_FILE_INFO_H
 
 #include <LuminaXDG.h>
 #include <QString>

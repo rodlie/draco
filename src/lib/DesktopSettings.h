@@ -12,8 +12,8 @@
 //  USER Settings > SYSTEM Settings > DEFAULT Settings
 //  XDG_CONFIG_HOME/lumina-desktop >  XDG_CONFIG_DIRS/lumina-desktop > XDG_DATA_DIRS/lumina-desktop
 //===========================================
-#ifndef _LUMINA_DESKTOP_SETTINGS_CLASS_H
-#define _LUMINA_DESKTOP_SETTINGS_CLASS_H
+#ifndef LUMINA_DESKTOP_SETTINGS_CLASS_H
+#define LUMINA_DESKTOP_SETTINGS_CLASS_H
 
 #include <QSettings>
 #include <QFileSystemWatcher>

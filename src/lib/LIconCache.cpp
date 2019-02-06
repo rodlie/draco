@@ -99,12 +99,12 @@ QString LIconCache::findFile(QString icon){
     }
   }
   //If still no icon found, look for any image format in the "pixmaps" directory
-  if(QFile::exists(LOS::AppPrefix()+"share/pixmaps/"+icon)){
+  /*if(QFile::exists(LOS::AppPrefix()+"share/pixmaps/"+icon)){
     if(QFileInfo(LOS::AppPrefix()+"share/pixmaps/"+icon).isDir()){ return ""; }
     return (LOS::AppPrefix()+"share/pixmaps/"+icon);
-  }else{
+  }else{*/
     //Need to scan for any close match in the directory
-    QDir pix(LOS::AppPrefix()+"share/pixmaps");
+    QDir pix;//(LOS::AppPrefix()+"share/pixmaps");
     QStringList formats = LUtils::imageExtensions();
     QStringList found = pix.entryList(QStringList() << icon, QDir::Files, QDir::Unsorted);
     if(found.isEmpty()){ found = pix.entryList(QStringList() << icon+"*", QDir::Files, QDir::Unsorted); }
@@ -115,7 +115,7 @@ QString LIconCache::findFile(QString icon){
         return pix.absoluteFilePath(found[i]);
       }
     }
-  }
+  //}
   return ""; //no file found
 }
 

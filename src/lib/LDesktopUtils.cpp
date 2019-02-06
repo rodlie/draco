@@ -34,17 +34,17 @@ bool LDesktopUtils::validQuickPlugin(QString ID){
 }
 
 QString LDesktopUtils::findQuickPluginFile(QString ID){
-  if(ID.startsWith("quick-")){ ID = ID.section("-",1,50); } //just in case
+  /*if(ID.startsWith("quick-")){ ID = ID.section("-",1,50); } //just in case
   //Give preference to any user-supplied plugins (overwrites for system plugins)
   QString path = QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/quickplugins/quick-"+ID+".qml";
   if( QFile::exists(path) ){return path; }
   path = LOS::LuminaShare()+"quickplugins/quick-"+ID+".qml";
-  if( QFile::exists(path) ){return path; }
+  if( QFile::exists(path) ){return path; }*/
   return ""; //could not be found
 }
 
 QStringList LDesktopUtils::listQuickPlugins(){
-  QDir dir(QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/quickplugins");
+  /*QDir dir(QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/quickplugins");
   QStringList files = dir.entryList(QStringList() << "quick-*.qml", QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
   dir.cd(LOS::LuminaShare()+"quickplugins");
   files << dir.entryList(QStringList() << "quick-*.qml", QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
@@ -53,7 +53,8 @@ QStringList LDesktopUtils::listQuickPlugins(){
   }
   files.removeDuplicates();
   //qDebug() << "Found Quick Plugins:" << files;
-  return files;
+  return files;*/
+    return QStringList();
 }
 
 QStringList LDesktopUtils::infoQuickPlugin(QString ID){ //Returns: [Name, Description, Icon]
@@ -154,13 +155,13 @@ void LDesktopUtils::LoadSystemDefaults(bool skipOS){
   bool skipmime = QFile::exists( QString(getenv("XDG_CONFIG_HOME"))+"/lumina-mimapps.list" );
   //qDebug() << " - Skipping mimetype default apps" << skipmime;
   QStringList sysDefaults;
-  if(!skipOS){ sysDefaults = LUtils::readFile(LOS::AppPrefix()+"etc/luminaDesktop.conf"); }
-  if(sysDefaults.isEmpty() && !skipOS){ sysDefaults = LUtils::readFile(LOS::AppPrefix()+"etc/luminaDesktop.conf.dist"); }
-  if(sysDefaults.isEmpty() && !skipOS) { sysDefaults = LUtils::readFile(LOS::SysPrefix()+"etc/luminaDesktop.conf"); }
-  if(sysDefaults.isEmpty() && !skipOS){ sysDefaults = LUtils::readFile(LOS::SysPrefix()+"etc/luminaDesktop.conf.dist"); }
+  //if(!skipOS){ sysDefaults = LUtils::readFile(LOS::AppPrefix()+"etc/luminaDesktop.conf"); }
+  //if(sysDefaults.isEmpty() && !skipOS){ sysDefaults = LUtils::readFile(LOS::AppPrefix()+"etc/luminaDesktop.conf.dist"); }
+  //if(sysDefaults.isEmpty() && !skipOS) { sysDefaults = LUtils::readFile(LOS::SysPrefix()+"etc/luminaDesktop.conf"); }
+  //if(sysDefaults.isEmpty() && !skipOS){ sysDefaults = LUtils::readFile(LOS::SysPrefix()+"etc/luminaDesktop.conf.dist"); }
   //if(sysDefaults.isEmpty() && !skipOS) { sysDefaults = LUtils::readFile(L_ETCDIR+"/luminaDesktop.conf"); }
   //if(sysDefaults.isEmpty() && !skipOS){ sysDefaults = LUtils::readFile(L_ETCDIR+"/luminaDesktop.conf.dist"); }
-  if(sysDefaults.isEmpty()){ sysDefaults = LUtils::readFile(LOS::LuminaShare()+"luminaDesktop.conf"); }
+  //if(sysDefaults.isEmpty()){ sysDefaults = LUtils::readFile(LOS::LuminaShare()+"luminaDesktop.conf"); }
   //Find the number of the left-most desktop screen
   QString screen = "0";
   QRect screenGeom;
@@ -526,7 +527,7 @@ bool LDesktopUtils::checkUserFiles(QString lastversion, QString currentversion){
       qDebug() << "Migrating Theme settings:" << newtheme.fileName();
       QStringList oldtheme = LUtils::readFile( QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/themesettings.cfg" );
       //Find the system install location for the theme engine for use later
-      QString enginedir = LOS::LuminaShare()+"/../lthemeengine/";
+      QString enginedir;// = LOS::LuminaShare()+"/../lthemeengine/";
       //Find/match the icon theme
       QString tmp = oldtheme.filter("ICONTHEME=").join("\n").section("=",1,-1).section("\n",0,0).simplified();
       if(tmp.isEmpty()){ tmp = "material-design-light"; } //unknown Icon theme - use the default "light" version
@@ -564,14 +565,14 @@ bool LDesktopUtils::checkUserFiles(QString lastversion, QString currentversion){
   else if(oldversion < 60){ fluxcopy=true; qDebug() << "Current fluxbox settings obsolete: Re-implementing defaults"; }
   if(fluxcopy){
     qDebug() << "Copying default fluxbox configuration files";
-    if(QFile::exists(dset+"fluxbox-init")){ QFile::remove(dset+"fluxbox-init"); }
+    /*if(QFile::exists(dset+"fluxbox-init")){ QFile::remove(dset+"fluxbox-init"); }
     if(QFile::exists(dset+"fluxbox-keys")){ QFile::remove(dset+"fluxbox-keys"); }
     QString finit = LUtils::readFile(LOS::LuminaShare()+"fluxbox-init-rc").join("\n");
      finit.replace("${XDG_CONFIG_HOME}", QString(getenv("XDG_CONFIG_HOME")));
      LUtils::writeFile(dset+"fluxbox-init", finit.split("\n"));
     QFile::copy(LOS::LuminaShare()+"fluxbox-keys", dset+"fluxbox-keys");
     QFile::setPermissions(dset+"fluxbox-init", QFile::ReadOwner | QFile::WriteOwner | QFile::ReadUser | QFile::ReadOther | QFile::ReadGroup);
-    QFile::setPermissions(dset+"fluxbox-keys", QFile::ReadOwner | QFile::WriteOwner | QFile::ReadUser | QFile::ReadOther | QFile::ReadGroup);
+    QFile::setPermissions(dset+"fluxbox-keys", QFile::ReadOwner | QFile::WriteOwner | QFile::ReadUser | QFile::ReadOther | QFile::ReadGroup);*/
   }
 
   if(firstrun){ qDebug() << "First time using Lumina!!"; }

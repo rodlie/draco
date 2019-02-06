@@ -7,8 +7,8 @@
 //  This class governs all the XCB input device interactions
 //  and provides simpler Qt-based functions for use elsewhere
 //===========================================
-#ifndef _LUMINA_XCB_INPUT_DEVICES_H
-#define _LUMINA_XCB_INPUT_DEVICES_H
+#ifndef LUMINA_XCB_INPUT_DEVICES_H
+#define LUMINA_XCB_INPUT_DEVICES_H
 
 #include <QList>
 #include <QString>

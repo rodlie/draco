@@ -756,7 +756,7 @@ QStringList LXDG::systemApplicationDirs(){
   //Returns a list of all the directories where *.desktop files can be found
   QStringList appDirs = QString(getenv("XDG_DATA_HOME")).split(":");
   appDirs << QString(getenv("XDG_DATA_DIRS")).split(":");
-  if(appDirs.isEmpty()){ appDirs << "/usr/local/share" << "/usr/share" << LOS::AppPrefix()+"/share" << LOS::SysPrefix()+"/share" /*<< L_SHAREDIR*/; }
+  //if(appDirs.isEmpty()){ appDirs << "/usr/local/share" << "/usr/share" << LOS::AppPrefix()+"/share" << LOS::SysPrefix()+"/share" /*<< L_SHAREDIR*/; }
   appDirs.removeDuplicates();
   //Now create a valid list
   QStringList out;
@@ -868,7 +868,7 @@ QIcon LXDG::findIcon(QString iconName, QString fallback){
   if(!tmp.isNull() && tmp.name()==iconName){ return tmp; } //found this in the theme
   else if(iconName=="start-here-lumina"){
     //Additional fallback options for the OS-branded icon
-    QString osname = LOS::OSName().simplified().toLower();
+    QString osname;// = LOS::OSName().simplified().toLower();
     QStringList possible; possible << "distributor-logo-"+osname << osname;
     QStringList words;
     if(osname.contains(" ")){ words = osname.split(" "); }
@@ -963,11 +963,11 @@ QIcon LXDG::findIcon(QString iconName, QString fallback){
   }
   //If still no icon found, look for any image format in the "pixmaps" directory
   if(ico.isNull()){
-    if(QFile::exists(LOS::AppPrefix()+"share/pixmaps/"+iconName)){
+    /*if(QFile::exists(LOS::AppPrefix()+"share/pixmaps/"+iconName)){
       ico.addFile(LOS::AppPrefix()+"share/pixmaps/"+iconName);
-    }else{
+    }else{*/
       //Need to scan for any close match in the directory
-      QDir pix(LOS::AppPrefix()+"share/pixmaps");
+      QDir pix;//(LOS::AppPrefix()+"share/pixmaps");
       QStringList formats = LUtils::imageExtensions();
       QStringList found = pix.entryList(QStringList() << iconName, QDir::Files, QDir::Unsorted);
       if(found.isEmpty()){ found = pix.entryList(QStringList() << iconName+"*", QDir::Files, QDir::Unsorted); }
@@ -978,7 +978,7 @@ QIcon LXDG::findIcon(QString iconName, QString fallback){
 	  ico.addFile( pix.absoluteFilePath(found[i]) );
 	  break;
 	}
-      }
+      //}
 
     }
   }
@@ -1382,7 +1382,7 @@ QStringList LXDG::loadMimeFileGlobs2(){
       }
       if(i==dirs.length()-1 && mimeglobs.isEmpty()){
         //Could not find the mimetype database on the system - use the fallback file distributed with Lumina
-        dirs << LOS::LuminaShare();
+        //dirs << LOS::LuminaShare();
       }
     }//end loop over dirs
   }

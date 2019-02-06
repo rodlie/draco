@@ -7,8 +7,8 @@
 // This is a simple class for loading/serving icon files
 // from the icon theme or local filesystem
 //===========================================
-#ifndef _LUMINA_LIBRARY_ICON_CACHE_H
-#define _LUMINA_LIBRARY_ICON_CACHE_H
+#ifndef LUMINA_LIBRARY_ICON_CACHE_H
+#define LUMINA_LIBRARY_ICON_CACHE_H
 
 #include <QHash>
 #include <QIcon>

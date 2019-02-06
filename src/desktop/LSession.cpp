@@ -353,13 +353,13 @@ void LSession::StartLogout(){
 
 void LSession::StartShutdown(bool skipupdates){
   CleanupSession();
-  LOS::systemShutdown(skipupdates);
+  //LOS::systemShutdown(skipupdates);
   QCoreApplication::exit(0);
 }
 
 void LSession::StartReboot(bool skipupdates){
   CleanupSession();
-  LOS::systemRestart(skipupdates);
+  //LOS::systemRestart(skipupdates);
   QCoreApplication::exit(0);
 }
 

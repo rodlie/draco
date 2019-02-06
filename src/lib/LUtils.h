@@ -4,8 +4,8 @@
 //  Available under the 3-clause BSD license
 //  See the LICENSE file for full details
 //===========================================
-#ifndef _LUMINA_LIBRARY_UTILS_H
-#define _LUMINA_LIBRARY_UTILS_H
+#ifndef LUMINA_LIBRARY_UTILS_H
+#define LUMINA_LIBRARY_UTILS_H
 
 #include <QCoreApplication>
 #include <QProcess>

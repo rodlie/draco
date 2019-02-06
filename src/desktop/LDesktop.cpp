@@ -542,8 +542,8 @@ void LDesktop::UpdateBackground(){
   if(DEBUG){ qDebug() << " - Update Desktop Background for screen:" << Screen(); }
   //Get the list of background(s) to show
   QStringList bgL = settings->value(DPREFIX+"background/filelist-workspace-"+QString::number( LSession::handle()->XCB->CurrentWorkspace()), QStringList()).toStringList();
-  if(bgL.isEmpty()){ bgL = settings->value(DPREFIX+"background/filelist", QStringList()).toStringList(); }
-  if(bgL.isEmpty()){ bgL << LOS::LuminaShare()+"../wallpapers/lumina-nature"; } //Use this entire directory by default if nothing specified
+  //if(bgL.isEmpty()){ bgL = settings->value(DPREFIX+"background/filelist", QStringList()).toStringList(); }
+  //if(bgL.isEmpty()){ bgL << LOS::LuminaShare()+"../wallpapers/lumina-nature"; } //Use this entire directory by default if nothing specified
   //qDebug() << " - List:" << bgL << CBG;
     //Remove any invalid files
     for(int i=0; i<bgL.length(); i++){
@@ -598,7 +598,7 @@ void LDesktop::UpdateBackground(){
   //Save this file as the current background
   CBG = bgFile;
   //qDebug() << " - Set Background to:" << CBG << index << bgL;
-  if( (bgFile.toLower()=="default")){ bgFile = LOS::LuminaShare()+"desktop-background.jpg"; }
+  //if( (bgFile.toLower()=="default")){ bgFile = LOS::LuminaShare()+"desktop-background.jpg"; }
   //Now set this file as the current background
   QString format = settings->value(DPREFIX+"background/format","stretch").toString();
   //bgWindow->setBackground(bgFile, format);

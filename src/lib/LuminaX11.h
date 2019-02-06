@@ -7,8 +7,8 @@
 //  This class governs all the XLib usage and interactions
 //  and provides simpler Qt-based functions for use elsewhere
 //===========================================
-#ifndef _LUMINA_LIBRARY_X11_H
-#define _LUMINA_LIBRARY_X11_H
+#ifndef LUMINA_LIBRARY_X11_H
+#define LUMINA_LIBRARY_X11_H
 
 //Qt includes
 #include <QList>

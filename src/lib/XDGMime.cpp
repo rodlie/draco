@@ -357,7 +357,7 @@ QStringList XDGMime::loadMimeFileGlobs2(){
       }
       if(i==dirs.length()-1 && mimeglobs.isEmpty()){
         //Could not find the mimetype database on the system - use the fallback file distributed with Lumina
-        if(dirs.last()!= LOS::LuminaShare()){ dirs << LOS::LuminaShare(); } //just in case it was not installed
+        //if(dirs.last()!= LOS::LuminaShare()){ dirs << LOS::LuminaShare(); } //just in case it was not installed
       }
     }//end loop over dirs
   }

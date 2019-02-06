@@ -12,8 +12,8 @@
 // *.desktop Exec Compliance Updated: 9/9/2014
 // Mime Application Version Compliance: 1.0.1 (11/14/14) (Skips random *.desktop parsing: ~80% compliant)
 //===========================================
-#ifndef _LUMINA_LIBRARY_XDG_H
-#define _LUMINA_LIBRARY_XDG_H
+#ifndef LUMINA_LIBRARY_XDG_H
+#define LUMINA_LIBRARY_XDG_H
 
 #include <QFile>
 #include <QFileSystemWatcher>

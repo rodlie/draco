@@ -12,8 +12,8 @@
 extern LIconCache *ICONS;
 
 AppMenu::AppMenu(QWidget* parent) : QMenu(parent){
-  appstorelink = LOS::AppStoreShortcut(); //Default application "store" to display (AppCafe in TrueOS)
-  controlpanellink = LOS::ControlPanelShortcut(); //Default control panel
+  //appstorelink = LOS::AppStoreShortcut(); //Default application "store" to display (AppCafe in TrueOS)
+  //controlpanellink = LOS::ControlPanelShortcut(); //Default control panel
   sysApps = new XDGDesktopList(this, true); //have this one automatically keep in sync
   APPS.clear();
   //watcher = new QFileSystemWatcher(this);

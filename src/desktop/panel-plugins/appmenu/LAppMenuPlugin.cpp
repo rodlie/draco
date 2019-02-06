@@ -68,7 +68,7 @@ void LAppMenuPlugin::UpdateMenu(){
     QAction *tmpact = mainmenu->addAction( LXDG::findIcon("user-home", ""), tr("Browse Files") );
       tmpact->setWhatsThis("\""+QDir::homePath()+"\"");
     //--Look for the app store
-    XDGDesktop store(LOS::AppStoreShortcut());
+    /*XDGDesktop store(LOS::AppStoreShortcut());
     if(store.isValid()){
       tmpact = mainmenu->addAction( LXDG::findIcon(store.icon, ""), tr("Install Applications") ); 
       tmpact->setWhatsThis("\""+store.filePath+"\"");
@@ -78,7 +78,7 @@ void LAppMenuPlugin::UpdateMenu(){
     if(controlp.isValid()){
       tmpact = mainmenu->addAction( LXDG::findIcon(controlp.icon, ""), tr("Control Panel") ); 
       tmpact->setWhatsThis("\""+controlp.filePath+"\"");
-    }
+    }*/
     mainmenu->addSeparator();
     //--Now create the sub-menus
     QStringList cats = HASH->keys();

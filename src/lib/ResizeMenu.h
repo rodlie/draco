@@ -4,8 +4,8 @@
 //  Available under the 3-clause BSD license
 //  See the LICENSE file for full details
 //===========================================
-#ifndef _LUMINA_LIBRARY_RESIZE_MENU_H
-#define _LUMINA_LIBRARY_RESIZE_MENU_H
+#ifndef LUMINA_LIBRARY_RESIZE_MENU_H
+#define LUMINA_LIBRARY_RESIZE_MENU_H
 
 #include <QMenu>
 #include <QWidget>
