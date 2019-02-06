@@ -14,7 +14,6 @@ SOURCES += $$PWD/userbutton/LUserButton.cpp \
 	$$PWD/appmenu/LAppMenuPlugin.cpp \
 	$$PWD/applauncher/AppLaunchButton.cpp \
 	$$PWD/systemstart/ItemWidget.cpp \
-	$$PWD/jsonmenu/PPJsonMenu.cpp
 	
 HEADERS += $$PWD/RotateToolButton.h \
 	$$PWD/userbutton/LUserButton.h \
@@ -33,7 +32,6 @@ HEADERS += $$PWD/RotateToolButton.h \
 	$$PWD/appmenu/LAppMenuPlugin.h \
 	$$PWD/applauncher/AppLaunchButton.h \
 	$$PWD/systemstart/ItemWidget.h \
-	$$PWD/jsonmenu/PPJsonMenu.h
 
 FORMS +=	 $$PWD/userbutton/UserWidget.ui
 	
