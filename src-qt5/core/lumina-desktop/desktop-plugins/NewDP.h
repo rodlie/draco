@@ -3,8 +3,6 @@
 //  Copyright (c) 2014, Ken Moore
 //  Available under the 3-clause BSD license
 //  See the LICENSE file for full details
-//
-//  Modified by Ole-André Rodlie for Draco DE
 //===========================================
 //  This class is the interface to load all the different desktop plugins
 //===========================================
