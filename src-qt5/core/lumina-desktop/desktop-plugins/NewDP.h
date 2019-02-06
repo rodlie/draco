@@ -18,7 +18,7 @@
 #include "applauncher/AppLauncherPlugin.h"
 #include "desktopview/DesktopViewPlugin.h"
 #include "notepad/NotepadPlugin.h"
-#include "audioplayer/PlayerWidget.h"
+//#include "audioplayer/PlayerWidget.h"
 #include "systemmonitor/MonitorWidget.h"
 //#include "quickcontainer/QuickDPlugin.h"
 //#include "messagecenter/MessageCenter.h"
@@ -41,9 +41,9 @@ public:
 	    plug = new DesktopViewPlugin(parent, plugin);
 	  }else if(plugin.section("---",0,0)=="notepad"){
 	    plug = new NotePadPlugin(parent, plugin);
-	  }else if(plugin.section("---",0,0)=="audioplayer"){
+      }/*else if(plugin.section("---",0,0)=="audioplayer"){
 	    plug = new AudioPlayerPlugin(parent, plugin);
-	  }else if(plugin.section("---",0,0)=="systemmonitor"){
+      }*/else if(plugin.section("---",0,0)=="systemmonitor"){
 	    plug = new SysMonitorPlugin(parent, plugin);
 	  //}else if(plugin.section("---",0,0)=="messagecenter"){
 	    //plug = new MessageCenterPlugin(parent, plugin);
