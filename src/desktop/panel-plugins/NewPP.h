@@ -14,7 +14,7 @@
 //List all the individual plugin includes here
 #include "LPPlugin.h"
 //#include "userbutton/LUserButton.h"
-#include "desktopbar/LDeskBar.h"
+//#include "desktopbar/LDeskBar.h"
 #include "spacer/LSpacer.h"
 #include "line/LLine.h"
 #include "clock/LClock.h"
@@ -34,9 +34,9 @@ public:
 	    plug = new LUserButtonPlugin(parent, plugin, horizontal);
       }else*/ if(plugin.startsWith("homebutton---")){
 	    plug = new LHomeButtonPlugin(parent, plugin, horizontal);
-	  }else if(plugin.startsWith("desktopbar---")){
+      }/*else if(plugin.startsWith("desktopbar---")){
 	    plug = new LDeskBarPlugin(parent, plugin, horizontal);
-	  }else if(plugin.startsWith("spacer---")){
+      }*/else if(plugin.startsWith("spacer---")){
 	    plug = new LSpacerPlugin(parent, plugin, horizontal);
 	  }else if(plugin.startsWith("line---")){
 	    plug = new LLinePlugin(parent, plugin, horizontal);

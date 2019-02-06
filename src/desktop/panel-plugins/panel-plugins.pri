@@ -1,7 +1,6 @@
 #Lumina Desktop Panel Plugin files
 
 SOURCES += \
-	$$PWD/desktopbar/LDeskBar.cpp \
 	$$PWD/taskmanager/LTaskManagerPlugin.cpp \
 	$$PWD/taskmanager/LTaskButton.cpp \
 	$$PWD/systemtray/LSysTray.cpp \
@@ -13,7 +12,6 @@ SOURCES += \
 	$$PWD/applauncher/AppLaunchButton.cpp \
 	
 HEADERS += $$PWD/RotateToolButton.h \
-	$$PWD/desktopbar/LDeskBar.h \
 	$$PWD/systemtray/LSysTray.h \
 	$$PWD/systemtray/TrayIcon.h \
 	$$PWD/spacer/LSpacer.h \
