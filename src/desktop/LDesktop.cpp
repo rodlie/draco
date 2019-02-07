@@ -395,11 +395,11 @@ void LDesktop::UpdateDesktop(){
   }
   //Also show anything available in the /media directory, and /run/media/USERNAME directory
   if(settings->value(DPREFIX+"generateMediaIcons",true).toBool()){
-    QDir media("/media");
+    /*QDir media("/media");
     QStringList mediadirs = media.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
     for(int i=0; i<mediadirs.length(); i++){
       filelist << media.absoluteFilePath(mediadirs[i]);
-    }
+    }*/
     QDir userMedia(QString("/run/media/%1").arg(QDir::homePath().split("/").takeLast()));
     QStringList userMediadirs = userMedia.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
     for(int i=0; i<userMediadirs.length(); i++){
