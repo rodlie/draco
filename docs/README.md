@@ -1,5 +1,8 @@
 # Draco Desktop Environment
 
+![screenshot](screenshot-01.jpg)
+
+
 A simple desktop environment based on Lumina. **This is work-in-progress, not for end-users (yet).**
 
 ## Requirements
