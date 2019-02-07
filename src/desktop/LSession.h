@@ -53,10 +53,11 @@ public:
 	LSession(int &argc, char **argv);
 	~LSession();
 
-	static QString batteryIconName(int charge, bool charging);
+    //static QString batteryIconName(int charge, bool charging);
 
 	static bool checkUserFiles();
 	//Functions to be called during startup
+    void setupFallbackDesktop(QSettings *dset);
 	void setupSession();
 
 	//Public System Tray Functions

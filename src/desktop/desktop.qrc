@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>defaults/draco-desktop.jpg</file>
+    </qresource>
+</RCC>

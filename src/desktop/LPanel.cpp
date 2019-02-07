@@ -124,8 +124,8 @@ void LPanel::UpdatePanel(bool geomonly){
   //First set the geometry of the panel and send the EWMH message to reserve that space
   if(DEBUG){ qDebug() << "Update Panel: Geometry only=" << geomonly << "Screen Size:" << LSession::handle()->screenGeom(Screen()); }
   hidden = settings->value(PPREFIX+"hidepanel",false).toBool();
-  QString loc = settings->value(PPREFIX+"location","").toString().toLower();
-  if(loc.isEmpty() && defaultpanel){ loc="top"; }
+  QString loc = settings->value(PPREFIX+"location","bottom").toString().toLower();
+  //if(loc.isEmpty() && defaultpanel){ loc="bottom"; }
   if(loc=="top" || loc=="bottom"){
     horizontal=true;
     layout->setAlignment(Qt::AlignLeft);
@@ -231,10 +231,12 @@ void LPanel::UpdatePanel(bool geomonly){
   if(needsticky){ LSession::handle()->XCB->SetAsSticky(this->winId()); }
   if(geomonly){ return; }
   //Now update the appearance of the toolbar
-  if(settings->value(PPREFIX+"customColor", false).toBool()){
-    QString color = settings->value(PPREFIX+"color", "rgba(255,255,255,160)").toString();
-    QString style = "QWidget#LuminaPanelColor{ background: %1; border-radius: 3px; border: 1px solid %1; }";
-    style = style.arg(color);
+  if(settings->value(PPREFIX+"customColor", true).toBool()){
+    QString color = settings->value(PPREFIX+"color", "rgba(239,235,231,255)").toString();
+    int borderRadius = 3;
+    if (panelPercent>99) { borderRadius=0; }
+    QString style = "QWidget#LuminaPanelColor{ background: %1; border-radius: %2px; border: 1px solid %1; }";
+    style = style.arg(color).arg(borderRadius);
     panelArea->setStyleSheet(style);
   }else{
     panelArea->setStyleSheet(""); //clear it and use the one from the theme
@@ -242,9 +244,9 @@ void LPanel::UpdatePanel(bool geomonly){
 
   //Then go through the plugins and create them as necessary
   QStringList plugins = settings->value(PPREFIX+"pluginlist", QStringList()).toStringList();
-  /*if(defaultpanel && plugins.isEmpty()){
-    plugins << "userbutton" << "taskmanager" << "spacer" << "systemtray" << "clock" << "systemdashboard";
-  }*/
+  if (defaultpanel && plugins.isEmpty()){
+      plugins << "appmenu" << "desktopswitcher" << "taskmanager"  << "systemtray" << "clock" << "homebutton";
+  }
   if(DEBUG){ qDebug() << " - Initialize Plugins: " << plugins; }
   for(int i=0; i<plugins.length(); i++){
     //Ensure this plugin has a unique ID (NOTE: this numbering does not persist between sessions)

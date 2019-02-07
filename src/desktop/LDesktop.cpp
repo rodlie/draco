@@ -16,6 +16,8 @@
 
 #include <QScreen>
 
+#include "common.h"
+
 #define DEBUG 1
 
 LDesktop::LDesktop(int deskNum, bool setdefault) : QObject(){
@@ -30,8 +32,8 @@ LDesktop::LDesktop(int deskNum, bool setdefault) : QObject(){
   usewinmenu=false;
   desktopFolderActionMenu = 0;
   //Setup the internal variables
-  settings = new QSettings(QSettings::UserScope, "lumina-desktop","desktopsettings", this);
-  //qDebug() << " - Desktop Settings File:" << settings->fileName();
+  settings = new QSettings(QSettings::UserScope, QString("%1-desktop").arg(DESKTOP_APP),DE_DESKTOP_SETTINGS, this);
+  qDebug() << " - Desktop Settings File:" << settings->fileName();
   if(!QFile::exists(settings->fileName())){ settings->setValue(DPREFIX+"background/filelist",QStringList()<<"default"); settings->sync(); }
   //bgWindow = 0;
   bgDesktop = 0;
@@ -551,11 +553,11 @@ void LDesktop::UpdateBackground(){
       if(bgL[i].isEmpty()){ bgL.removeAt(i); i--; }
       if( !QFile::exists(bgL[i]) ){
         //Quick Detect/replace for new path for Lumina wallpapers (change in 1.3.4)
-        if(bgL[i].contains("/wallpapers/Lumina-DE/")){
+        /*if(bgL[i].contains("/wallpapers/Lumina-DE/")){
           bgL[i] = bgL[i].replace("/wallpapers/Lumina-DE/", "/wallpapers/lumina-desktop/"); i--; //modify the path and re-check it
-        }else{
+        }else{*/
           bgL.removeAt(i); i--;
-        }
+        //}
       }
     }
     if(bgL.isEmpty()){ bgL << "default"; } //always fall back on the default

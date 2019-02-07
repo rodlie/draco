@@ -25,6 +25,11 @@ void LDesktopBackground::paintEvent(QPaintEvent *ev) {
 }
 
 QPixmap LDesktopBackground::setBackground(const QString& bgFile, const QString& format, QRect geom) {
+    qDebug() << "SET BACKGROUND" << bgFile;
+    QString imagefile = bgFile;
+    if (imagefile == QString("default") || (!bgFile.startsWith("rgb(") && !QFile::exists(bgFile))) {
+        imagefile = QString(":/defaults/draco-desktop.jpg");
+    }
     //if (bgPixmap != NULL) delete bgPixmap;
     QPixmap bgPixmap(geom.size());// = new QPixmap(size());
 
@@ -36,7 +41,7 @@ QPixmap LDesktopBackground::setBackground(const QString& bgFile, const QString& 
         bgPixmap.fill(Qt::black);
 
         // Load the background file and scale
-        QPixmap bgImage(bgFile);
+        QPixmap bgImage(imagefile);
         if (format == "stretch" || format == "full" || format == "fit") {
             Qt::AspectRatioMode mode;
             if (format == "stretch") {

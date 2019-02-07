@@ -11,16 +11,14 @@
 #include <QScreen>
 #include <QtConcurrent>
 #include <QMimeData>
-#include "LXcbEventFilter.h"
-//#include "BootSplash.h"
 
-//LibLumina X11 class
+#include "LXcbEventFilter.h"
 #include <LuminaX11.h>
 #include <LUtils.h>
-//#include <ExternalProcess.h>
 #include <LIconCache.h>
-
 #include <unistd.h> //for usleep() usage
+
+#include "common.h" // common stuff
 
 #ifndef DEBUG
 #define DEBUG 0
@@ -29,26 +27,14 @@
 XCBEventFilter *evFilter = 0;
 LIconCache *ICONS = 0;
 
-LSession::LSession(int &argc, char ** argv) : LSingleApplication(argc, argv, "lumina-desktop"){
+LSession::LSession(int &argc, char ** argv) : LSingleApplication(argc, argv, QString("%1-desktop").arg(DESKTOP_APP)){
  xchange = false;
 
- //  [1.0.0 -> 1000000], [1.2.3 -> 1002003], [0.6.1 -> 6001]
- qDebug() << "[Lumina] Checking User Files";
- QSettings sset("lumina-desktop", "sessionsettings");
- QString OVS = sset.value("DesktopVersion","0").toString(); //Old Version String
- qDebug() << " - Old Version:" << OVS;
- qDebug() << " - Current Version:" << LDesktopUtils::LuminaDesktopVersion();
- bool changed = LDesktopUtils::checkUserFiles(OVS, LDesktopUtils::LuminaDesktopVersion());
- qDebug() << " - Made Changes:" << changed;
- if(changed){
-   //Save the current version of the session to the settings file (for next time)
-   sset.setValue("DesktopVersion", LDesktopUtils::LuminaDesktopVersion());
- }
- qDebug() << "Finished with user files check";
-
+ // temp icon theme
  QIcon::setThemeName("Adwaita");
 
  if(this->isPrimaryProcess()){
+     qDebug() << "IS PRIMARY";
   connect(this, SIGNAL(InputsAvailable(QStringList)), this, SLOT(NewCommunication(QStringList)) );
   this->setApplicationName("Lumina Desktop Environment");
   this->setApplicationVersion( LDesktopUtils::LuminaDesktopVersion() );
@@ -82,7 +68,6 @@ LSession::LSession(int &argc, char ** argv) : LSingleApplication(argc, argv, "lu
   appmenu = 0;
   settingsmenu = 0;
   currTranslator=0;
-  //mediaObj=0;
   sessionsettings=0;
   //Setup the event filter for Qt5
   evFilter =  new XCBEventFilter(this);
@@ -115,109 +100,95 @@ LSession::~LSession(){
 }
 
 //Static function so everything can get the same icon name
-QString LSession::batteryIconName(int charge, bool charging){
+/*QString LSession::batteryIconName(int charge, bool charging){
     Q_UNUSED(charge)
     Q_UNUSED(charging)
     return "battery";
-}
+}*/
 
-void LSession::setupSession(){
-  //Seed random number generator (if needed)
-  qsrand( QTime::currentTime().msec() );
+void LSession::setupSession()
+{
+    qDebug() << "setup desktop session";
 
-  //currTranslator = LUtils::LoadTranslation(this, "lumina-desktop");
-  //BootSplash splash;
-    //splash.showScreen("init");
-  qDebug() << "Initializing Session";
-  if(QFile::exists("/tmp/.luminastopping")){ QFile::remove("/tmp/.luminastopping"); }
-  QTime* timer = 0;
-  //if(DEBUG){ timer = new QTime(); timer->start(); qDebug() << " - Init srand:" << timer->elapsed();}
+    // Seed random number generator (if needed)
+    qsrand( QTime::currentTime().msec() );
 
-  //Setup the QSettings default paths
-   // splash.showScreen("settings");
- // if(DEBUG){ qDebug() << " - Init QSettings:" << timer->elapsed();}
-  sessionsettings = new QSettings("lumina-desktop", "sessionsettings");
-  DPlugSettings = new QSettings("lumina-desktop","pluginsettings/desktopsettings");
-  //Load the proper translation files
-  /*if(sessionsettings->value("ForceInitialLocale",false).toBool()){
-    //Some system locale override it in place - change the env first
-    LUtils::setLocaleEnv( sessionsettings->value("InitLocale/LANG","").toString(), \
-				sessionsettings->value("InitLocale/LC_MESSAGES","").toString(), \
-				sessionsettings->value("InitLocale/LC_TIME","").toString(), \
-				sessionsettings->value("InitLocale/LC_NUMERIC","").toString(), \
-				sessionsettings->value("InitLocale/LC_MONETARY","").toString(), \
-				sessionsettings->value("InitLocale/LC_COLLATE","").toString(), \
-				sessionsettings->value("InitLocale/LC_CTYPE","").toString() );
-  }*/
-//use the system settings
-  //Setup the user's lumina settings directory as necessary
-    //splash.showScreen("user");
-  //if(DEBUG){ qDebug() << " - Init User Files:" << timer->elapsed();}
-  //checkUserFiles(); //adds these files to the watcher as well
+    // Remove existing session file
+    if (QFile::exists(Draco::sessionFile())){ QFile::remove(Draco::sessionFile()); }
 
-  //Initialize the internal variables
-  DESKTOPS.clear();
+    // Initialize settings files
+   /* Draco::sessionSettingsFile(); // make sure file exists and has sane default
+    Draco::desktopSettingsFile(); // make sure file exists and has sane default
+    Draco::envSettingsFile(); // make sure file exists and has sane default
+*/
+    sessionsettings = new QSettings(QString("%1-desktop").arg(DESKTOP_APP),
+                                    QString(DE_SESSION_SETTINGS));
+    DPlugSettings = new QSettings(QString("%1-desktop").arg(DESKTOP_APP),
+                                  QString("%1/%2")
+                                  .arg(DE_PLUGIN_SETTINGS)
+                                  .arg(DE_DESKTOP_SETTINGS));
 
-  //Start the background system tray
-   // splash.showScreen("systray");
-  //if(DEBUG){ qDebug() << " - Init System Tray:" << timer->elapsed();}
-  startSystemTray();
+    // Initialize the internal variables
+    DESKTOPS.clear();
 
-  //Initialize the global menus
- // qDebug() << " - Initialize system menus";
-  //  splash.showScreen("apps");
-  //if(DEBUG){ qDebug() << " - Init AppMenu:" << timer->elapsed();}
-  appmenu = new AppMenu();
+    // Initialize the system tray
+    startSystemTray();
 
- //   splash.showScreen("menus");
- // if(DEBUG){ qDebug() << " - Init SettingsMenu:" << timer->elapsed();}
-  settingsmenu = new SettingsMenu();
-  //if(DEBUG){ qDebug() << " - Init SystemWindow:" << timer->elapsed();}
-  sysWindow = new SystemWindow();
+    //Initialize the global menus
+    appmenu = new AppMenu();
 
-  //Initialize the desktops
-  //  splash.showScreen("desktop");
-  //if(DEBUG){ qDebug() << " - Init Desktops:" << timer->elapsed();}
-  desktopFiles = QDir(LUtils::standardDirectory(LUtils::Desktop)).entryInfoList(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs, QDir::Name | QDir::IgnoreCase | QDir::DirsFirst);
-  updateDesktops();
-  //if(DEBUG){ qDebug() << " - Process Events (6x):" << timer->elapsed();}
-  //for(int i=0; i<6; i++){ LSession::processEvents(); } //Run through this a few times so the interface systems get up and running
+    // Initialize settings menu
+    settingsmenu = new SettingsMenu();
 
-  //Now setup the system watcher for changes
-    //splash.showScreen("final");
-  //qDebug() << " - Initialize file system watcher";
-  //if(DEBUG){ qDebug() << " - Init QFileSystemWatcher:" << timer->elapsed();}
-  watcher = new QFileSystemWatcher(this);
-    QString confdir = sessionsettings->fileName().section("/",0,-2);
-    watcherChange(sessionsettings->fileName() );
-    watcherChange( confdir+"/desktopsettings.conf" );
-    //watcherChange( confdir+"/fluxbox-init" );
-    //watcherChange( confdir+"/fluxbox-keys" );
-    watcherChange( confdir+"/favorites.list" );
-    //Try to watch the localized desktop folder too
-    watcherChange( LUtils::standardDirectory(LUtils::Desktop) );
-    //And watch the /media directory, and /run/media/USERNAME directory
-   if(QFile::exists("/media")){  watcherChange("/media"); }
-   QString userMedia = QString("/run/media/%1").arg(QDir::homePath().split("/").takeLast());
-   if (QFile::exists(userMedia)) { watcherChange(userMedia); }
-   if(!QFile::exists("/tmp/.autofs_change")){ system("touch /tmp/.autofs_change"); }
-   watcherChange("/tmp/.autofs_change");
-  //connect internal signals/slots
-  connect(watcher, SIGNAL(directoryChanged(QString)), this, SLOT(watcherChange(QString)) );
-  connect(watcher, SIGNAL(fileChanged(QString)), this, SLOT(watcherChange(QString)) );
-  connect(this, SIGNAL(aboutToQuit()), this, SLOT(SessionEnding()) );
-  //if(DEBUG){ qDebug() << " - Process Events (4x):" << timer->elapsed();}
-  //for(int i=0; i<4; i++){ LSession::processEvents(); } //Again, just a few event loops here so thing can settle before we close the splash screen
-  //if(DEBUG){ qDebug() << " - Launch Startup Apps:" << timer->elapsed();}
-  //launchStartupApps();
-  //QTimer::singleShot(500, this, SLOT(launchStartupApps()) );
-  //if(DEBUG){ qDebug() << " - Hide Splashscreen:" << timer->elapsed();}
-  //splash.hide();
-  //LSession::processEvents();
-  //if(DEBUG){ qDebug() << " - Close Splashscreen:" << timer->elapsed();}
-  //splash.close();
-  //LSession::processEvents();
-  //if(DEBUG){ qDebug() << " - Init Finished:" << timer->elapsed(); delete timer;}
+    // Initialize system window
+    sysWindow = new SystemWindow();
+
+    // Initialize the desktops
+    desktopFiles = QDir(LUtils::standardDirectory(LUtils::Desktop))
+                   .entryInfoList(QDir::NoDotAndDotDot |
+                                  QDir::Files |
+                                  QDir::Dirs,
+                                  QDir::Name |
+                                  QDir::IgnoreCase |
+                                  QDir::DirsFirst);
+    updateDesktops();
+
+    // Setup the system watcher for changes
+    watcher = new QFileSystemWatcher(this);
+
+    // add user media to watcher
+    QString userMedia = QString("/run/media/%1")
+                        .arg(QDir::homePath().split("/").takeLast());
+    if (QFile::exists(userMedia)) { watcherChange(userMedia); }
+
+    // add "standards" directories to watcher
+    watcherChange(LUtils::standardDirectory(LUtils::Desktop));
+
+    // watch openbox settings
+    // TODO
+
+    // watch settings
+    watcherChange(Draco::sessionSettingsFile());
+    watcherChange(Draco::desktopSettingsFile());
+    watcherChange(Draco::envSettingsFile());
+
+    // connect internal signals/slots
+    connect(watcher,
+            SIGNAL(directoryChanged(QString)),
+            this,
+            SLOT(watcherChange(QString)));
+    connect(watcher,
+            SIGNAL(fileChanged(QString)),
+            this,
+            SLOT(watcherChange(QString)));
+    connect(this,
+            SIGNAL(aboutToQuit()),
+            this,
+            SLOT(SessionEnding()));
+
+    // Initialize startup applications
+    //launchStartupApps();
+    //QTimer::singleShot(500, this, SLOT(launchStartupApps()) );
 }
 
 void LSession::CleanupSession(){
@@ -226,7 +197,7 @@ void LSession::CleanupSession(){
   QDateTime time = QDateTime::currentDateTime();
   qDebug() << "Start closing down the session: " << time.toString( Qt::SystemLocaleShortDate);
   //Create a temporary flag to prevent crash dialogs from opening during cleanup
-  LUtils::writeFile("/tmp/.luminastopping",QStringList() << "yes", true);
+  LUtils::writeFile(Draco::sessionFile(),QStringList() << "yes", true);
   //Start the logout chimes (if necessary)
   //int vol = LOS::audioVolume();
  // if(vol>=0){ sessionsettings->setValue("last_session_state/audio_volume", vol); }
@@ -283,7 +254,7 @@ void LSession::CleanupSession(){
     for(int i=0; i<20; i++){ LSession::processEvents(); usleep(25000); } //1/2 second pause
   //}
   //Clean up the temporary flag
-  if(QFile::exists("/tmp/.luminastopping")){ QFile::remove("/tmp/.luminastopping"); }
+  if(QFile::exists(Draco::sessionFile())){ QFile::remove(Draco::sessionFile()); }
 }
 
 int LSession::VersionStringToNumber(QString version){
@@ -370,7 +341,10 @@ void LSession::reloadIconTheme(){
   emit IconThemeChanged();
 }
 
-void LSession::watcherChange(QString changed){
+void LSession::watcherChange(QString changed)
+{
+    if (!sessionSettings()) { return; }
+
   if(DEBUG){ qDebug() << "Session Watcher Change:" << changed; }
   //if(changed.endsWith("fluxbox-init") || changed.endsWith("fluxbox-keys")){ refreshWindowManager(); }
   if(changed.endsWith("sessionsettings.conf") ){
@@ -426,6 +400,7 @@ void LSession::checkWindowGeoms(){
   }
 }
 
+// REMOVE
 bool LSession::checkUserFiles(){
   //internal version conversion examples:
   //  [1.0.0 -> 1000000], [1.2.3 -> 1002003], [0.6.1 -> 6001]
@@ -448,43 +423,87 @@ bool LSession::checkUserFiles(){
   return changed;
 }
 
+void LSession::setupFallbackDesktop(QSettings *dset)
+{
+    if (!dset->contains(QString("desktop-fallback/screen/lastHeight"))) {
+      dset->setValue(QString("desktop-fallback/screen/lastHeight"),
+                    screenRect.height());
+    } else {
+      if (dset->value(QString("desktop-fallback/screen/lastHeight"))
+                      .toInt() != screenRect.height()) {
+          dset->setValue(QString("desktop-fallback/screen/lastHeight"),
+                        screenRect.height());
+      }
+    }
+    if (!dset->contains(QString("desktop-fallback/screen/lastWidth"))) {
+      dset->setValue(QString("desktop-fallback/screen/lastWidth"),
+                    screenRect.width());
+    } else {
+      if (dset->value(QString("desktop-fallback/screen/lastWidth"))
+                      .toInt() != screenRect.width()) {
+          dset->setValue(QString("desktop-fallback/screen/lastWidth"),
+                        screenRect.width());
+      }
+    }
+    if (!dset->contains(QString("desktop-fallback/panels"))) {
+      dset->setValue(QString("desktop-fallback/panels"), 1);
+    }
+    if (!dset->contains(QString("desktop-fallback/generateMediaIcons"))) {
+      dset->setValue(QString("desktop-fallback/generateMediaIcons"), true);
+    }
+    if (!dset->contains(QString("desktop-fallback/generateDesktopIcons"))) {
+      dset->setValue(QString("desktop-fallback/generateDesktopIcons"), true);
+    }
+    if (!dset->contains(QString("desktop-fallback/GridSize"))) {
+      dset->setValue(QString("desktop-fallback/GridSize"), 100);
+    }
+    if (!dset->contains(QString("desktop-fallback/background/format"))) {
+      dset->setValue(QString("desktop-fallback/background/format"),
+                    QString("full"));
+    }
+    if (dset->contains(QString("desktop-fallback/background/minutesToChange"))) {
+      dset->setValue(QString("desktop-fallback/background/minutesToChange"), 1);
+    }
+    dset->sync();
+}
+
 void LSession::refreshWindowManager(){
   //LUtils::runCmd("touch \""+QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/fluxbox-init\"" );
 }
 
-void LSession::updateDesktops(){
-  qDebug() << " - Update Desktops";
-  QDesktopWidget *DW = this->desktop();
-  int sC = DW->screenCount();
-  qDebug() << "  Screen Count:" << sC;
-  qDebug() << "  DESKTOPS Length:" << DESKTOPS.length();
-  if(sC<1){ return; } //stop here - no screens available temporarily (displayport/4K issue)
-  screenRect = QRect(); //clear it
-  for(int i=0; i<sC; i++){
-    screenRect = screenRect.united(DW->screenGeometry(i));
-    qDebug() << " -- Screen["+QString::number(i)+"]:" << DW->screenGeometry(i);
-  }
+void LSession::updateDesktops()
+{
+    qDebug() << "update desktops";
+    QDesktopWidget *DW = this->desktop();
 
-  bool firstrun = (DESKTOPS.length()==0);
-  bool numchange = DESKTOPS.length()!=sC;
-  QSettings dset("lumina-desktop", "desktopsettings");
-  if(firstrun && sC==1){
-    //Sanity check - ensure the monitor ID did not change between sessions for single-monitor setups
-    QString name = QApplication::screens().at(0)->name();
-    if(!dset.contains("desktop-"+name+"/screen/lastHeight")){
-      //Empty Screen - find the previous one and migrate the settings over
-      QStringList old = dset.allKeys().filter("desktop-").filter("/screen/lastHeight");
-	QStringList lastused = dset.value("last_used_screens").toStringList();
-      QString oldname;
-      for(int i=0; i<old.length(); i++){
-        QString tmp = old[i].section("/",0,0).section("-",1,-1); //old desktop ID
-        if(lastused.contains(tmp)){
-          oldname = tmp; break; //use the first screen that was last used
-        }
-      }
-      if(!oldname.isEmpty()){ LDesktopUtils::MigrateDesktopSettings(&dset, oldname, name); }
+    int sC = DW->screenCount();
+    qDebug() << "screen count" << sC;
+    qDebug() << "desktops length" << DESKTOPS.length();
+    if(sC<1){ return; } //stop here - no screens available temporarily (displayport/4K issue)
+
+    screenRect = QRect(); //clear it
+    for(int i=0; i<sC; i++){
+        screenRect = screenRect.united(DW->screenGeometry(i));
+        qDebug() << "screen" << i << DW->screenGeometry();
     }
-  }
+
+    bool firstrun = (DESKTOPS.length()==0);
+    bool numchange = DESKTOPS.length()!=sC;
+    QSettings dset(QString("%1-desktop")
+                 .arg(DESKTOP_APP),
+                 DE_DESKTOP_SETTINGS);
+
+    // add fallback desktop settings
+    setupFallbackDesktop(&dset);
+
+    if(firstrun && sC==1){
+        QString name = QApplication::screens().at(0)->name();
+        qDebug() << "checking desktop settings" << name;
+        if(!dset.contains("desktop-"+name+"/screen/lastHeight")){
+            qDebug() << "add fallback settings for desktop" << name;
+            LDesktopUtils::MigrateDesktopSettings(&dset, "fallback", name);
+        }
+    }
 
   // If the screen count is changing on us
   if ( sC != DW->screenCount() ) {
@@ -652,10 +671,10 @@ void LSession::storeClipboard(QString text, QClipboard::Mode mode){
 //===============
 //  SYSTEM ACCESS
 //===============
-void LSession::LaunchApplication(QString cmd){
-  //LSession::setOverrideCursor(QCursor(Qt::BusyCursor));
-  //ExternalProcess::launch(cmd, QStringList(), true);
-  QProcess::startDetached(cmd);
+void LSession::LaunchApplication(QString cmd)
+{
+    qDebug() << "launch application" << cmd;
+    QProcess::startDetached(cmd);
 }
 
 QFileInfoList LSession::DesktopFiles(){
@@ -710,11 +729,11 @@ WId LSession::activeWindow(){
 
 //Temporarily change the session locale (nothing saved between sessions)
 void LSession::switchLocale(QString localeCode){
-  currTranslator = LUtils::LoadTranslation(this, "lumina-desktop", localeCode, currTranslator);
+  /*currTranslator = LUtils::LoadTranslation(this, "lumina-desktop", localeCode, currTranslator);
   if(currTranslator!=0 || localeCode=="en_US"){
     LUtils::setLocaleEnv(localeCode); //will set everything to this locale (no custom settings)
   }
-  emit LocaleChanged();
+  emit LocaleChanged();*/
 }
 
 void LSession::systemWindow(){
