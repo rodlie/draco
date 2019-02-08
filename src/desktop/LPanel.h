@@ -71,6 +71,7 @@ public slots:
 
 private slots:
 	void checkPanelFocus();
+    void setupFallbackPanel(const QString &panel);
 
 protected:
 	void resizeEvent(QResizeEvent *event);

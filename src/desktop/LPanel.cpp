@@ -10,7 +10,7 @@
 
 #include "panel-plugins/systemtray/LSysTray.h"
 
-#define DEBUG 0
+//#define DEBUG 0
 
 static bool hascompositer = !LUtils::getCmdOutput("ps -x").filter("compton").filter("--backend").isEmpty(); //LUtils::isValidBinary("xcompmgr"); //NOT WORKING YET - xcompmgr issue with special window flags?
 
@@ -18,7 +18,7 @@ LPanel::LPanel(QSettings *file, QString scr, int num, QWidget *parent, bool rese
   //Take care of inputs
   reserveloc = reservespace;
   this->setMouseTracking(true);
-  if(DEBUG){ qDebug() << " - Creating Panel:" << scr << num; }
+  qDebug() << " - Creating Panel:" << scr << num;
   bgWindow = parent; //save for later
   //Setup the widget overlay for the entire panel to provide transparency effects
   panelArea = new QWidget(this);
@@ -33,12 +33,15 @@ LPanel::LPanel(QSettings *file, QString scr, int num, QWidget *parent, bool rese
   screen = LSession::desktop();
   QString screenID = QApplication::screens().at(Screen())->name();
   PPREFIX = "panel_"+screenID+"."+QString::number(num)+"/";
-  if(DEBUG){ qDebug() << "Panel Prefix:" << PPREFIX; }
+  qDebug() << "Panel Prefix:" << PPREFIX;
   defaultpanel = (LSession::handle()->screenGeom(Screen()).x()==0 && num==0);
   horizontal=true; //use this by default initially
   hidden = false; //use this by default
+
+
   //Setup the panel
-  if(DEBUG){ qDebug() << " -- Setup Panel"; }
+  setupFallbackPanel(PPREFIX);
+  qDebug() << " -- Setup Panel";
   this->setContentsMargins(0,0,0,0);
   this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   //panels cannot get keyboard focus otherwise it upsets the task manager window detection
@@ -61,7 +64,7 @@ LPanel::LPanel(QSettings *file, QString scr, int num, QWidget *parent, bool rese
     //layout->setSizeConstraint(QLayout::SetFixedSize);
   panelArea->setLayout(layout);
   //Set special window flags on the panel for proper usage
-  if(DEBUG){ qDebug() << "About to Show Panel"; }
+  qDebug() << "About to Show Panel";
   this->show();
   //if(reservespace){
   LSession::handle()->XCB->SetAsPanel(this->winId());
@@ -122,7 +125,7 @@ void LPanel::UpdatePanel(bool geomonly){
   //Create/Update the panel as designated in the Settings file
   settings->sync(); //make sure to catch external settings changes
   //First set the geometry of the panel and send the EWMH message to reserve that space
-  if(DEBUG){ qDebug() << "Update Panel: Geometry only=" << geomonly << "Screen Size:" << LSession::handle()->screenGeom(Screen()); }
+qDebug() << "Update Panel: Geometry only=" << geomonly << "Screen Size:" << LSession::handle()->screenGeom(Screen());
   hidden = settings->value(PPREFIX+"hidepanel",false).toBool();
   QString loc = settings->value(PPREFIX+"location","bottom").toString().toLower();
   //if(loc.isEmpty() && defaultpanel){ loc="bottom"; }
@@ -142,7 +145,7 @@ void LPanel::UpdatePanel(bool geomonly){
   if(hidesize<2){ hidesize=2; } //minimum of 2 pixels (need space for the mouse to go over it)
   if(hidden){ viswidth = hidesize; }
   else{ viswidth = ht; }
-  if(DEBUG){ qDebug() << "Hidden Panel size:" << hidesize << "pixels"; }
+  qDebug() << "Hidden Panel size:" << hidesize << "pixels";
   //qDebug() << " - set Geometry";
   int xwid = LSession::handle()->screenGeom(Screen()).width();
   int xhi = LSession::handle()->screenGeom(Screen()).height();
@@ -152,7 +155,7 @@ void LPanel::UpdatePanel(bool geomonly){
   if(panelPercent<1 || panelPercent>100){ panelPercent = 100; }
   panelPercent = panelPercent/100.0;
   QString panelPinLoc = settings->value(PPREFIX+"pinLocation","center").toString().toLower(); //[left/right/center] possible values (assume center otherwise)
-  if(DEBUG){ qDebug() << " - Panel settings:" << QString::number(panelPercent)+QString("%") << panelPinLoc << loc; }
+  qDebug() << " - Panel settings:" << QString::number(panelPercent)+QString("%") << panelPinLoc << loc;
   //xloc=xoffset;
   if(loc=="top"){ //top of screen
     QSize sz = QSize(xwid*panelPercent, ht);
@@ -225,18 +228,27 @@ void LPanel::UpdatePanel(bool geomonly){
       this->resize( viswidth, this->height());
     }
   }
-  if(DEBUG){ qDebug() << " - Done with panel geometry" << this->geometry(); }
+  qDebug() << " - Done with panel geometry" << this->geometry();
   //Double check that the "sticky" bit is set on the window state
   bool  needsticky = (reserveloc ? !LSession::handle()->XCB->WM_Get_Window_States(this->winId()).contains(LXCB::S_STICKY) : true);
   if(needsticky){ LSession::handle()->XCB->SetAsSticky(this->winId()); }
   if(geomonly){ return; }
   //Now update the appearance of the toolbar
   if(settings->value(PPREFIX+"customColor", true).toBool()){
+
     QString color = settings->value(PPREFIX+"color", "rgba(239,235,231,255)").toString();
     int borderRadius = 3;
     if (panelPercent>99) { borderRadius=0; }
-    QString style = "QWidget#LuminaPanelColor{ background: %1; border-radius: %2px; border: 1px solid %1; }";
-    style = style.arg(color).arg(borderRadius);
+    //QString style = "QWidget#LuminaPanelColor{ background: %1; border: 1px solid %1; }";
+
+    QString style;
+    style.append(QString("QWidget#LuminaPanelColor { "));
+    style.append(QString("background: %1;").arg(color));
+    style.append(QString("border: 1px solid %1;").arg(color));
+    if (borderRadius>0) { style.append(QString("border-radius: %1px;").arg(borderRadius)); }
+    style.append(QString("}"));
+
+
     panelArea->setStyleSheet(style);
   }else{
     panelArea->setStyleSheet(""); //clear it and use the one from the theme
@@ -247,7 +259,7 @@ void LPanel::UpdatePanel(bool geomonly){
   if (defaultpanel && plugins.isEmpty()){
       plugins << "appmenu" << "desktopswitcher" << "taskmanager"  << "systemtray" << "clock" << "homebutton";
   }
-  if(DEBUG){ qDebug() << " - Initialize Plugins: " << plugins; }
+  qDebug() << " - Initialize Plugins: " << plugins;
   for(int i=0; i<plugins.length(); i++){
     //Ensure this plugin has a unique ID (NOTE: this numbering does not persist between sessions)
     if(!plugins[i].contains("---")){
@@ -279,7 +291,7 @@ void LPanel::UpdatePanel(bool geomonly){
     }
     if(!found){
       //New Plugin
-      if(DEBUG){ qDebug() << " -- New Plugin:" << plugins[i] << i; }
+      qDebug() << " -- New Plugin:" << plugins[i] << i;
       LPPlugin *plug = NewPP::createPlugin(plugins[i], panelArea, horizontal);
       if(plug != 0){
         PLUGINS.insert(i, plug);
@@ -298,7 +310,7 @@ void LPanel::UpdatePanel(bool geomonly){
   //qDebug() << "PLUGINS length:" << PLUGINS.length();
   for(int i=0; i<PLUGINS.length(); i++){
     if(plugins.contains(PLUGINS[i]->type())){ continue; } //good plugin - skip it
-    if(DEBUG){ qDebug() << " -- Remove Plugin: " << PLUGINS[i]->type(); }
+    qDebug() << " -- Remove Plugin: " << PLUGINS[i]->type();
     //If this is the system tray - stop it first
     if( PLUGINS[i]->type().startsWith("systemtray---") ){
       static_cast<LSysTray*>(PLUGINS[i])->stop();
@@ -358,6 +370,27 @@ void LPanel::checkPanelFocus(){
       this->setGeometry( QRect(showpoint, sz) );
   }
   //qDebug() << " - done checking focus";
+}
+
+void LPanel::setupFallbackPanel(const QString &panel)
+{
+    if (panel.isEmpty() || !settings) { return; }
+    qDebug() << "check settings for panel" << panel;
+    QString panelLocation = settings->value(QString("%1location").arg(panel)).toString();
+    if (!panelLocation.isEmpty()) { return; }
+
+    // add default settings for panel
+    qDebug() << "setting default settings for panel" << panel;
+    QStringList plugins;
+    plugins << "appmenu" << "desktopswitcher" << "taskmanager"  << "systemtray" << "clock" << "homebutton";
+    settings->setValue(QString("%1hidepanel").arg(panel), false);
+    settings->setValue(QString("%1location").arg(panel), QString("bottom"));
+    settings->setValue(QString("%1height").arg(panel), 30);
+    settings->setValue(QString("%1lengthPercent").arg(panel), 100);
+    settings->setValue(QString("%1customColor").arg(panel), true);
+    settings->setValue(QString("%1color").arg(panel), QString("rgba(239,235,231,255)"));
+    settings->setValue(QString("%1pluginlist").arg(panel), plugins);
+    settings->sync();
 }
 
 //===========
