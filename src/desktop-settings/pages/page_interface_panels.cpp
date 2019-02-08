@@ -18,7 +18,7 @@ page_interface_panels::page_interface_panels(QWidget *parent) : PageWidget(paren
   ui->setupUi(this);
   loading = false;
   PINFO = new LPlugins();
-  settings = new QSettings("lumina-desktop","desktopsettings");
+  settings = new QSettings(QString("%1-desktop").arg(DESKTOP_APP),"desktopsettings");
   connect(ui->tool_panels_add, SIGNAL(clicked()), this, SLOT(newPanel()) );
   updateIcons();
 

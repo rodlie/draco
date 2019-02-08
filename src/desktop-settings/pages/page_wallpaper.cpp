@@ -30,7 +30,7 @@ page_wallpaper::~page_wallpaper(){
 //    PUBLIC SLOTS
 //================
 void page_wallpaper::SaveSettings(){
-  QSettings settings("lumina-desktop","desktopsettings");
+  QSettings settings(QString("%1-desktop").arg(DESKTOP_APP),"desktopsettings");
   QString screenID = QApplication::screens().at(cScreen)->name();
   QString DPrefix = "desktop-"+screenID+"/";
   QStringList bgs; //get the list of backgrounds to use
@@ -55,7 +55,7 @@ void page_wallpaper::LoadSettings(int screennum){
   emit ChangePageTitle( tr("Wallpaper Settings") );
   cScreen = screennum; //save for later
   loading = true;
-  QSettings settings("lumina-desktop","desktopsettings");
+  QSettings settings(QString("%1-desktop").arg(DESKTOP_APP),"desktopsettings");
   QString screenID = QApplication::screens().at(cScreen)->name();
   QString DPrefix = "desktop-"+screenID+"/";
 

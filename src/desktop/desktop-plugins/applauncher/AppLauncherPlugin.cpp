@@ -218,10 +218,10 @@ void AppLauncherPlugin::buttonClicked(bool openwith){
     if(!ok || names.indexOf(app)<0){ return; } //cancelled
     this->saveSetting("applicationpath", apps[ names.indexOf(app) ]->filePath);
     QTimer::singleShot(0,this, SLOT(loadButton()));
-  }else if(openwith){
-    LSession::LaunchApplication("lumina-open -select \""+path+"\"");
+  }else if(openwith){ // TODO
+    LSession::LaunchApplication("qtfm-launcher \""+path+"\"");
   }else{
-    LSession::LaunchApplication("lumina-open \""+path+"\"");
+    LSession::LaunchApplication("qtfm-launcher \""+path+"\"");
   }
 
 }

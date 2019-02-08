@@ -163,23 +163,25 @@ void AppMenu::watcherUpdate(){
 }
 
 void AppMenu::launchStore(){
-  LSession::LaunchApplication("lumina-open \""+appstorelink+"\"");
+ // LSession::LaunchApplication("lumina-open \""+appstorelink+"\"");
 }
 
 void AppMenu::launchControlPanel(){
-  LSession::LaunchApplication("lumina-open \""+controlpanellink+"\"");
+ // LSession::LaunchApplication("lumina-open \""+controlpanellink+"\"");
 }
 
 void AppMenu::launchFileManager(){
-  QString fm = "lumina-open \""+QDir::homePath()+"\"";
-  LSession::LaunchApplication(fm);
+  //QString fm = "lumina-open \""+QDir::homePath()+"\"";
+  //LSession::LaunchApplication(fm);
+    QProcess::startDetached(QString("qtfm"));
 }
 
 void AppMenu::launchApp(QAction *act){
   QString appFile = act->whatsThis();
+  qDebug() << "LAUNCH APP" << appFile;
   if(appFile.startsWith("-action")){
-    LSession::LaunchApplication("lumina-open "+appFile); //already has quotes put in place properly
+    LSession::LaunchApplication("qtfm-launcher "+appFile); //already has quotes put in place properly
   }else{
-    LSession::LaunchApplication("lumina-open \""+appFile+"\"");
+    LSession::LaunchApplication("qtfm-launcher \""+appFile+"\"");
   }
 }

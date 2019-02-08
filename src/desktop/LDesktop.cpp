@@ -128,15 +128,16 @@ void LDesktop::SystemTerminal(){
 
 void LDesktop::SystemFileManager(){
   //Just open the home directory
-  QString fm =  "lumina-open \""+QDir::homePath()+"\"";
+  /*QString fm =  "lumina-open \""+QDir::homePath()+"\"";
   qDebug() << "system file manager" << fm;
-  LSession::LaunchApplication(fm);
+  LSession::LaunchApplication(fm);*/
+    QProcess::startDetached(QString("qtfm"));
 }
 
 void LDesktop::SystemApplication(QAction* act){
   if(!act->whatsThis().isEmpty() && act->parent()==deskMenu){
       qDebug() << "system application" << act;
-    LSession::LaunchApplication("lumina-open \""+act->whatsThis()+"\"");
+    LSession::LaunchApplication("qtfm-launcher \""+act->whatsThis()+"\"");
   }
 }
 

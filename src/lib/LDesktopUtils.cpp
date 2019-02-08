@@ -83,7 +83,7 @@ QStringList LDesktopUtils::listFavorites(){
   QStringList fav;
   //QDateTime cur = QDateTime::currentDateTime();
   //if(lastRead.isNull() || fav.isEmpty() || lastRead<QFileInfo( QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/favorites.list").lastModified()){
-    fav = LUtils::readFile(QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/favorites.list");
+    fav = LUtils::readFile(QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/favorites.list").arg(DESKTOP_APP));
     fav.removeAll(""); //remove any empty lines
     fav.removeDuplicates();
     //lastRead = cur;
@@ -94,7 +94,7 @@ QStringList LDesktopUtils::listFavorites(){
 bool LDesktopUtils::saveFavorites(QStringList list){
   list.removeDuplicates();
   //qDebug() << "Save Favorites:" << list;
-  bool ok = LUtils::writeFile(QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/favorites.list", list, true);
+  bool ok = LUtils::writeFile(QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/favorites.list").arg(DESKTOP_APP), list, true);
   //if(ok){ fav = list; } //also save internally in case of rapid write/read of the file
   return ok;
 }
@@ -146,7 +146,7 @@ void LDesktopUtils::LoadSystemDefaults(bool skipOS){
   //Will create the Lumina configuration files based on the current system template (if any)
   qDebug() << "Loading System Defaults";
   //Ensure that the settings directory exists
-  QString setdir = QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop";
+  QString setdir = QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop").arg(DESKTOP_APP);
   if(!QFile::exists(setdir)){
     QDir dir;
     dir.mkpath(setdir);
@@ -478,7 +478,7 @@ bool LDesktopUtils::checkUserFiles(QString lastversion, QString currentversion){
   bool newversion =  ( oldversion < nversion ); //increasing version number
   bool newrelease = ( lastversion.contains("-devel", Qt::CaseInsensitive) && QApplication::applicationVersion().contains("-release", Qt::CaseInsensitive) ); //Moving from devel to release
 
-  QString confdir = QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/";
+  QString confdir = QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/").arg(DESKTOP_APP);
   //Check for the desktop settings file
   QString dset = confdir+"desktopsettings.conf";
   bool firstrun = false;
@@ -525,7 +525,7 @@ bool LDesktopUtils::checkUserFiles(QString lastversion, QString currentversion){
       //Need to migrate theme settings from the old location to the new one
       QSettings newtheme(themefile, QSettings::NativeFormat);
       qDebug() << "Migrating Theme settings:" << newtheme.fileName();
-      QStringList oldtheme = LUtils::readFile( QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/themesettings.cfg" );
+      QStringList oldtheme = LUtils::readFile( QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/themesettings.cfg" ).arg(DESKTOP_APP));
       //Find the system install location for the theme engine for use later
       QString enginedir;// = LOS::LuminaShare()+"/../lthemeengine/";
       //Find/match the icon theme
@@ -555,7 +555,7 @@ bool LDesktopUtils::checkUserFiles(QString lastversion, QString currentversion){
   }
 
   //Check the fluxbox configuration files
-  dset = QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/";
+  dset = QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/").arg(DESKTOP_APP);
   if(!QFile::exists(dset+"fluxbox-init")){
     firstrun = true;
   }

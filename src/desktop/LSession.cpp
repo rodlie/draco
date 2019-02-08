@@ -408,7 +408,7 @@ bool LSession::checkUserFiles(){
     //char tmp[] = "junk\0";
     //int tmpN = 0;
   //QApplication A(tmpN, (char **)&tmp);
-  QSettings sset("lumina-desktop", "sessionsettings");
+  QSettings sset(QString("%1-desktop").arg(DESKTOP_APP), "sessionsettings");
   QString OVS = sset.value("DesktopVersion","0").toString(); //Old Version String
   qDebug() << " - Old Version:" << OVS;
   qDebug() << " - Current Version:" << LDesktopUtils::LuminaDesktopVersion();

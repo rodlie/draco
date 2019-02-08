@@ -27,13 +27,6 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QLineEdit" name="lineEdit">
-     <property name="placeholderText">
-      <string>Search for....</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QTreeWidget" name="treeWidget">
      <property name="focusPolicy">
       <enum>Qt::TabFocus</enum>

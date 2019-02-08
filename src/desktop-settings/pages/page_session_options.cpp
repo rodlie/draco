@@ -46,7 +46,7 @@ page_session_options::~page_session_options(){
 //    PUBLIC SLOTS
 //================
 void page_session_options::SaveSettings(){
-  QSettings sessionsettings("lumina-desktop","sessionsettings");
+  QSettings sessionsettings(QString("%1-desktop").arg(DESKTOP_APP),"sessionsettings");
   sessionsettings.setValue("AutomaticDesktopAppLinks",  ui->check_autoapplinks->isChecked());
   sessionsettings.setValue("EnableNumlock", ui->check_session_numlock->isChecked());
   sessionsettings.setValue("PlayStartupAudio", ui->check_session_playloginaudio->isChecked());
@@ -68,7 +68,7 @@ void page_session_options::SaveSettings(){
 
 
 
-  QString lopenWatchFile = QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/nowatch";
+  QString lopenWatchFile = QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/nowatch").arg(DESKTOP_APP);
   if(QFile::exists(lopenWatchFile) && ui->check_watch_app_procs->isChecked()){
     QFile::remove(lopenWatchFile);
   }else if(!QFile::exists(lopenWatchFile) && !ui->check_watch_app_procs->isChecked()){
@@ -94,7 +94,7 @@ void page_session_options::LoadSettings(int){
   emit HasPendingChanges(false);
   emit ChangePageTitle( tr("Desktop Settings") );
   loading = true;
-  QSettings sessionsettings("lumina-desktop","sessionsettings");
+  QSettings sessionsettings(QString("%1-desktop").arg(DESKTOP_APP),"sessionsettings");
   ui->check_session_numlock->setChecked( sessionsettings.value("EnableNumlock", true).toBool() );
   ui->check_session_playloginaudio->setChecked( sessionsettings.value("PlayStartupAudio",true).toBool() );
   ui->check_session_playlogoutaudio->setChecked( sessionsettings.value("PlayLogoutAudio",true).toBool() );
@@ -125,7 +125,7 @@ void page_session_options::LoadSettings(int){
 
   ui->mywindowmanager->setCurrentIndex(index);
 
-  QString lopenWatchFile = QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/nowatch";
+  QString lopenWatchFile = QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/nowatch").arg(DESKTOP_APP);
   ui->check_watch_app_procs->setChecked( !QFile::exists(lopenWatchFile) );
 
   sessionLoadTimeSample();

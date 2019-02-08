@@ -51,18 +51,19 @@ void LAppMenuPlugin::shortcutActivated(){
 }
 
 void LAppMenuPlugin::LaunchItem(QAction* item){
-    qDebug() << "launch item" << item;
     QString appFile = item->whatsThis();
+    qDebug() << "launch item" << item << appFile;
     if (appFile.startsWith("internal::")) {
     appFile = appFile.section("::",1,50); //cut off the "internal" flag
     if (appFile=="logout"){ LSession::handle()->systemWindow(); }
     } else if(!appFile.isEmpty()) {
-        if (appFile.contains(QString("\""))) { appFile.replace(QString("\""), QString()); }
+        /*if (appFile.contains(QString("\""))) { appFile.replace(QString("\""), QString()); }
         XDGDesktop desktop(appFile, this);
         if (desktop.isValid()) {
             qDebug() << "command" << desktop.getDesktopExec();
             QProcess::startDetached(desktop.getDesktopExec());
-        }
+        }*/
+        QProcess::startDetached(QString("qtfm-launcher %1").arg(appFile));
     }
 }
 

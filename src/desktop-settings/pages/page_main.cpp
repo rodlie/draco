@@ -15,13 +15,18 @@ extern XDGDesktopList* APPSLIST;
 //==========
 page_main::page_main(QWidget *parent) : PageWidget(parent), ui(new Ui::page_main()){
   ui->setupUi(this);
+
+
+  // temp icon theme
+  QIcon::setThemeName("Adwaita");
+
   findShort = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_F), this, SLOT(showFind()));
   ui->treeWidget->setMouseTracking(true);
   ui->treeWidget->setSortingEnabled(false); //the QTreeView sort flag always puts them in backwards (reverse-alphabetical)
   connect(ui->treeWidget, SIGNAL(itemActivated(QTreeWidgetItem*,int)), this, SLOT(itemTriggered(QTreeWidgetItem*, int)) );
   connect(ui->treeWidget, SIGNAL(itemPressed(QTreeWidgetItem*,int)), this, SLOT(itemTriggered(QTreeWidgetItem*, int)) );
 
-  connect(ui->lineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchChanged(QString)) );
+  //connect(ui->lineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchChanged(QString)) );
   connect(APPSLIST, SIGNAL(appsUpdated()), this, SLOT(LoadSettings()) );
 }
 
@@ -120,7 +125,7 @@ void page_main::UpdateItems(QString search){
   if(session->childCount()>0){ ui->treeWidget->addTopLevelItem(session); session->setExpanded(true); }
   if(user->childCount()>0){ ui->treeWidget->addTopLevelItem(user); user->setExpanded(true); }
   if(system->childCount()>0){ ui->treeWidget->addTopLevelItem(system); system->setExpanded(true); }
-  ui->treeWidget->sortItems(0, Qt::AscendingOrder);
+  //ui->treeWidget->sortItems(0, Qt::AscendingOrder);
   ui->treeWidget->resizeColumnToContents(0);
   ui->treeWidget->resizeColumnToContents(1);
 
@@ -146,10 +151,10 @@ void page_main::SaveSettings(){
 }
 
 void page_main::clearlineEdit(){
-  ui->lineEdit->clear();
+  /*ui->lineEdit->clear();
   ui->treeWidget->sortItems(0, Qt::AscendingOrder);
   ui->treeWidget->resizeColumnToContents(0);
-  ui->treeWidget->resizeColumnToContents(1);
+  ui->treeWidget->resizeColumnToContents(1);*/
 }
 
 
@@ -176,8 +181,8 @@ void page_main::LoadSettings(int){
     }
   }
   INFO = sorted; //replace the internal list with the sorted version
-  UpdateItems(ui->lineEdit->text());
-  ui->lineEdit->setFocus();
+  UpdateItems(/*ui->lineEdit->text()*/"");
+  //ui->lineEdit->setFocus();
 }
 
 void page_main::updateIcons(){
@@ -188,8 +193,8 @@ void page_main::updateIcons(){
 //    PRIVATE SLOTS
 //=================
 void page_main::showFind(){
-  ui->lineEdit->setFocus();
-  ui->treeWidget->setCurrentItem(0);
+  /*ui->lineEdit->setFocus();
+  ui->treeWidget->setCurrentItem(0);*/
 }
 
 void page_main::itemTriggered(QTreeWidgetItem *it, int col){
@@ -198,7 +203,7 @@ void page_main::itemTriggered(QTreeWidgetItem *it, int col){
     it->setSelected(false);
   }else if(!it->whatsThis(col).isEmpty()){
     QString id = it->whatsThis(col);
-    if(id.endsWith(".desktop")){ QProcess::startDetached("lumina-open \""+id+"\""); } //external setting utility
+    if(id.endsWith(".desktop")){ QProcess::startDetached("qtfm-launcher \""+id+"\""); } //external setting utility
     else{ emit ChangePage(it->whatsThis(col)); } //internal page
   }else{
    it->setSelected(false);
