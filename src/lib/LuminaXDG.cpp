@@ -614,7 +614,7 @@ void XDGDesktopList::populateMenu(QMenu *topmenu, bool byCategory){
       if(cats[i]=="All"){continue; } //skip this listing for the menu
       else if(cats[i] == "Multimedia"){ name = tr("Multimedia"); icon = "applications-multimedia"; }
       else if(cats[i] == "Development"){ name = tr("Development"); icon = "applications-development"; }
-      else if(cats[i] == "Education"){ name = tr("Education"); icon = "applications-education"; }
+      else if(cats[i] == "Education"){ name = tr("Education"); icon = "applications-science"; }
       else if(cats[i] == "Game"){ name = tr("Games"); icon = "applications-games"; }
       else if(cats[i] == "Graphics"){ name = tr("Graphics"); icon = "applications-graphics"; }
       else if(cats[i] == "Network"){ name = tr("Network"); icon = "applications-internet"; }
@@ -624,7 +624,7 @@ void XDGDesktopList::populateMenu(QMenu *topmenu, bool byCategory){
       else if(cats[i] == "System"){ name = tr("System"); icon = "applications-system"; }
       else if(cats[i] == "Utility"){ name = tr("Utility"); icon = "applications-utilities"; }
       else if(cats[i] == "Wine"){ name = tr("Wine"); icon = "wine"; }
-      else{ name = tr("Unsorted"); icon = "applications-other"; }
+      else{ name = tr("Other"); icon = "applications-other"; }
 
       QMenu *menu = new QMenu(name, topmenu);
       menu->setIcon(LXDG::findIcon(icon,""));
@@ -806,7 +806,7 @@ QHash<QString,QList<XDGDesktop*> > LXDG::sortDesktopCats(QList<XDGDesktop*> apps
   if(!sys.isEmpty()){ out.insert("System", LXDG::sortDesktopNames(sys)); }
   if(!utility.isEmpty()){ out.insert("Utility", LXDG::sortDesktopNames(utility)); }
   if(!wine.isEmpty()){ out.insert("Wine", LXDG::sortDesktopNames(wine)); }
-  if(!other.isEmpty()){ out.insert("Unsorted", LXDG::sortDesktopNames(other)); }
+  if(!other.isEmpty()){ out.insert("Other", LXDG::sortDesktopNames(other)); }
   //return the resulting hash
   return out;
 }

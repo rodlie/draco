@@ -297,6 +297,15 @@ protected:
 		if(info.exists() && !QFile::exists(QDir::homePath()+"/Desktop/"+info.fileName())){
 		  //Make a link to the file here
 		  QFile::link(info.absoluteFilePath(), QDir::homePath()+"/Desktop/"+info.fileName());
+          /*if (info.isFile()) {
+              if (!QFile::copy(info.absoluteFilePath(),
+                               QDir::homePath()+"/Desktop/"+info.fileName()))
+              {
+                  qWarning() << "Failed to copy file" << info.path();
+              }
+          } else if (info.isDir()) {
+
+          }*/
 		}else{
 		  qWarning() << "Invalid desktop file drop (ignored):" << urls[i].toString();
 		}

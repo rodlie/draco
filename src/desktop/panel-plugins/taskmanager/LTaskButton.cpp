@@ -21,6 +21,7 @@ LTaskButton::LTaskButton(QWidget *parent, bool smallDisplay) : LTBWidget(parent)
   this->setFocusPolicy(Qt::NoFocus);
   this->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   winMenu->setContextMenuPolicy(Qt::CustomContextMenu);
+  showText = true;
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openActionMenu()) );
   connect(this, SIGNAL(clicked()), this, SLOT(buttonClicked()) );
   connect(winMenu, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openActionMenu()) );

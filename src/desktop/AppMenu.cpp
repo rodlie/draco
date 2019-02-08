@@ -93,7 +93,7 @@ void AppMenu::updateAppList(){
       if(cats[i]=="All"){continue; } //skip this listing for the menu
       else if(cats[i] == "Multimedia"){ name = tr("Multimedia"); icon = "applications-multimedia"; }
       else if(cats[i] == "Development"){ name = tr("Development"); icon = "applications-development"; }
-      else if(cats[i] == "Education"){ name = tr("Education"); icon = "applications-education"; }
+      else if(cats[i] == "Education"){ name = tr("Education"); icon = "applications-science"; }
       else if(cats[i] == "Game"){ name = tr("Games"); icon = "applications-games"; }
       else if(cats[i] == "Graphics"){ name = tr("Graphics"); icon = "applications-graphics"; }
       else if(cats[i] == "Network"){ name = tr("Network"); icon = "applications-internet"; }
@@ -103,7 +103,7 @@ void AppMenu::updateAppList(){
       else if(cats[i] == "System"){ name = tr("System"); icon = "applications-system"; }
       else if(cats[i] == "Utility"){ name = tr("Utility"); icon = "applications-utilities"; }
       else if(cats[i] == "Wine"){ name = tr("Wine"); icon = "wine"; }
-      else{ name = tr("Unsorted"); icon = "applications-other"; }
+      else{ name = tr("Other"); icon = "applications-other"; }
 
       QMenu *menu = new QMenu(name, this);
       menu->setIcon( ICONS->loadIcon(icon) );

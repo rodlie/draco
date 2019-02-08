@@ -51,13 +51,19 @@ void LAppMenuPlugin::shortcutActivated(){
 }
 
 void LAppMenuPlugin::LaunchItem(QAction* item){
-  QString appFile = item->whatsThis();
-  if(appFile.startsWith("internal::")){
+    qDebug() << "launch item" << item;
+    QString appFile = item->whatsThis();
+    if (appFile.startsWith("internal::")) {
     appFile = appFile.section("::",1,50); //cut off the "internal" flag
-    if(appFile=="logout"){ LSession::handle()->systemWindow(); }
-  }else if(!appFile.isEmpty()){
-    LSession::LaunchApplication("lumina-open "+appFile);
-  }	
+    if (appFile=="logout"){ LSession::handle()->systemWindow(); }
+    } else if(!appFile.isEmpty()) {
+        if (appFile.contains(QString("\""))) { appFile.replace(QString("\""), QString()); }
+        XDGDesktop desktop(appFile, this);
+        if (desktop.isValid()) {
+            qDebug() << "command" << desktop.getDesktopExec();
+            QProcess::startDetached(desktop.getDesktopExec());
+        }
+    }
 }
 
 void LAppMenuPlugin::UpdateMenu(){
@@ -89,7 +95,7 @@ void LAppMenuPlugin::UpdateMenu(){
       if(cats[i]=="All"){continue; } //skip this listing for the menu
       else if(cats[i] == "Multimedia"){ name = tr("Multimedia"); icon = "applications-multimedia"; }
       else if(cats[i] == "Development"){ name = tr("Development"); icon = "applications-development"; }
-      else if(cats[i] == "Education"){ name = tr("Education"); icon = "applications-education"; }
+      else if(cats[i] == "Education"){ name = tr("Education"); icon = "applications-science"; }
       else if(cats[i] == "Game"){ name = tr("Games"); icon = "applications-games"; }
       else if(cats[i] == "Graphics"){ name = tr("Graphics"); icon = "applications-graphics"; }
       else if(cats[i] == "Network"){ name = tr("Network"); icon = "applications-internet"; }
@@ -99,7 +105,7 @@ void LAppMenuPlugin::UpdateMenu(){
       else if(cats[i] == "System"){ name = tr("System"); icon = "applications-system"; }
       else if(cats[i] == "Utility"){ name = tr("Utility"); icon = "applications-utilities"; }
       else if(cats[i] == "Wine"){ name = tr("Wine"); icon = "wine"; }
-      else{ name = tr("Unsorted"); icon = "applications-other"; }
+      else{ name = tr("Other"); icon = "applications-other"; }
 
       QMenu *menu = new QMenu(name, this);
       menu->setIcon(LXDG::findIcon(icon,""));
