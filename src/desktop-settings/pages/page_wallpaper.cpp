@@ -12,7 +12,7 @@
 //==========
 page_wallpaper::page_wallpaper(QWidget *parent) : PageWidget(parent), ui(new Ui::page_wallpaper()){
   ui->setupUi(this);
-  DEFAULTBG = LOS::LuminaShare()+"/desktop-background.jpg";
+  //DEFAULTBG = LOS::LuminaShare()+"/desktop-background.jpg";
   updateIcons();
   connect(ui->combo_desk_bg, SIGNAL(currentIndexChanged(int)), this, SLOT(deskbgchanged()) );
   connect(ui->radio_desk_multi, SIGNAL(toggled(bool)), this, SLOT(desktimechanged()) );
@@ -212,7 +212,7 @@ void page_wallpaper::deskbgremoved(){
 
 void page_wallpaper::deskbgadded(){
   //Prompt the user to find an image file to use for a background
-  QString dir = LOS::LuminaShare().section("/lumina-desktop",0,0)+"/wallpapers";
+  QString dir;// = LOS::LuminaShare().section("/lumina-desktop",0,0)+"/wallpapers";
   qDebug() << "Looking for wallpaper dir:" << dir;
   if( !QFile::exists(dir) ){ dir = QDir::homePath(); }
   QStringList imgs = LUtils::imageExtensions();
@@ -245,7 +245,7 @@ void page_wallpaper::deskbgcoloradded(){
 
 void page_wallpaper::deskbgdiradded(){
   //Add the files from a single directory
- QString dir = LOS::LuminaShare().section("/lumina-desktop",0,0)+"/wallpapers";
+ QString dir;// = LOS::LuminaShare().section("/lumina-desktop",0,0)+"/wallpapers";
   qDebug() << "Looking for wallpaper dir:" << dir;
   if( !QFile::exists(dir) ){ dir = QDir::homePath(); }
   dir = QFileDialog::getExistingDirectory(this, tr("Find Background Image Directory"), dir, QFileDialog::ReadOnly);
@@ -263,7 +263,7 @@ void page_wallpaper::deskbgdiradded(){
 
 void page_wallpaper::deskbgdirradded(){
   //Recursively add files from a directory
- QString dir = LOS::LuminaShare().section("/lumina-desktop",0,0)+"/wallpapers";
+ QString dir;// = LOS::LuminaShare().section("/lumina-desktop",0,0)+"/wallpapers";
   qDebug() << "Looking for wallpaper dir:" << dir;
   if( !QFile::exists(dir) ){ dir = QDir::homePath(); }
   dir = QFileDialog::getExistingDirectory(this, tr("Find Background Image Directory"), dir, QFileDialog::ReadOnly);

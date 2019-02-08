@@ -9,7 +9,7 @@
 
 #include "GetPluginDialog.h"
 #include "AppDialog.h"
-#include "ScriptDialog.h"
+//#include "ScriptDialog.h"
 
 PanelWidget::PanelWidget(QWidget *parent, QWidget *Main, LPlugins *Pinfo) : QWidget(parent), ui(new Ui::PanelWidget){
   ui->setupUi(this);
@@ -202,7 +202,7 @@ void PanelWidget::on_tool_addplugin_clicked(){
     it = new QListWidgetItem( LXDG::findIcon(desk.icon,""), desk.name);
       it->setWhatsThis(pan);
 
-  }else if(pan=="jsonmenu"){
+  }/*else if(pan=="jsonmenu"){
     //Need to prompt for the script file, name, and icon to use
     //new ID format: "jsonmenu"::::<exec to run>::::<name>::::<icon>
     ScriptDialog SD(this);
@@ -212,7 +212,7 @@ void PanelWidget::on_tool_addplugin_clicked(){
     it = new QListWidgetItem( LXDG::findIcon(SD.icon(),"text-x-script"), SD.name()+" ("+info.ID+")" );
     it->setWhatsThis(info.ID+"::::"+SD.command()+"::::"+SD.name()+"::::"+SD.icon());
     it->setToolTip( info.description );
-  }else{
+  }*/else{
     if(pan.isEmpty()){ return; } //nothing selected
     //Add the new plugin to the list
     LPI info = PINFO->panelPluginInfo(pan);

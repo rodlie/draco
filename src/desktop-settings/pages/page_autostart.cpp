@@ -128,7 +128,7 @@ void page_autostart::addsessionstartapp(){
 }
 
 void page_autostart::addsessionstartbin(){
-  QString chkpath = LOS::AppPrefix() + "bin";
+  QString chkpath;// = LOS::AppPrefix() + "bin";
   if(!QFile::exists(chkpath)){ chkpath = QDir::homePath(); }
   QString bin = QFileDialog::getOpenFileName(this, tr("Select Binary"), chkpath, tr("Application Binaries (*)") );
   if( bin.isEmpty() || !QFile::exists(bin) ){ return; } //cancelled

@@ -268,7 +268,7 @@ void page_defaultapps::setdefaultbinary(){
   QFileDialog dlg(this);
     //dlg.setFilter(QDir::Executable | QDir::Files); //Does not work! Filters executable files as well as breaks browsing capabilities
     dlg.setFileMode(QFileDialog::ExistingFile);
-    dlg.setDirectory( LOS::AppPrefix()+"bin" );
+    //dlg.setDirectory( LOS::AppPrefix()+"bin" );
     dlg.setWindowTitle(tr("Select Binary"));
   if( !dlg.exec() || dlg.selectedFiles().isEmpty() ){
     return; //cancelled
