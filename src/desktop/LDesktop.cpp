@@ -540,14 +540,17 @@ void LDesktop::UpdateDesktopPluginArea(){
   //qDebug() << "Screen Geom:" <<  LSession::desktop()->screenGeometry(Screen());
 }
 
-void LDesktop::UpdateBackground(){
+void LDesktop::UpdateBackground()
+{
   //Get the current Background
   if(bgupdating || bgDesktop==0){ return; } //prevent multiple calls to this at the same time
   bgupdating = true;
-  if(DEBUG){ qDebug() << " - Update Desktop Background for screen:" << Screen(); }
+
+  qDebug() << " - Update Desktop Background for screen:" << Screen();
   //Get the list of background(s) to show
   QStringList bgL = settings->value(DPREFIX+"background/filelist-workspace-"+QString::number( LSession::handle()->XCB->CurrentWorkspace()), QStringList()).toStringList();
-  //if(bgL.isEmpty()){ bgL = settings->value(DPREFIX+"background/filelist", QStringList()).toStringList(); }
+  if(bgL.isEmpty()){ bgL = settings->value(DPREFIX+"background/filelist", QStringList()).toStringList(); }
+  qDebug() << "BG?" << bgL;
   //if(bgL.isEmpty()){ bgL << LOS::LuminaShare()+"../wallpapers/lumina-nature"; } //Use this entire directory by default if nothing specified
   //qDebug() << " - List:" << bgL << CBG;
     //Remove any invalid files
