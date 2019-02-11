@@ -92,9 +92,9 @@ QString LIconCache::findFile(QString icon){
   QIcon ico;
   QStringList srch; srch << "icontheme" << "default" << "fallback";
   for(int i=0; i<srch.length() && ico.isNull(); i++){
-    if(QFile::exists(srch[i]+":"+icon+".svg") && !icon.contains("libreoffice") ){
+    /*if(QFile::exists(srch[i]+":"+icon+".svg") && !icon.contains("libreoffice") ){
       return QFileInfo(srch[i]+":"+icon+".svg").absoluteFilePath();
-    }else if(QFile::exists(srch[i]+":"+icon+".png")){
+    }else*/ if(QFile::exists(srch[i]+":"+icon+".png")){
       return QFileInfo(srch[i]+":"+icon+".png").absoluteFilePath();
     }
   }
@@ -265,7 +265,7 @@ QStringList LIconCache::getChildIconDirs(QString path){
     for(int i=0; i<dirs.length(); i++){ dirs[i] = dirs[i].section("::::",1,50); } //chop the sorter off the front again
     //qDebug() << "Sorted:" << dirs;
   }
-  QStringList img = D.entryList(QStringList() << "*.png" << "*.svg", QDir::Files | QDir::NoDotAndDotDot, QDir::NoSort);
+  QStringList img = D.entryList(QStringList() << "*.png", QDir::Files | QDir::NoDotAndDotDot, QDir::NoSort);
   if(img.length() > 0){ out << D.absolutePath(); }
   for(int i=0; i<dirs.length(); i++){
     img.clear();
@@ -293,7 +293,7 @@ QStringList LIconCache::getIconThemeDepChain(QString theme, QStringList paths){
 }
 
 void LIconCache::startReadFile(QString id, QString path){
-  if(path.endsWith(".svg")){
+  /*if(path.endsWith(".svg")){
     //Special handling - need to read QIcon directly to have the SVG icon scale up appropriately
     icon_data idat = HASH[id];
     idat.lastread = QDateTime::currentDateTime();
@@ -309,9 +309,9 @@ void LIconCache::startReadFile(QString id, QString path){
     //Now update the hash and let the world know it is available now
     HASH.insert(id, idat);
     this->emit IconAvailable(id);
-  }else{
+  }else{*/
     QtConcurrent::run(this, &LIconCache::ReadFile, this, id, path);
-  }
+  //}
 }
 
 void LIconCache::ReadFile(LIconCache *obj, QString id, QString path){

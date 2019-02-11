@@ -10,7 +10,9 @@
 #include <QObject>
 #include <QTimer>
 //#include <QMediaPlayer>
-#include <QSvgRenderer>
+//#include <QSvgRenderer>
+
+#include "common.h"
 
 static QStringList mimeglobs;
 static qint64 mimechecktime;
@@ -855,54 +857,36 @@ void LXDG::setEnvironmentVars(){
   //Don't set "XDG_RUNTIME_DIR" yet - need to look into the specs
 }
 
-QIcon LXDG::findIcon(QString iconName, QString fallback){
-  //With the addition of the Lumina theme engine (8/3/17), switch back to using the Qt icon from theme method for apps
-  QIcon tmp;
-  if(!iconName.contains("libreoffice") || !QIcon::themeName().startsWith("material-design") ){ //libreoffice is stupid - their svg icons are un-renderable with Qt
-    tmp = QIcon::fromTheme(iconName);
-    /*if(iconName.contains("start-here")){
-      qDebug() << "[ICON]" << iconName << "found:" << !tmp.isNull() << tmp.name();
-    }*/
-    //if(tmp.isNull()){ tmp = QIcon::fromTheme(fallback); }
-  }
-  if(!tmp.isNull() && tmp.name()==iconName){ return tmp; } //found this in the theme
-  else if(iconName=="start-here-lumina"){
-    //Additional fallback options for the OS-branded icon
-    QString osname;// = LOS::OSName().simplified().toLower();
-    QStringList possible; possible << "distributor-logo-"+osname << osname;
-    QStringList words;
-    if(osname.contains(" ")){ words = osname.split(" "); }
-    else if(osname.contains("-")){ words = osname.split("-"); }
-    for(int i=0; i<words.length(); i++){ possible << "distributor-logo-"+words[i] << words[i]; }
-    //qDebug() << "Looking for possible OS icons:" << possible;
-    for(int i=0; i<possible.length(); i++){
-      if(QIcon::hasThemeIcon(possible[i])){ return QIcon::fromTheme(possible[i]); }
+QIcon LXDG::findIcon(QString iconName, QString fallback)
+{
+    qDebug() << "FIND ICON" << iconName << fallback;
+    if (iconName.isEmpty()){ return QIcon(); }
+
+    QIcon tmp = QIcon::fromTheme(iconName);
+    if(!tmp.isNull() &&
+       tmp.name()==iconName){ return tmp; }
+    if (!fallback.isEmpty() &&
+       QIcon::hasThemeIcon(fallback))
+    {
+        tmp = QIcon::fromTheme(fallback);
+        return tmp;
     }
-  }
-  if(!fallback.isEmpty() && QIcon::hasThemeIcon(fallback)){ tmp = QIcon::fromTheme(fallback); return tmp; } //found this in the theme
+
+    if (QFile::exists(iconName) &&
+        iconName.startsWith(QString("/"))) { return QIcon(iconName); }
+    else if (iconName.startsWith("/")) { iconName.section("/",-1); }
 
 
-  //NOTE: This was re-written on 11/10/15 to avoid using the QIcon::fromTheme() framework
-  //   -- Too many issues with SVG files and/or search paths with the built-in system
 
-  //Check if the icon is an absolute path and exists
-  bool DEBUG =false;
-  if(DEBUG){ qDebug() << "[LXDG] Find icon for:" << iconName; }
-  if(QFile::exists(iconName) && iconName.startsWith("/")){ return QIcon(iconName); }
-  else if(iconName.startsWith("/")){ iconName.section("/",-1); } //Invalid absolute path, just look for the icon
-  //Check if the icon is actually given
-  if(iconName.isEmpty()){
-    if(fallback.isEmpty()){  return QIcon(); }
-    else{ return LXDG::findIcon(fallback, ""); }
-  }
   //Now try to find the icon from the theme
-  if(DEBUG){ qDebug() << "[LXDG] Start search for icon"; }
+  qDebug() << "[LXDG] Start search for icon" << iconName;
   //Get the currently-set theme
   QString cTheme = QIcon::themeName();
   if(cTheme.isEmpty()){
-    QIcon::setThemeName("material-design-light");
-    cTheme = "material-design-light";
+    QIcon::setThemeName("Adwaita");
+    cTheme = "Adwaita";
   }
+
   //Make sure the current search paths correspond to this theme
   if( QDir::searchPaths("icontheme").filter("/"+cTheme+"/").isEmpty() ){
     //Need to reset search paths: setup the "icontheme" "material-design-light" and "fallback" sets
@@ -914,6 +898,7 @@ QIcon LXDG::findIcon(QString iconName, QString fallback){
         for(int i=0; i<xdd.length(); i++){
           if(QFile::exists(xdd[i]+"/icons")){ paths << xdd[i]+"/icons/"; }
         }
+        qDebug() << "ICON PATHS" << paths;
     //Now load all the dirs into the search paths
     QStringList theme, oxy, fall;
     QStringList themedeps = getIconThemeDepChain(cTheme, paths);
@@ -935,30 +920,12 @@ QIcon LXDG::findIcon(QString iconName, QString fallback){
   QIcon ico;
   QStringList srch; srch << "icontheme" << "default" << "fallback";
   for(int i=0; i<srch.length() && ico.isNull(); i++){
-    //Look for a svg first
-    if(QFile::exists(srch[i]+":"+iconName+".svg") && !iconName.contains("libreoffice") ){
-        //Be careful about how an SVG is loaded - needs to render the image onto a paint device
-        /*QSvgRenderer svg;
-        if( svg.load(srch[i]+":"+iconName+".svg") ){
-	  //Could be loaded - now check that it is version 1.1+ (Qt has issues with 1.0? (LibreOffice Icons) )
-	  float version = 1.1; //only downgrade files that explicitly set the version as older
-	  QString svginfo = LUtils::readFile(srch[i]+":"+iconName+".svg").join("\n").section("<svg",1,1).section(">",0,0);
-	  svginfo.replace("\t"," "); svginfo.replace("\n"," ");
-	  if(svginfo.contains(" version=")){ version = svginfo.section(" version=\"",1,1).section("\"",0,0).toFloat(); }
-	  if(version>=1.1){*/
-            ico.addFile(srch[i]+":"+iconName+".svg"); //could be loaded/parsed successfully
-	  /*}else{
-	    //qDebug() << "Old SVG Version file:" << iconName+".svg  Theme:" << srch[i];
-	    //qDebug() << "SVGInfo:" << svginfo;
-	  }
-        }else{
-          qDebug() << "Found bad SVG file:" << iconName+".svg  Theme:" << srch[i];
-        }*/
-    }
+
     if(QFile::exists(srch[i]+":"+iconName+".png")){
       //simple PNG image - load directly into the QIcon structure
       ico.addFile(srch[i]+":"+iconName+".png");
     }
+
 
   }
   //If still no icon found, look for any image format in the "pixmaps" directory
@@ -967,11 +934,15 @@ QIcon LXDG::findIcon(QString iconName, QString fallback){
       ico.addFile(LOS::AppPrefix()+"share/pixmaps/"+iconName);
     }else{*/
       //Need to scan for any close match in the directory
-      QDir pix;//(LOS::AppPrefix()+"share/pixmaps");
+
+      QStringList pixmaps = Draco::pixmapLocations(qApp->applicationFilePath());
+      for (int x = 0;x<pixmaps.size();++x) {
+
+      QDir pix(pixmaps.at(x));//(LOS::AppPrefix()+"share/pixmaps");
       QStringList formats = LUtils::imageExtensions();
       QStringList found = pix.entryList(QStringList() << iconName, QDir::Files, QDir::Unsorted);
       if(found.isEmpty()){ found = pix.entryList(QStringList() << iconName+"*", QDir::Files, QDir::Unsorted); }
-      //qDebug() << "Found pixmaps:" << found << formats;
+      qDebug() << "Found pixmaps:" << found << formats;
       //Use the first one found that is a valid format
       for(int i=0; i<found.length(); i++){
         if( formats.contains(found[i].section(".",-1).toLower()) ){
@@ -981,6 +952,8 @@ QIcon LXDG::findIcon(QString iconName, QString fallback){
       //}
 
     }
+
+      }
   }
   //Use the fallback icon if necessary
   if(ico.isNull() ){
@@ -994,6 +967,7 @@ QIcon LXDG::findIcon(QString iconName, QString fallback){
   }
   if(ico.isNull()){
     qDebug() << "Could not find icon:" << iconName << fallback;
+    ico = QIcon::fromTheme("application-x-executable");
   }
   //Return the icon
   return ico;
@@ -1016,7 +990,7 @@ QStringList LXDG::getChildIconDirs(QString parent){
     for(int i=0; i<dirs.length(); i++){ dirs[i] = dirs[i].section("::::",1,50); } //chop the sorter off the front again
     //qDebug() << "Sorted:" << dirs;
   }
-  QStringList img = D.entryList(QStringList() << "*.png" << "*.svg", QDir::Files | QDir::NoDotAndDotDot, QDir::NoSort);
+  QStringList img = D.entryList(QStringList() << "*.png", QDir::Files | QDir::NoDotAndDotDot, QDir::NoSort);
   if(img.length() > 0){ out << D.absolutePath(); }
   for(int i=0; i<dirs.length(); i++){
     img.clear();
