@@ -24,9 +24,15 @@ A simple desktop environment based on Lumina. **This is work-in-progress, not fo
     * xcb-util
     * xcb-atom
   * xdamage
-  * xscreensaver
-  * powerkit 1.x
-  * qtfm 6.2.x
+  * powerkit
+    * xscreensaver
+  * qtfm
+    * qtfm-launcher is needed
+    * qtfm-tray is needed
   * hicolor-icon-theme
   * adwaita-icon-theme (or compatible)
   * xrandr
+  * openbox
+    * obconf recommended
+    * obkey recommended
+  
