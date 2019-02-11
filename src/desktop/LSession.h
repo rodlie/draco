@@ -144,7 +144,7 @@ private:
 
 	void CleanupSession();
 
-	int VersionStringToNumber(QString version);
+
 
     bool ignoreClipboard; // flag for (handle/store)Clipboard
 

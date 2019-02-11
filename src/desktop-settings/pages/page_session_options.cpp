@@ -212,13 +212,13 @@ void page_session_options::sessionChangeUserIcon(){
 
 void page_session_options::sessionResetSys(){
   if( !verifySettingsReset() ){ return; } //cancelled
-  LDesktopUtils::LoadSystemDefaults();
+  //LDesktopUtils::LoadSystemDefaults();
   QTimer::singleShot(500,this, SLOT(LoadSettings()) );
 }
 
 void page_session_options::sessionResetLumina(){
   if( !verifySettingsReset() ){ return; } //cancelled
-  LDesktopUtils::LoadSystemDefaults(true); //skip OS customizations
+  //LDesktopUtils::LoadSystemDefaults(true); //skip OS customizations
   QTimer::singleShot(500,this, SLOT(LoadSettings()) );
 }
 

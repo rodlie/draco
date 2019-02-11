@@ -37,7 +37,7 @@ LSession::LSession(int &argc, char ** argv) : LSingleApplication(argc, argv, QSt
      qDebug() << "IS PRIMARY";
   connect(this, SIGNAL(InputsAvailable(QStringList)), this, SLOT(NewCommunication(QStringList)) );
   this->setApplicationName("Lumina Desktop Environment");
-  this->setApplicationVersion( LDesktopUtils::LuminaDesktopVersion() );
+  //this->setApplicationVersion( LDesktopUtils::LuminaDesktopVersion() );
   this->setOrganizationName("LuminaDesktopEnvironment");
   this->setQuitOnLastWindowClosed(false); //since the LDesktop's are not necessarily "window"s
   //Enabled a few of the simple effects by default
@@ -257,19 +257,6 @@ void LSession::CleanupSession(){
   if(QFile::exists(Draco::sessionFile())){ QFile::remove(Draco::sessionFile()); }
 }
 
-int LSession::VersionStringToNumber(QString version){
-  version = version.section("-",0,0); //trim any extra labels off the end
-  int maj, mid, min; //major/middle/minor version numbers (<Major>.<Middle>.<Minor>)
-  maj = mid = min = 0;
-  bool ok = true;
-  maj = version.section(".",0,0).toInt(&ok);
-  if(ok){ mid = version.section(".",1,1).toInt(&ok); }else{ maj = 0; }
-  if(ok){ min = version.section(".",2,2).toInt(&ok); }else{ mid = 0; }
-  if(!ok){ min = 0; }
-  //Now assemble the number
-  //NOTE: This format allows numbers to be anywhere from 0->999 without conflict
-  return (maj*1000000 + mid*1000 + min);
-}
 
 void LSession::NewCommunication(QStringList list){
   if(DEBUG){ qDebug() << "New Communications:" << list; }
@@ -402,25 +389,7 @@ void LSession::checkWindowGeoms(){
 
 // REMOVE
 bool LSession::checkUserFiles(){
-  //internal version conversion examples:
-  //  [1.0.0 -> 1000000], [1.2.3 -> 1002003], [0.6.1 -> 6001]
-  qDebug() << "Check User Files";
-    //char tmp[] = "junk\0";
-    //int tmpN = 0;
-  //QApplication A(tmpN, (char **)&tmp);
-  QSettings sset(QString("%1-desktop").arg(DESKTOP_APP), "sessionsettings");
-  QString OVS = sset.value("DesktopVersion","0").toString(); //Old Version String
-  qDebug() << " - Old Version:" << OVS;
-  qDebug() << " - Current Version:" << LDesktopUtils::LuminaDesktopVersion();
-  bool changed = LDesktopUtils::checkUserFiles(OVS, LDesktopUtils::LuminaDesktopVersion());
-  qDebug() << " - Made Changes:" << changed;
-  if(changed){
-    //Save the current version of the session to the settings file (for next time)
-    sset.setValue("DesktopVersion", LDesktopUtils::LuminaDesktopVersion());
-  }
-  qDebug() << "Finished with user files check";
-  //delete A;
-  return changed;
+  return false;
 }
 
 void LSession::setupFallbackDesktop(QSettings *dset)
