@@ -13,11 +13,11 @@ LClock::LClock(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, 
   button = new QToolButton(this); //RotateToolButton(this);
     button->setAutoRaise(true);
     button->setToolButtonStyle(Qt::ToolButtonTextOnly);
-    button->setStyleSheet("font-weight: bold;");
+    //button->setStyleSheet("font-weight: bold;");
     button->setPopupMode(QToolButton::DelayedPopup); //make sure it runs the update routine first
     button->setMenu(new QMenu());
-	//button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-	//this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+//    button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+  //  this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
     connect(button, SIGNAL(clicked()), this, SLOT(openMenu()));
     connect(button->menu(), SIGNAL(aboutToHide()), this, SIGNAL(MenuClosed()));
   calendar = new QCalendarWidget(this);
@@ -30,7 +30,10 @@ LClock::LClock(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, 
   button->menu()->addAction(calAct);
   button->menu()->addMenu(TZMenu);
 
-  this->layout()->setContentsMargins(0,0,0,0); //reserve some space on left/right
+  //button->setStyleSheet("background-color:red;");
+
+  //button->setContentsMargins(10,0,10,0);
+  //this->layout()->setContentsMargins(0,0,0,0); //reserve some space on left/right
   this->layout()->addWidget(button);
 
   //Setup the timer
@@ -93,7 +96,7 @@ void LClock::updateTime(bool adjustformat){
       font.setBold(true);
     button->setFont(font);
    //Check the font/spacing for the display and adjust as necessary
-    QStringList lines = label.split("\n");
+   /* QStringList lines = label.split("\n");
     QFontMetrics metrics(font);
     if(this->layout()->direction()==QBoxLayout::LeftToRight){
       //horizontal layout
@@ -110,7 +113,7 @@ void LClock::updateTime(bool adjustformat){
       //vertical layout
       this->setMinimumHeight(metrics.lineSpacing() * lines.length());
       this->setMaximumHeight( (lines.length()+4)*metrics.height() );
-    }
+    }*/
   }
   button->setText(label);
 }
