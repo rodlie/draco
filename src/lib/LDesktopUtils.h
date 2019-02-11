@@ -17,7 +17,7 @@
 //Other classes needed
 #include <LUtils.h>
 #include <LuminaXDG.h>
-#include <LuminaOS.h>
+//#include <LuminaOS.h>
 
 class LDesktopUtils{
 public:

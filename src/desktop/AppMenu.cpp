@@ -6,7 +6,7 @@
 //===========================================
 #include "AppMenu.h"
 #include "LSession.h"
-#include <LuminaOS.h>
+//#include <LuminaOS.h>
 #include <LIconCache.h>
 
 extern LIconCache *ICONS;

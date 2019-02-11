@@ -9,7 +9,7 @@
 #include <QClipboard>
 #include <QMimeData>
 
-#include <LuminaOS.h>
+//#include <LuminaOS.h>
 #include <LuminaX11.h>
 #include "LWinInfo.h"
 #include "JsonMenu.h"

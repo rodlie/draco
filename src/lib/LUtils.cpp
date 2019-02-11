@@ -6,7 +6,7 @@
 //===========================================
 #include "LUtils.h"
 
-#include "LuminaOS.h"
+//#include "LuminaOS.h"
 #include "LuminaXDG.h"
 
 #include <QApplication>

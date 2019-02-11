@@ -6,7 +6,7 @@
 //===========================================
 #include "XDGMime.h"
 #include <LUtils.h>
-#include <LuminaOS.h>
+//#include <LuminaOS.h>
 
 static QStringList mimeglobs;
 static qint64 mimechecktime;

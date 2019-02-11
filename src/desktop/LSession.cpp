@@ -5,7 +5,7 @@
 //  See the LICENSE file for full details
 //===========================================
 #include "LSession.h"
-#include <LuminaOS.h>
+//#include <LuminaOS.h>
 
 #include <QTime>
 #include <QScreen>

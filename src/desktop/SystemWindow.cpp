@@ -2,7 +2,7 @@
 #include "ui_SystemWindow.h"
 
 #include "LSession.h"
-#include <LuminaOS.h>
+//#include <LuminaOS.h>
 #include <QPoint>
 #include <QCursor>
 #include <QDebug>

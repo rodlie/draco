@@ -5,7 +5,7 @@
 //  See the LICENSE file for full details
 //===========================================
 #include "LuminaXDG.h"
-#include "LuminaOS.h"
+//#include "LuminaOS.h"
 #include "LUtils.h"
 #include <QObject>
 #include <QTimer>
