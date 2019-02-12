@@ -23,7 +23,7 @@
 #include <QUrl>
 #include <QClipboard>
 
-#include "Globals.h"
+//#include "Globals.h"
 #include "AppMenu.h"
 #include "SettingsMenu.h"
 #include "SystemWindow.h"

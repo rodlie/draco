@@ -20,6 +20,8 @@
 
 #include "common.h" // common stuff
 
+#include <LDesktopUtils.h>
+
 #ifndef DEBUG
 #define DEBUG 0
 #endif
@@ -81,7 +83,7 @@ LSession::LSession(int &argc, char ** argv) : LSingleApplication(argc, argv, QSt
   qRegisterMetaType<QClipboard::Mode>("QClipboard::Mode");
   connect(QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)), this, SLOT(handleClipboard(QClipboard::Mode)));
 
-  setupSession();
+  //setupSession();
  } //end check for primary process
 }
 

@@ -5,7 +5,7 @@
 //  See the LICENSE file for full details
 //===========================================
 #include "LHomeButton.h"
-#include "../../LSession.h"
+#include "LSession.h"
 
 #include <LuminaX11.h>
 

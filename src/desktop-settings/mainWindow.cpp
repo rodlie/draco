@@ -6,12 +6,17 @@
 //===========================================
 #include "mainWindow.h"
 #include "ui_mainWindow.h"
-#include "globals.h"
+//#include "globals.h"
+
+
 
 #include "pages/getPage.h"
 #include "pages/page_main.h"
 
 #include <QSettings>
+#include <QToolButton>
+#include <QMessageBox>
+#include <QScreen>
 
 //=============
 //      PUBLIC

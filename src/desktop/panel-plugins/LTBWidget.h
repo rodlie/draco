@@ -11,7 +11,7 @@
 #include <QEvent>
 #include <QWheelEvent>
 
-#include "Globals.h"
+//#include "Globals.h"
 #include <LuminaX11.h>
 
 class LTBWidget : public QToolButton{

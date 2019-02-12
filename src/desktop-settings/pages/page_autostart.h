@@ -6,7 +6,7 @@
 //===========================================
 #ifndef _LUMINA_CONFIG_PAGE_AUTOSTART_H
 #define _LUMINA_CONFIG_PAGE_AUTOSTART_H
-#include "../globals.h"
+
 #include "PageWidget.h"
 
 namespace Ui{

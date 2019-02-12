@@ -6,8 +6,11 @@
 //===========================================
 #include "page_autostart.h"
 #include "ui_page_autostart.h"
+#include <QFileDialog>
+#include <QMessageBox>
 
-#include "../AppDialog.h"
+#include "AppDialog.h"
+
 //==========
 //    PUBLIC
 //==========

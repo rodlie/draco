@@ -6,7 +6,10 @@
 //===========================================
 #ifndef _LUMINA_CONFIG_PAGE_WIDGET_UI_H
 #define _LUMINA_CONFIG_PAGE_WIDGET_UI_H
-#include "../globals.h"
+
+#include <QStringList>
+#include <QWidget>
+
 //===============================
 // NOTES FOR CREATING SUBPAGES
 //===============================

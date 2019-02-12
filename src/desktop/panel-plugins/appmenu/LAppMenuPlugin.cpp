@@ -5,7 +5,7 @@
 //  See the LICENSE file for full details
 //===========================================
 #include "LAppMenuPlugin.h"
-#include "../../LSession.h"
+#include "LSession.h"
 
 #include <LuminaXDG.h>
 

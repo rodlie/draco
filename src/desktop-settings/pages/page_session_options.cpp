@@ -7,6 +7,17 @@
 #include "page_session_options.h"
 #include "ui_page_session_options.h"
 
+#include <QSettings>
+#include <QMessageBox>
+#include <QFile>
+#include <QDir>
+#include <QDebug>
+#include "LuminaXDG.h"
+#include "LUtils.h"
+#include <QFileDialog>
+#include <QScreen>
+#include <QTimer>
+
 //==========
 //    PUBLIC
 //==========

@@ -7,7 +7,6 @@
 #ifndef _LUMINA_CONFIG_PAGE_WIDGET_FETCH_H
 #define _LUMINA_CONFIG_PAGE_WIDGET_FETCH_H
 
-#include "../globals.h"
 #include "PageWidget.h"
 
 class Pages{

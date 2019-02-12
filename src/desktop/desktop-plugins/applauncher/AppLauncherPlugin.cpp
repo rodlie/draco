@@ -1,5 +1,5 @@
 #include "AppLauncherPlugin.h"
-#include "../../LSession.h"
+#include "LSession.h"
 #include "OutlineToolButton.h"
 #include <QClipboard>
 

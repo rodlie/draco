@@ -7,7 +7,10 @@
 #ifndef _LUMINA_CONFIG_PANEL_WIDGET_H
 #define _LUMINA_CONFIG_PANEL_WIDGET_H
 
-#include "globals.h"
+//#include "globals.h"
+
+#include <QWidget>
+#include <QSettings>
 
 #include "LPlugins.h"
 

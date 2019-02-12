@@ -6,13 +6,13 @@
 //===========================================
 
 #include "LSession.h"
-#include "Globals.h"
+//#include "Globals.h"
 
 #include <LuminaXDG.h> //from libLuminaUtils
-#include <LuminaThemes.h>
+//#include <LuminaThemes.h>
 //#include <LuminaOS.h>
-#include <LUtils.h>
-#include <LDesktopUtils.h>
+//#include <LUtils.h>
+//#include <LDesktopUtils.h>
 
 int main(int argc, char ** argv)
 {
@@ -24,13 +24,9 @@ int main(int argc, char ** argv)
     //setenv("QT_QPA_PLATFORMTHEME", "lthemeengine", 1);
     unsetenv("QT_AUTO_SCREEN_SCALE_FACTOR"); //causes pixel-specific scaling issues with the desktop - turn this on after-the-fact for other apps
 
-
-
-
-
     //Startup the session
     LSession a(argc, argv);
-
     if(!a.isPrimaryProcess()){ return 0; }
+    a.setupSession();
     return a.exec();
 }

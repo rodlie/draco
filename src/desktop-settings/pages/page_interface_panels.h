@@ -6,10 +6,10 @@
 //===========================================
 #ifndef _LUMINA_CONFIG_PAGE_INTERFACE_PANELS_H
 #define _LUMINA_CONFIG_PAGE_INTERFACE_PANELS_H
-#include "../globals.h"
+//#include "../globals.h"
 #include "PageWidget.h"
-#include "../LPlugins.h"
-#include "../PanelWidget.h"
+#include "LPlugins.h"
+#include "PanelWidget.h"
 
 namespace Ui{
 	class page_interface_panels;

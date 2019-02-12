@@ -228,3 +228,5 @@ public:
 };
 
 #endif
+
+extern XDGDesktopList *APPSLIST;

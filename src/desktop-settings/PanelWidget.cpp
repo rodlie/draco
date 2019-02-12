@@ -10,6 +10,8 @@
 #include "GetPluginDialog.h"
 #include "AppDialog.h"
 //#include "ScriptDialog.h"
+#include <QScreen>
+#include <QColorDialog>
 
 PanelWidget::PanelWidget(QWidget *parent, QWidget *Main, LPlugins *Pinfo) : QWidget(parent), ui(new Ui::PanelWidget){
   ui->setupUi(this);

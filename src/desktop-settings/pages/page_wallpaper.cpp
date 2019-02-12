@@ -6,6 +6,13 @@
 //===========================================
 #include "page_wallpaper.h"
 #include "ui_page_wallpaper.h"
+#include <QSettings>
+#include <QScreen>
+#include <QDesktopWidget>
+#include <LuminaXDG.h>
+#include <QColorDialog>
+#include <LDesktopUtils.h>
+#include <QFileDialog>
 
 //==========
 //    PUBLIC

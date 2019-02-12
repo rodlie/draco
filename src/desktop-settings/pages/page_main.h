@@ -6,7 +6,9 @@
 //===========================================
 #ifndef _LUMINA_CONFIG_PAGE_MAIN_H
 #define _LUMINA_CONFIG_PAGE_MAIN_H
-#include "../globals.h"
+//#include "../globals.h"
+#include <QShortcut>
+#include <QTreeWidgetItem>
 #include "PageWidget.h"
 
 namespace Ui{

@@ -6,7 +6,7 @@
 //===========================================
 #include "LDPlugin.h"
 
-#include "../LSession.h"
+#include "LSession.h"
 #include <LuminaXDG.h>
 
 LDPlugin::LDPlugin(QWidget *parent, QString id) : QFrame(parent){

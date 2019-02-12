@@ -5,11 +5,12 @@
 //  See the LICENSE file for full details
 //===========================================
 #include "AppLaunchButton.h"
-#include "../../LSession.h"
+#include "LSession.h"
 
 #include <LuminaXDG.h>
 #include <LUtils.h>
 #include <QInputDialog>
+#include <LFileInfo.h>
 
 AppLaunchButtonPlugin::AppLaunchButtonPlugin(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, id, horizontal){
   button = new QToolButton(this);

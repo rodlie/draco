@@ -5,7 +5,7 @@
 //  See the LICENSE file for full details
 //===========================================
 #include "LTaskManagerPlugin.h"
-#include "../../LSession.h"
+#include "LSession.h"
 
 LTaskManagerPlugin::LTaskManagerPlugin(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, id, horizontal){
   timer = new QTimer(this);

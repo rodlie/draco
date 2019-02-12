@@ -9,8 +9,11 @@
 #ifndef _LUMINA_FILE_MANAGER_APP_SELECT_DIALOG_H
 #define _LUMINA_FILE_MANAGER_APP_SELECT_DIALOG_H
 
-#include "globals.h"
+//#include "globals.h"
 
+
+#include <LuminaX11.h>
+#include <LuminaXDG.h>
 #include "ui_AppDialog.h"
 
 namespace Ui{

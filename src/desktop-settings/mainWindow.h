@@ -6,9 +6,14 @@
 //===========================================
 #ifndef _LUMINA_CONFIG_MAIN_WINDOW_H
 #define _LUMINA_CONFIG_MAIN_WINDOW_H
-#include "globals.h"
+//#include "globals.h"
 //#include "pages/getPage.h"
 
+#include "LuminaXDG.h"
+
+#include <QMainWindow>
+#include <QShortcut>
+#include <QTimer>
 #include <QResizeEvent>
 #include <QMoveEvent>
 

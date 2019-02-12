@@ -8,6 +8,9 @@
 #include "ui_page_main.h"
 #include "getPage.h"
 
+#include <LuminaXDG.h>
+#include <QProcess>
+
 extern XDGDesktopList* APPSLIST;
 
 //==========
