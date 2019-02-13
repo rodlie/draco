@@ -1090,7 +1090,7 @@ while(mimes.isEmpty()){
   } //end of mimes while loop
   mimes.sort(); //this automatically puts them in reverse weight order (100 on down)
   QStringList matches;
-  //qDebug() << "Mimes:" << mimes;
+  qDebug() << "Mimes:" << mimes;
   for(int m=mimes.length()-1; m>=0; m--){
     QString mime = mimes[m].section(":",1,1,QString::SectionSkipEmpty);
     matches << mime;

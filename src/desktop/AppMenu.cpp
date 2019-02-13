@@ -74,10 +74,10 @@ void AppMenu::updateAppList(){
     //Add link to the file manager
     //this->addAction( LXDG::findIcon("user-home", ""), tr("Browse Files"), this, SLOT(launchFileManager()) );
     //--Look for the app store
-    XDGDesktop store(appstorelink);
+    /*XDGDesktop store(appstorelink);
     if(store.isValid()){
       this->addAction( LXDG::findIcon(store.icon, ""), tr("Manage Applications"), this, SLOT(launchStore()) );
-    }
+    }*/
     //--Look for the control panel
     XDGDesktop controlp(controlpanellink);
     if(controlp.isValid()){

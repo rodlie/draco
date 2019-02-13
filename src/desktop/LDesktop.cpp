@@ -223,6 +223,7 @@ void LDesktop::InitDesktop(){
   connect(winMenu, SIGNAL(triggered(QAction*)), this, SLOT(winClicked(QAction*)) );
   workspacelabel = new QLabel(0);
     workspacelabel->setAlignment(Qt::AlignCenter);
+    workspacelabel->setContentsMargins(3, 3, 3, 3);
   wkspaceact = new QWidgetAction(0);
     wkspaceact->setDefaultWidget(workspacelabel);
   bgtimer = new QTimer(this);
@@ -259,7 +260,7 @@ void LDesktop::InitDesktop(){
       connect(bgDesktop, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(ShowMenu()) );
 
   desktopFolderActionMenu = new QMenu(0);
-    desktopFolderActionMenu->setTitle(tr("Desktop Actions"));
+    desktopFolderActionMenu->setTitle(tr("Desktop"));
     desktopFolderActionMenu->setIcon(LXDG::findIcon("user-desktop",""));
     desktopFolderActionMenu->addAction(LXDG::findIcon("folder-new",""), tr("New Folder"), this, SLOT(NewDesktopFolder()) );
     desktopFolderActionMenu->addAction(LXDG::findIcon("document-new",""), tr("New File"), this, SLOT(NewDesktopFile()) );
@@ -295,23 +296,23 @@ void LDesktop::UpdateMenu(bool fast){
   //Put a label at the top
   int num = LSession::handle()->XCB->CurrentWorkspace(); //LX11::GetCurrentDesktop();
   if(DEBUG){ qDebug() << "Found workspace number:" << num; }
-  if(num < 0){ workspacelabel->setText( "<b>"+tr("Lumina Desktop")+"</b>"); }
-  else{ workspacelabel->setText( "<b>"+QString(tr("Workspace %1")).arg(QString::number(num+1))+"</b>"); }
+  /*if(num < 0){*/ workspacelabel->setText(QString("%1 Desktop %2").arg(DESKTOP_APP_NAME).arg(DESKTOP_APP_VERSION));// }
+  //else{ workspacelabel->setText( "<b>"+QString(tr("Workspace %1")).arg(QString::number(num+1))+"</b>"); }
   if(fast && usewinmenu){ UpdateWinMenu(); }
   if(fast){ return; } //already done
   deskMenu->clear(); //clear it for refresh
   deskMenu->addAction(wkspaceact);
   deskMenu->addSeparator();
   //Now load the user's menu setup and fill the menu
-  QStringList items = settings->value("menu/itemlist", QStringList()<< "terminal" << "filemanager" <<"applications" << "line" << "settings" ).toStringList();
+  QStringList items = settings->value("menu/itemlist", QStringList() << "windowlist" ).toStringList();
   usewinmenu=false;
   for(int i=0; i<items.length(); i++){
-    if(items[i]=="terminal"){ deskMenu->addAction(LXDG::findIcon("utilities-terminal",""), tr("Terminal"), this, SLOT(SystemTerminal()) ); }
-    else if(items[i]=="lockdesktop"){ deskMenu->addAction(LXDG::findIcon("system-lock-screen",""), tr("Lock Session"), this, SLOT(SystemLock()) ); }
-    else if(items[i]=="filemanager"){ deskMenu->addAction( LXDG::findIcon("user-home",""), tr("Browse Files"), this, SLOT(SystemFileManager()) ); }
-    else if(items[i]=="applications"){ deskMenu->addMenu( LSession::handle()->applicationMenu() ); }
+    //if(items[i]=="terminal"){ deskMenu->addAction(LXDG::findIcon("utilities-terminal",""), tr("Terminal"), this, SLOT(SystemTerminal()) ); }
+    /*else*/ if(items[i]=="lockdesktop"){ deskMenu->addAction(LXDG::findIcon("system-lock-screen",""), tr("Lock Session"), this, SLOT(SystemLock()) ); }
+    //else if(items[i]=="filemanager"){ deskMenu->addAction( LXDG::findIcon("user-home",""), tr("Browse Files"), this, SLOT(SystemFileManager()) ); }
+    //else if(items[i]=="applications"){ deskMenu->addMenu( LSession::handle()->applicationMenu() ); }
     else if(items[i]=="line"){ deskMenu->addSeparator(); }
-    else if(items[i]=="settings"){ deskMenu->addMenu( LSession::handle()->settingsMenu() ); }
+    //else if(items[i]=="settings"){ deskMenu->addMenu( LSession::handle()->settingsMenu() ); }
     else if(items[i]=="windowlist"){ deskMenu->addMenu( winMenu); usewinmenu=true;}
     else if(items[i].startsWith("app::::") && items[i].endsWith(".desktop")){
       //Custom *.desktop application
@@ -322,22 +323,11 @@ void LDesktop::UpdateMenu(bool fast){
 	}else{
 	  qDebug() << "Could not load application file:" << file;
 	}
-    }else if(items[i].startsWith("jsonmenu::::")){
-      //Custom JSON menu system (populated on demand via external scripts/tools
-      QStringList info = items[i].split("::::"); //FORMAT:[ "jsonmenu",exec,name, icon(optional)]
-      if(info.length()>=3){
-        qDebug() << "Custom JSON Menu Loaded:" << info;
-        JsonMenu *tmp = new JsonMenu(info[1], deskMenu);
-        tmp->setTitle(info[2]);
-        connect(tmp, SIGNAL(triggered(QAction*)), this, SLOT(SystemApplication(QAction*)) );
-        if(info.length()>=4){ tmp->setIcon( LXDG::findIcon(info[3],"") ); }
-        deskMenu->addMenu(tmp);
-      }
     }
   }
   //Now add the desktop folder options (if desktop is icon-enabled)
   if(settings->value(DPREFIX+"generateDesktopIcons",false).toBool()){
-    deskMenu->addSeparator();
+    //deskMenu->addSeparator();
     deskMenu->addMenu(desktopFolderActionMenu);
   }
   //Now add the system quit options

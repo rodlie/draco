@@ -35,9 +35,8 @@ LAppMenuPlugin::~LAppMenuPlugin(){
 
 void LAppMenuPlugin::updateButtonVisuals(){
     button->setToolTip( tr("Quickly launch applications or open files"));
-    button->setText( tr("Applications") );
-    //Use the TrueOS icon by default (or the Lumina icon for non-TrueOS systems)
-    button->setIcon( LXDG::findIcon("applications-other"/*,"Lumina-DE"*/) );
+    button->setText(tr("Applications"));
+    button->setIcon(LXDG::findIcon("system-run"));
 }
 
 // ========================
