@@ -38,7 +38,7 @@ LDesktopPluginSpace::~LDesktopPluginSpace(){
 }
 
 void LDesktopPluginSpace::LoadItems(QStringList plugs, QStringList files){
-  if(DEBUG){ qDebug() << "Loading Desktop Items:" << plugs << files << "Area:" << this->size() << GRIDSIZE; }
+  qDebug() << "Loading Desktop Items:" << plugs << files << "Area:" << this->size() << GRIDSIZE;
   bool changes = false;
   if(plugs != plugins){ plugins = plugs; changes = true; }
   if(files != deskitems){ deskitems = files; changes = true; }

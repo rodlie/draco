@@ -17,15 +17,12 @@
 
 class LFileInfo : public QFileInfo{
 private:
-	QString mime, zfs_ds, zfs_dspath;
-	QStringList iconList, zfs_perms;
+    QString mime;
+    QStringList iconList;
 	int c_uid;
 	XDGDesktop *desk;
 
 	void loadExtraInfo();
-	bool zfsAvailable();
-	void getZfsDataset(); //note: only run this if "zfsAvailable" is true
-	bool goodZfsDataset(); //simplification of the two functions above
 
 public:
 	//Couple overloaded contructors
@@ -51,26 +48,6 @@ public:
 	bool isImage(); //Is a readable image file (for thumbnail support)
 	bool isVideo(); //Is a readable video file (for thumbnail support)
 	bool isAVFile(); //Is an audio/video file
-
-	//ZFS Information
-	bool isZfsDataset(QString path = "");
-	QString zfsPool();
-	QStringList zfsSnapshots(); //Format: "snapshot name::::path/to/snapshot"
-	QJsonObject zfsProperties();
-	bool zfsSetProperty(QString property, QString value);
-
-	//ZFS Permissions/Modifications
-	bool canZFScreate();
-	bool zfsCreateDataset(QString subdir);
-	bool canZFSdestroy();
-	bool zfsDestroyDataset(QString subdir);
-	bool zfsDestroySnapshot(QString snapshot);
-	bool canZFSclone();
-	bool zfsCloneDataset(QString subdir, QString newsubdir);
-	bool canZFSsnapshot();
-	bool zfsSnapshot(QString snapname);
-	bool canZFSrollback();
-	bool zfsRollback(QString snapname);
 
 };
 typedef QList<LFileInfo> LFileInfoList;

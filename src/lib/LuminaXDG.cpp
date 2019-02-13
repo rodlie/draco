@@ -14,6 +14,9 @@
 
 #include "common.h"
 
+#include <QMimeDatabase>
+#include <QMimeType>
+
 static QStringList mimeglobs;
 static qint64 mimechecktime;
 
@@ -1043,10 +1046,11 @@ QIcon LXDG::findMimeIcon(QString extension){
 }
 
 QString LXDG::findAppMimeForFile(QString filename, bool multiple){
+    qDebug() << "find app mime for file" << filename << multiple;
   QString out;
   QString extension = filename.section(".",1,-1);
   if("."+extension == filename){ extension.clear(); } //hidden file without extension
-  //qDebug() << "MIME SEARCH:" << filename << extension;
+  qDebug() << "MIME SEARCH:" << filename << extension;
   QStringList mimefull = LXDG::loadMimeFileGlobs2();
   QStringList mimes;
   //Just in case the filename is a mimetype itself
@@ -1091,14 +1095,37 @@ while(mimes.isEmpty()){
     QString mime = mimes[m].section(":",1,1,QString::SectionSkipEmpty);
     matches << mime;
   }
-  //qDebug() << "Matches:" << matches;
+  qDebug() << "Matches:" << matches;
   if(multiple && !matches.isEmpty() ){ out = matches.join("::::"); }
   else if( !matches.isEmpty() ){ out = matches.first(); }
   else{ //no mimetype found - assign one (internal only - no system database changes)
     if(extension.isEmpty()){ out = "unknown/"+filename.toLower(); }
     else{ out = "unknown/"+extension.toLower(); }
   }
-  //qDebug() << "Out:" << out;
+
+  if (out.isEmpty() || out.startsWith(QString("unknown"))) {
+      QMimeDatabase db;
+      QMimeType type = db.mimeTypeForFile(filename);
+      qDebug() << "get real mime type" << type.name();
+      if (!type.name().isEmpty()) { out = type.name(); }
+      else { out = "text-x-generic"; }
+  }
+  if (out.startsWith(QString("video/"))) {
+      out = "video-x-generic";
+  } else if(out.startsWith(QString("audio/"))) {
+      out = "audio-x-generic";
+  } else if (out.startsWith(QString("image/"))) {
+      out = "image-x-generic";
+  } else if (out.startsWith(QString("text/"))) {
+      if (out.contains(QString("htm"))) {
+          out = "text-html";
+      } else if (out.contains(QString("script"))) {
+          out = "text-x-script";
+      } else {
+          out = "text-x-generic";
+      }
+  }
+  qDebug() << "Out:" << out;
   return out;
 }
 
