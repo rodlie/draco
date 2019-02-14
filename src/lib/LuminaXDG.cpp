@@ -422,7 +422,7 @@ bool XDGDesktop::setAutoStarted(bool autostart){
   if( !filePath.startsWith(upath) && autostart){
     //Some other non-override autostart file - set it up to open with lumina-open
     if(!filePath.endsWith(".desktop")){
-      exec = "lumina-open \""+filePath+"\"";
+      exec = "qtfm-launcher \""+filePath+"\"";
       tryexec = filePath; //make sure this file exists
       if(name.isEmpty()){ name = filePath.section("/",-1); }
       if(icon.isEmpty()){ icon = LXDG::findAppMimeForFile(filePath); icon.replace("/","-"); }
@@ -431,7 +431,7 @@ bool XDGDesktop::setAutoStarted(bool autostart){
     }else{
       //Some other *.desktop file on the system (keep almost all the existing settings/values)
       // - setup a redirect to the other file
-      exec = "lumina-open \""+filePath+"\"";
+      exec = "qtfm-launcher \""+filePath+"\"";
       tryexec = filePath; //make sure this file exists
       // - Adjust the actual path where this file will get saved
       filePath = upath+filePath.section("/",-1);
@@ -945,7 +945,7 @@ QIcon LXDG::findIcon(QString iconName, QString fallback)
       QStringList formats = LUtils::imageExtensions();
       QStringList found = pix.entryList(QStringList() << iconName, QDir::Files, QDir::Unsorted);
       if(found.isEmpty()){ found = pix.entryList(QStringList() << iconName+"*", QDir::Files, QDir::Unsorted); }
-      qDebug() << "Found pixmaps:" << found << formats;
+      //qDebug() << "Found pixmaps:" << found << formats;
       //Use the first one found that is a valid format
       for(int i=0; i<found.length(); i++){
         if( formats.contains(found[i].section(".",-1).toLower()) ){
@@ -1405,6 +1405,7 @@ QList<XDGDesktop*> LXDG::findAutoStartFiles(bool includeInvalid){
     dir.cd(paths[i]+"/autostart");
     QStringList tmp = dir.entryList(QStringList() << "*.desktop", QDir::Files, QDir::Name);
     for(int t=0; t<tmp.length(); t++){
+        qDebug() << "AUTOSTART DESKTOP?" << tmp[t];
       XDGDesktop *desk = new XDGDesktop(dir.absoluteFilePath(tmp[t]));
       if(desk->type == XDGDesktop::BAD){ continue; } //could not read file
       //Now figure out what to do with it

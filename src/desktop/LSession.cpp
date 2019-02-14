@@ -189,7 +189,7 @@ void LSession::setupSession()
             SLOT(SessionEnding()));
 
     // Initialize startup applications
-    //launchStartupApps();
+    launchStartupApps();
     //QTimer::singleShot(500, this, SLOT(launchStartupApps()) );
 }
 
@@ -289,6 +289,28 @@ void LSession::launchStartupApps(){
   }*/
   //QProcess::startDetached("nice lumina-open -autostart-apps");
   //ExternalProcess::launch("lumina-open", QStringList() << "-autostart-apps", false);
+
+      QList<XDGDesktop*> xdgapps = LXDG::findAutoStartFiles();
+      for(int i=0; i<xdgapps.length(); i++){
+        //Generate command and clean up any stray "Exec" field codes (should not be any here)
+        QString cmd = xdgapps[i]->getDesktopExec();
+        if(cmd.contains("%")){cmd = cmd.remove("%U").remove("%u").remove("%F").remove("%f").remove("%i").remove("%c").remove("%k").simplified(); }
+        //Now run the command
+        if(!cmd.isEmpty()){
+          qDebug() << " - Auto-Starting File:" << xdgapps[i]->filePath;
+          //QProcess::startDetached(cmd);
+        }
+      }
+      //make sure we clean up all the xdgapps structures
+      for(int i=0;  i<xdgapps.length(); i++){ xdgapps[i]->deleteLater(); }
+
+
+
+
+
+
+
+
 
   //Re-load the screen brightness and volume settings from the previous session
   // Wait until after the XDG-autostart functions, since the audio system might be started that way

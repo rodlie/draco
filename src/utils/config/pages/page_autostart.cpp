@@ -73,7 +73,7 @@ void page_autostart::LoadSettings(int){
   //qDebug() << "StartApps:";
   ui->list_session_start->clear();
   for(int i=0; i<STARTAPPS.length(); i++){
-  //qDebug() << STARTAPPS[i]->filePath +" -> " +STARTAPPS[i]->name << STARTAPPS[i]->isHidden;
+  qDebug() << STARTAPPS[i]->filePath +" -> " +STARTAPPS[i]->name << STARTAPPS[i]->isHidden;
     if( !STARTAPPS[i]->isValid() || !QFile::exists(STARTAPPS[i]->filePath) ){ continue; }
     QListWidgetItem *it = new QListWidgetItem( LXDG::findIcon(STARTAPPS[i]->icon,"application-x-executable"), STARTAPPS[i]->name );
 	it->setWhatsThis(STARTAPPS[i]->filePath); //keep the file location

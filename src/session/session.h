@@ -63,7 +63,7 @@ private:
 	int wmfails;
 	QTimer *wmTimer;
 
-	void setupCompositor(bool force = false);
+    //void setupCompositor(bool force = false);
 
 private slots:
 	void stopall();
@@ -83,7 +83,7 @@ public:
 	}
 	~LSession(){ }
 
-	void start(bool unified = false);
+    void start();
 
 	void checkFiles();
 
