@@ -136,13 +136,9 @@ void LSession::setupSession()
     qsrand( QTime::currentTime().msec() );
 
     // Remove existing session file
-    if (QFile::exists(Draco::sessionFile())){ QFile::remove(Draco::sessionFile()); }
+    if (QFile::exists(Draco::sessionFile())) { QFile::remove(Draco::sessionFile()); }
 
     // Initialize settings files
-   /* Draco::sessionSettingsFile(); // make sure file exists and has sane default
-    Draco::desktopSettingsFile(); // make sure file exists and has sane default
-    Draco::envSettingsFile(); // make sure file exists and has sane default
-*/
     sessionsettings = new QSettings(QString("%1-desktop").arg(DESKTOP_APP),
                                     QString(DE_SESSION_SETTINGS));
     DPlugSettings = new QSettings(QString("%1-desktop").arg(DESKTOP_APP),
@@ -156,7 +152,7 @@ void LSession::setupSession()
     // Initialize the system tray
     startSystemTray();
 
-    //Initialize the global menus
+    // Initialize the global menus
     appmenu = new AppMenu();
 
     // Initialize settings menu
@@ -221,7 +217,9 @@ void LSession::CleanupSession()
     qDebug() << "Start closing down the session: " << time.toString(Qt::SystemLocaleShortDate);
 
     // Create a temporary flag to prevent crash dialogs from opening during cleanup
-    LUtils::writeFile(Draco::sessionFile(), QStringList() << "yes", true);
+    LUtils::writeFile(Draco::sessionFile(),
+                      QStringList() << "yes",
+                      true);
 
     // Stop the background system tray (detaching/closing apps as necessary)
     stopSystemTray(!cleansession);
@@ -252,7 +250,7 @@ void LSession::CleanupSession()
 
     evFilter->StopEventHandling();
 
-    //Stop the window manager
+    // Stop the window manager
     //qDebug() << " - Stopping the window manager";
     //WM->stopWM();
 
@@ -288,61 +286,29 @@ void LSession::NewCommunication(QStringList list)
     }
 }
 
-void LSession::launchStartupApps(){
-  //First start any system-defined startups, then do user defined
- // qDebug() << "Launching startup applications";
-  //Enable Numlock
-  /*if(LUtils::isValidBinary("numlockx")){ //make sure numlockx is installed
-    if(sessionsettings->value("EnableNumlock",false).toBool()){
-      QProcess::startDetached("numlockx on");
-    }else{
-      QProcess::startDetached("numlockx off");
-    }
-  }*/
-  //int tmp = LOS::ScreenBrightness();
-  /*if(tmp>0){
-    LOS::setScreenBrightness( tmp );
-    qDebug() << " - - Screen Brightness:" << QString::number(tmp)+"%";
-  }*/
-  //QProcess::startDetached("nice lumina-open -autostart-apps");
-  //ExternalProcess::launch("lumina-open", QStringList() << "-autostart-apps", false);
-
-      QList<XDGDesktop*> xdgapps = LXDG::findAutoStartFiles();
-      for(int i=0; i<xdgapps.length(); i++){
-        //Generate command and clean up any stray "Exec" field codes (should not be any here)
+void LSession::launchStartupApps()
+{
+    QList<XDGDesktop*> xdgapps = LXDG::findAutoStartFiles();
+    for(int i=0; i<xdgapps.length(); i++){
+        // Generate command and clean up any stray "Exec" field codes (should not be any here)
         QString cmd = xdgapps[i]->getDesktopExec();
-        if(cmd.contains("%")){cmd = cmd.remove("%U").remove("%u").remove("%F").remove("%f").remove("%i").remove("%c").remove("%k").simplified(); }
-        //Now run the command
-        if(!cmd.isEmpty()){
-          qDebug() << " - Auto-Starting File:" << xdgapps[i]->filePath;
-          //QProcess::startDetached(cmd);
+        if (cmd.contains("%")){ cmd = cmd.remove("%U")
+                                      .remove("%u")
+                                      .remove("%F")
+                                      .remove("%f")
+                                      .remove("%i")
+                                      .remove("%c")
+                                      .remove("%k")
+                                      .simplified(); }
+        // Now run the command
+        if (!cmd.isEmpty()) {
+            qDebug() << " - Auto-Starting File:" << xdgapps[i]->filePath;
+            //QProcess::startDetached(cmd);
         }
-      }
-      //make sure we clean up all the xdgapps structures
-      for(int i=0;  i<xdgapps.length(); i++){ xdgapps[i]->deleteLater(); }
-
-
-
-
-
-
-
-
-
-  //Re-load the screen brightness and volume settings from the previous session
-  // Wait until after the XDG-autostart functions, since the audio system might be started that way
-  //qDebug() << " - Loading previous settings";
-  //tmp = sessionsettings->value("last_session_state/audio_volume",50).toInt();
-  //if(tmp>=0){ LOS::setAudioVolume(tmp); }
-  //qDebug() << " - - Audio Volume:" << QString::number(tmp)+"%";
-
-  //Now play the login music since we are finished
-  /*if(sessionsettings->value("PlayStartupAudio",true).toBool()){
-     QString sfile = sessionsettings->value("audiofiles/login", "").toString();
-     if(sfile.isEmpty() || !QFile::exists(sfile)){ sfile = LOS::LuminaShare()+"Login.ogg"; }
-     playAudioFile(sfile);
-  }*/
-  //qDebug() << "[DESKTOP INIT FINISHED]";
+    }
+    // make sure we clean up all the xdgapps structures
+    for (int i=0;  i<xdgapps.length(); i++) { xdgapps[i]->deleteLater(); }
+    qDebug() << "[DESKTOP INIT FINISHED]";
 }
 
 void LSession::StartLogout()
@@ -355,6 +321,7 @@ void LSession::StartShutdown()
 {
     CleanupSession();
     //LOS::systemShutdown(skipupdates);
+    // TODO use powerkit
     QCoreApplication::exit(0);
 }
 
@@ -362,12 +329,13 @@ void LSession::StartReboot()
 {
     CleanupSession();
     //LOS::systemRestart(skipupdates);
+    // TODO use powerkit
     QCoreApplication::exit(0);
 }
 
 void LSession::reloadIconTheme()
 {
-    //Wait a moment for things to settle before sending out the signal to the interfaces
+    // Wait a moment for things to settle before sending out the signal to the interfaces
     QApplication::processEvents();
     QApplication::processEvents();
     emit IconThemeChanged();
@@ -377,36 +345,48 @@ void LSession::watcherChange(QString changed)
 {
     if (!sessionSettings()) { return; }
 
-  qDebug() << "Session Watcher Change:" << changed;
-  //if(changed.endsWith("fluxbox-init") || changed.endsWith("fluxbox-keys")){ refreshWindowManager(); }
-  if(changed.endsWith("sessionsettings.conf") ){
-    sessionsettings->sync();
-    //qDebug() << "Session Settings Changed";
-    if(sessionsettings->contains("Qt5_theme_engine")){
-      QString engine = sessionsettings->value("Qt5_theme_engine","").toString();
-      //qDebug() << "Set Qt5 theme engine: " << engine;
-      if(engine.isEmpty()){ unsetenv("QT_QPA_PLATFORMTHEME"); }
-      else{ setenv("QT_QPA_PLATFORMTHEME", engine.toUtf8().data(),1); }
-    }else{
-      setenv("QT_QPA_PLATFORMTHEME", "lthemeengine",1); //ensure the lumina theme engine is always enabled
+    qDebug() << "Session Watcher Change:" << changed;
+    // OPENBOX TODO if(changed.endsWith("fluxbox-init") || changed.endsWith("fluxbox-keys")){ refreshWindowManager(); }
+
+    if (changed.endsWith("sessionsettings.conf") ){
+        sessionsettings->sync();
+        qDebug() << "Session Settings Changed";
+        /*if (sessionsettings->contains("Qt5_theme_engine")) {
+            QString engine = sessionsettings->value("Qt5_theme_engine","").toString();
+            qDebug() << "Set Qt5 theme engine: " << engine;
+            if (engine.isEmpty()) { unsetenv("QT_QPA_PLATFORMTHEME"); }
+            else { setenv("QT_QPA_PLATFORMTHEME", engine.toUtf8().data(),1); }
+        } else {
+            setenv("QT_QPA_PLATFORMTHEME", "lthemeengine",1); //ensure the lumina theme engine is always enabled
+        }*/
+        emit SessionConfigChanged();
     }
-    emit SessionConfigChanged();
-  }else if(changed.endsWith("desktopsettings.conf") ){ emit DesktopConfigChanged(); }
-  else if(changed == LUtils::standardDirectory(LUtils::Desktop) ){
-    desktopFiles = QDir(changed).entryInfoList(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs ,QDir::Name | QDir::IgnoreCase | QDir::DirsFirst);
-    qDebug() << "New Desktop Files:" << desktopFiles.length();
-    emit DesktopFilesChanged();
-  }else if(changed.toLower() == "/media" || changed.toLower().startsWith("/run/media/") || changed == "/tmp/.autofs_change" ){
-    emit MediaFilesChanged();
-  }else if(changed.endsWith("favorites.list")){ emit FavoritesChanged(); }
-  //Now ensure this file was not removed from the watcher
-  if(!watcher->files().contains(changed) && !watcher->directories().contains(changed)){
-    if(!QFile::exists(changed)){
-      //Create the file really quick to ensure it can be watched
-      //TODO
+    else if (changed.endsWith("desktopsettings.conf") ) { emit DesktopConfigChanged(); }
+    else if (changed == LUtils::standardDirectory(LUtils::Desktop) )
+    {
+        desktopFiles = QDir(changed).entryInfoList(QDir::NoDotAndDotDot |
+                                                   QDir::Files |
+                                                   QDir::Dirs, QDir::Name |
+                                                   QDir::IgnoreCase |
+                                                   QDir::DirsFirst);
+        qDebug() << "New Desktop Files:" << desktopFiles.length();
+        emit DesktopFilesChanged();
     }
-    watcher->addPath(changed);
-  }
+    else if(changed.toLower() == "/media" ||
+            changed.toLower().startsWith("/run/media/") ||
+            changed == "/tmp/.autofs_change" )
+    {
+        emit MediaFilesChanged();
+    }
+
+    // Now ensure this file was not removed from the watcher
+    if (!watcher->files().contains(changed) && !watcher->directories().contains(changed)) {
+        if(!QFile::exists(changed)){
+            // Create the file really quick to ensure it can be watched
+            // TODO
+        }
+        watcher->addPath(changed);
+    }
 }
 
 void LSession::screensChanged()
@@ -494,16 +474,16 @@ void LSession::updateDesktops()
     int sC = DW->screenCount();
     qDebug() << "screen count" << sC;
     qDebug() << "desktops length" << DESKTOPS.length();
-    if(sC<1){ return; } //stop here - no screens available temporarily (displayport/4K issue)
+    if (sC<1) { return; } //stop here - no screens available temporarily (displayport/4K issue)
 
     screenRect = QRect(); //clear it
-    for(int i=0; i<sC; i++){
+    for (int i=0; i<sC; i++) {
         screenRect = screenRect.united(DW->screenGeometry(i));
         qDebug() << "screen" << i << DW->screenGeometry();
     }
 
     bool firstrun = (DESKTOPS.length()==0);
-    bool numchange = DESKTOPS.length()!=sC;
+    //bool numchange = DESKTOPS.length()!=sC;
     QSettings dset(QString("%1-desktop")
                  .arg(DESKTOP_APP),
                  DE_DESKTOP_SETTINGS);
@@ -511,85 +491,80 @@ void LSession::updateDesktops()
     // add fallback desktop settings
     setupFallbackDesktop(&dset);
 
-    if(firstrun && sC==1){
+    if (firstrun && sC==1) {
         QString name = QApplication::screens().at(0)->name();
         qDebug() << "checking desktop settings" << name;
-        if(!dset.contains("desktop-"+name+"/screen/lastHeight")){
+        if (!dset.contains("desktop-"+name+"/screen/lastHeight")) {
             qDebug() << "add fallback settings for desktop" << name;
             LDesktopUtils::MigrateDesktopSettings(&dset, "fallback", name);
         }
     }
 
     // If the screen count is changing on us
-    if ( sC != DW->screenCount() ) {
+    if (sC != DW->screenCount()) {
         qDebug() << "Screen Count changed while running";
         return;
     }
 
-  //First clean up any current desktops
-  QList<int> dnums; //keep track of which screens are already managed
-  QList<QRect> geoms;
-  for(int i=0; i<DESKTOPS.length(); i++){
-    if ( DESKTOPS[i]->Screen() < 0 || DESKTOPS[i]->Screen() >= sC || geoms.contains(DW->screenGeometry(DESKTOPS[i]->Screen())) ) {
-        //qDebug() << " - Close desktop:" << i;
-        qDebug() << " - Close desktop on screen:" << DESKTOPS[i]->Screen();
-        DESKTOPS[i]->prepareToClose();
-        DESKTOPS.takeAt(i)->deleteLater();
-        i--;
-      } else {
-        //qDebug() << " - Show desktop:" << i;
-        qDebug() << " - Show desktop on screen:" << DESKTOPS[i]->Screen();
-        DESKTOPS[i]->UpdateGeometry();
-        DESKTOPS[i]->show();
-	dnums << DESKTOPS[i]->Screen();
-	geoms << DW->screenGeometry(DESKTOPS[i]->Screen());
-      }
-  }
-
-  //Now add any new desktops
-  QStringList allNames;
-  QList<QScreen*> scrns = QApplication::screens();
-  for(int i=0; i<sC; i++){
-    allNames << scrns.at(i)->name();
-    if(!dnums.contains(i) && !geoms.contains(DW->screenGeometry(i)) ){
-      //Start the desktop on this screen
-      qDebug() << " - Start desktop on screen:" << i;
-      DESKTOPS << new LDesktop(i);
-      geoms << DW->screenGeometry(i);
+    // First clean up any current desktops
+    QList<int> dnums; // keep track of which screens are already managed
+    QList<QRect> geoms;
+    for (int i=0; i<DESKTOPS.length(); i++) {
+        if (DESKTOPS[i]->Screen() < 0 ||
+            DESKTOPS[i]->Screen() >= sC ||
+            geoms.contains(DW->screenGeometry(DESKTOPS[i]->Screen())))
+        {
+            qDebug() << " - Close desktop:" << i;
+            qDebug() << " - Close desktop on screen:" << DESKTOPS[i]->Screen();
+            DESKTOPS[i]->prepareToClose();
+            DESKTOPS.takeAt(i)->deleteLater();
+            i--;
+        } else {
+            qDebug() << " - Show desktop:" << i;
+            qDebug() << " - Show desktop on screen:" << DESKTOPS[i]->Screen();
+            DESKTOPS[i]->UpdateGeometry();
+            DESKTOPS[i]->show();
+            dnums << DESKTOPS[i]->Screen();
+            geoms << DW->screenGeometry(DESKTOPS[i]->Screen());
+        }
     }
-  }
-  dset.setValue("last_used_screens", allNames);
-  //Make sure fluxbox also gets prompted to re-load screen config if the number of screens changes in the middle of a session
+
+    // Now add any new desktops
+    QStringList allNames;
+    QList<QScreen*> scrns = QApplication::screens();
+    for (int i=0; i<sC; i++) {
+        allNames << scrns.at(i)->name();
+        if (!dnums.contains(i) && !geoms.contains(DW->screenGeometry(i))) {
+            // Start the desktop on this screen
+            qDebug() << " - Start desktop on screen:" << i;
+            DESKTOPS << new LDesktop(i);
+            geoms << DW->screenGeometry(i);
+        }
+    }
+    dset.setValue("last_used_screens", allNames);
+
+    // REMOVE?
+    //Make sure fluxbox also gets prompted to re-load screen config if the number of screens changes in the middle of a session
     if(!firstrun && xchange){
-      qDebug() << "Update WM";
-      //QProcess::startDetached("killall fluxbox");
-      xchange = false;
+        qDebug() << "Update WM";
+        //QProcess::startDetached("killall fluxbox");
+        xchange = false;
     }
 
-  //Make sure all the background windows are registered on the system as virtual roots
-  QTimer::singleShot(100,this, SLOT(registerDesktopWindows()));
-  //Determine if any High-DPI screens are available and enable auto-scaling as needed
-  /*for(int i=0; i<scrns.length(); i++){
-    qDebug() << "Check Screen DPI:" << scrns[i]->name();
-    qDebug() << " -- Physical DPI:" << scrns[i]->physicalDotsPerInchX() << "x" << scrns[i]->physicalDotsPerInchY();
-    qDebug() << " -- Logical DPI:" << scrns[i]->logicalDotsPerInchX() << "x" << scrns[i]->logicalDotsPerInchY();
-    if(scrns[i]->logicalDotsPerInchX() > 110 || scrns[i]->logicalDotsPerInchY()>110){ //4K is ~196, 3K is ~150
-      setenv("QT_AUTO_SCREEN_SCALE_FACTOR","1",true); //Enable the automatic Qt5 DPI scaling for apps
-      break;
-    }else if(i==(scrns.length()-1)){
-      unsetenv("QT_AUTO_SCREEN_SCALE_FACTOR");
+    // Make sure all the background windows are registered on the system as virtual roots
+    QTimer::singleShot(100,this, SLOT(registerDesktopWindows()));
+}
+
+void LSession::registerDesktopWindows()
+{
+    QList<WId> wins;
+    for (int i=0; i<DESKTOPS.length(); i++) {
+        wins << DESKTOPS[i]->backgroundID();
     }
-  }*/
+    XCB->RegisterVirtualRoots(wins);
 }
 
-void LSession::registerDesktopWindows(){
-  QList<WId> wins;
-  for(int i=0; i<DESKTOPS.length(); i++){
-    wins << DESKTOPS[i]->backgroundID();
-  }
-  XCB->RegisterVirtualRoots(wins);
-}
-
+// REMOVE?
 void LSession::adjustWindowGeom(WId win, bool maximize){
   //return; //temporary disable
   qDebug() << "AdjustWindowGeometry():" << win << maximize << XCB->WindowClass(win);
@@ -654,33 +629,35 @@ void LSession::adjustWindowGeom(WId win, bool maximize){
 
 }
 
-void LSession::SessionEnding(){
-  stopSystemTray(); //just in case it was not stopped properly earlier
+void LSession::SessionEnding()
+{
+    stopSystemTray(); // just in case it was not stopped properly earlier
 }
 
-void LSession::handleClipboard(QClipboard::Mode mode){
-  if ( !ignoreClipboard && mode == QClipboard::Clipboard ){ //only support Clipboard
-    const QMimeData *mime = QApplication::clipboard()->mimeData(mode);
-    if (mime==NULL) { return; }
-    if (mime->hasText() && !QApplication::clipboard()->ownsClipboard()) {
-      //preserve the entire mimeData set, not just the text
-      //Note that even when we want to "save" the test, we should keep the whole thing
-      //  this preserves formatting codes and more that apps might need
-      QMimeData *copy = new QMimeData();
-      QStringList fmts = mime->formats();
-      for(int i=0; i<fmts.length(); i++){ copy->setData(fmts[i], mime->data(fmts[i])); }
-      ignoreClipboard = true;
-      QApplication::clipboard()->setMimeData(copy, mode);
-      ignoreClipboard = false;
-      //QMetaObject::invokeMethod(this, "storeClipboard", Qt::QueuedConnection, Q_ARG(QString, mime->text()), Q_ARG(QClipboard::Mode, mode));
+void LSession::handleClipboard(QClipboard::Mode mode)
+{
+    if ( !ignoreClipboard && mode == QClipboard::Clipboard ){ //only support Clipboard
+        const QMimeData *mime = QApplication::clipboard()->mimeData(mode);
+        if (mime==Q_NULLPTR) { return; }
+        if (mime->hasText() && !QApplication::clipboard()->ownsClipboard()) {
+            // preserve the entire mimeData set, not just the text
+            // Note that even when we want to "save" the test, we should keep the whole thing
+            //  this preserves formatting codes and more that apps might need
+            QMimeData *copy = new QMimeData();
+            QStringList fmts = mime->formats();
+            for (int i=0; i<fmts.length(); i++) { copy->setData(fmts[i], mime->data(fmts[i])); }
+            ignoreClipboard = true;
+            QApplication::clipboard()->setMimeData(copy, mode);
+            ignoreClipboard = false;
+            //QMetaObject::invokeMethod(this, "storeClipboard", Qt::QueuedConnection, Q_ARG(QString, mime->text()), Q_ARG(QClipboard::Mode, mode));
+        }
     }
-  }
 }
 
-void LSession::storeClipboard(QString text, QClipboard::Mode mode){
-  ignoreClipboard = true;
-  QApplication::clipboard()->setText(text, mode);
-  ignoreClipboard = false;
+void LSession::storeClipboard(QString text, QClipboard::Mode mode) {
+    ignoreClipboard = true;
+    QApplication::clipboard()->setText(text, mode);
+    ignoreClipboard = false;
 }
 
 //===============
@@ -692,58 +669,67 @@ void LSession::LaunchApplication(QString cmd)
     QProcess::startDetached(cmd);
 }
 
-QFileInfoList LSession::DesktopFiles(){
-  return desktopFiles;
+QFileInfoList LSession::DesktopFiles()
+{
+    return desktopFiles;
 }
 
-QRect LSession::screenGeom(int num){
-  if(num < 0 || num >= this->desktop()->screenCount() ){ return QRect(); }
-  QRect geom = this->desktop()->screenGeometry(num);
-  return geom;
+QRect LSession::screenGeom(int num)
+{
+    if (num < 0 || num >= this->desktop()->screenCount() ) { return QRect(); }
+    QRect geom = this->desktop()->screenGeometry(num);
+    return geom;
 }
 
-AppMenu* LSession::applicationMenu(){
-  return appmenu;
+AppMenu* LSession::applicationMenu()
+{
+    return appmenu;
 }
 
-SettingsMenu* LSession::settingsMenu(){
-  return settingsmenu;
+SettingsMenu* LSession::settingsMenu()
+{
+    return settingsmenu;
 }
 
-QSettings* LSession::sessionSettings(){
-  return sessionsettings;
+QSettings* LSession::sessionSettings()
+{
+    return sessionsettings;
 }
 
-QSettings* LSession::DesktopPluginSettings(){
-  return DPlugSettings;
+QSettings* LSession::DesktopPluginSettings()
+{
+    return DPlugSettings;
 }
 
-WId LSession::activeWindow(){
-  //Check the last active window pointer first
-  WId active = XCB->ActiveWindow();
-  //qDebug() << "Check Active Window:" << active << lastActiveWin;
-  if(RunningApps.contains(active)){ lastActiveWin = active; }
-  else if(RunningApps.contains(lastActiveWin) && XCB->WindowState(lastActiveWin) >= LXCB::VISIBLE){} //no change needed
-  else if(RunningApps.contains(lastActiveWin) && RunningApps.length()>1){
-    int start = RunningApps.indexOf(lastActiveWin);
-    if(start<1){ lastActiveWin = RunningApps.length()-1; } //wrap around to the last item
-    else{ lastActiveWin = RunningApps[start-1]; }
-  }else{
-    //Need to change the last active window - find the first one which is visible
-    lastActiveWin = 0; //fallback value - nothing active
-    for(int i=0; i<RunningApps.length(); i++){
-      if(XCB->WindowState(RunningApps[i]) >= LXCB::VISIBLE){
-        lastActiveWin = RunningApps[i];
-	break;
-      }
+WId LSession::activeWindow()
+{
+    // Check the last active window pointer first
+    WId active = XCB->ActiveWindow();
+    qDebug() << "Check Active Window:" << active << lastActiveWin;
+    if (RunningApps.contains(active)) { lastActiveWin = active; }
+    else if (RunningApps.contains(lastActiveWin) && XCB->WindowState(lastActiveWin) >= LXCB::VISIBLE){} //no change needed
+    else if (RunningApps.contains(lastActiveWin) && RunningApps.length()>1){
+        int start = RunningApps.indexOf(lastActiveWin);
+        if (start<1) { lastActiveWin = RunningApps.length()-1; } // wrap around to the last item
+        else { lastActiveWin = RunningApps[start-1]; }
+    } else {
+        // Need to change the last active window - find the first one which is visible
+        lastActiveWin = 0; // fallback value - nothing active
+        for (int i=0; i<RunningApps.length(); i++) {
+            if (XCB->WindowState(RunningApps[i]) >= LXCB::VISIBLE) {
+                lastActiveWin = RunningApps[i];
+                break;
+            }
+        }
+        qDebug() << " -- New Last Active Window:" << lastActiveWin;
     }
-    //qDebug() << " -- New Last Active Window:" << lastActiveWin;
-  }
-  return lastActiveWin;
+    return lastActiveWin;
 }
 
-//Temporarily change the session locale (nothing saved between sessions)
-void LSession::switchLocale(QString localeCode){
+// Temporarily change the session locale (nothing saved between sessions)
+void LSession::switchLocale(QString localeCode)
+{
+    Q_UNUSED(localeCode)
   /*currTranslator = LUtils::LoadTranslation(this, "lumina-desktop", localeCode, currTranslator);
   if(currTranslator!=0 || localeCode=="en_US"){
     LUtils::setLocaleEnv(localeCode); //will set everything to this locale (no custom settings)
@@ -751,214 +737,222 @@ void LSession::switchLocale(QString localeCode){
   emit LocaleChanged();*/
 }
 
-void LSession::systemWindow(){
-  if(sysWindow==0){ sysWindow = new SystemWindow(); }
-  else{ sysWindow->updateWindow(); }
-  sysWindow->show();
-  //LSession::processEvents();
+void LSession::systemWindow()
+{
+    if (sysWindow==Q_NULLPTR) { sysWindow = new SystemWindow(); }
+    else { sysWindow->updateWindow(); }
+    sysWindow->show();
+    //LSession::processEvents();
 }
-
 
 // =======================
 //  XCB EVENT FILTER FUNCTIONS
 // =======================
-void LSession::RootSizeChange(){
-  if(DESKTOPS.isEmpty() || screenRect.isNull()){ return; } //Initial setup not run yet
-  QDesktopWidget *DW = this->desktop();
-  int sC = DW->screenCount();
-  QRect tmp;
-  for(int i=0; i<sC; i++){ tmp = tmp.united(DW->screenGeometry(i)); }
-  if(tmp == screenRect){ return; } //false event - session size did not change
-  qDebug() << "Got Root Size Change";
-  xchange = true;
-  screenTimer->start();
+void LSession::RootSizeChange()
+{
+    if (DESKTOPS.isEmpty() || screenRect.isNull()) { return; } // Initial setup not run yet
+    QDesktopWidget *DW = this->desktop();
+    int sC = DW->screenCount();
+    QRect tmp;
+    for (int i=0; i<sC; i++) { tmp = tmp.united(DW->screenGeometry(i)); }
+    if (tmp == screenRect) { return; } // false event - session size did not change
+    qDebug() << "Got Root Size Change";
+    xchange = true;
+    screenTimer->start();
 }
 
-void LSession::WindowPropertyEvent(){
-  qDebug() << "Window Property Event";
-  QList<WId> newapps = XCB->WindowList();
-  if(RunningApps.length() < newapps.length()){
-    //New Window found
-    //qDebug() << "New window found";
-    //LSession::restoreOverrideCursor(); //restore the mouse cursor back to normal (new window opened?)
-    //Perform sanity checks on any new window geometries
-    for(int i=0; i<newapps.length() && !TrayStopping; i++){
-      if(!RunningApps.contains(newapps[i])){
-        checkWin << newapps[i];
-	XCB->SelectInput(newapps[i]); //make sure we get property/focus events for this window
-    qDebug() << "New Window - check geom in a moment:" << XCB->WindowClass(newapps[i]);
-	QTimer::singleShot(50, this, SLOT(checkWindowGeoms()) );
-      }
+void LSession::WindowPropertyEvent()
+{
+    qDebug() << "Window Property Event";
+    QList<WId> newapps = XCB->WindowList();
+    if (RunningApps.length() < newapps.length()) {
+        // New Window found
+        qDebug() << "New window found";
+        // Perform sanity checks on any new window geometries
+        for (int i=0; i<newapps.length() && !TrayStopping; i++) {
+            if (!RunningApps.contains(newapps[i])) {
+                checkWin << newapps[i];
+                XCB->SelectInput(newapps[i]); // make sure we get property/focus events for this window
+                qDebug() << "New Window - check geom in a moment:" << XCB->WindowClass(newapps[i]);
+                QTimer::singleShot(50, this, SLOT(checkWindowGeoms()) );
+            }
+        }
     }
-  }
 
-  //Now save the list and send out the event
-  RunningApps = newapps;
-  emit WindowListEvent();
+    // Now save the list and send out the event
+    RunningApps = newapps;
+    emit WindowListEvent();
 }
 
-void LSession::WindowPropertyEvent(WId win){
-  //Emit the single-app signal if the window in question is one used by the task manager
-  if(RunningApps.contains(win)){
-    qDebug() << "Single-window property event";
-    /*if( XCB->WindowClass(win).contains("VirtualBox")){
-      qDebug() << "Found VirtualBox Window:";
-      QList<LXCB::WINDOWSTATE> states = XCB->WM_Get_Window_States(win);
-      if(states.contains(LXCB::S_FULLSCREEN) && !states.contains(LXCB::S_HIDDEN)){
-       qDebug() << "Adjusting VirtualBox Window (fullscreen)";
-        XCB->WM_Set_Window_Type(win, QList<LXCB::WINDOWTYPE>() << LXCB::T_NORMAL << LXCB::T_UTILITY );
-        XCB->RestoreWindow(win);
-      }
-    }*/
-    //emit WindowListEvent();
-    WindowPropertyEvent(); //Run through the entire routine for window checks
-  }else if(RunningTrayApps.contains(win)){
-    emit TrayIconChanged(win);
-  }
-}
-
-void LSession::SysTrayDockRequest(WId win){
-  if(TrayStopping){ return; }
-  attachTrayWindow(win); //Check to see if the window is already registered
-}
-
-void LSession::WindowClosedEvent(WId win){
-  if(TrayStopping){ return; }
-  removeTrayWindow(win); //Check to see if the window is a tray app
-}
-
-void LSession::WindowConfigureEvent(WId win){
-  if(TrayStopping){ return; }
-    if(RunningTrayApps.contains(win)){
-      qDebug() << "SysTray: Configure Event";
-      emit TrayIconChanged(win); //trigger a repaint event
-    }else if(RunningApps.contains(win)){
-      WindowPropertyEvent();
+void LSession::WindowPropertyEvent(WId win)
+{
+    // Emit the single-app signal if the window in question is one used by the task manager
+    if (RunningApps.contains(win)) {
+        qDebug() << "Single-window property event";
+        WindowPropertyEvent(); // Run through the entire routine for window checks
+    } else if (RunningTrayApps.contains(win)) {
+        emit TrayIconChanged(win);
     }
 }
 
-void LSession::WindowDamageEvent(WId win){
-  if(TrayStopping){ return; }
-    if(RunningTrayApps.contains(win)){
-      qDebug() << "SysTray: Damage Event";
-      emit TrayIconChanged(win); //trigger a repaint event
+void LSession::SysTrayDockRequest(WId win)
+{
+    if (TrayStopping) { return; }
+    attachTrayWindow(win); // Check to see if the window is already registered
+}
+
+void LSession::WindowClosedEvent(WId win)
+{
+    if (TrayStopping) { return; }
+    removeTrayWindow(win); // Check to see if the window is a tray app
+}
+
+void LSession::WindowConfigureEvent(WId win)
+{
+    if (TrayStopping){ return; }
+    if (RunningTrayApps.contains(win)) {
+        qDebug() << "SysTray: Configure Event";
+        emit TrayIconChanged(win); // trigger a repaint event
+    } else if (RunningApps.contains(win)) {
+        WindowPropertyEvent();
     }
 }
 
-void LSession::WindowSelectionClearEvent(WId win){
-  if(win==SystemTrayID && !TrayStopping){
-    qDebug() << "Stopping system tray";
-    stopSystemTray(true); //make sure to detach all windows
-  }
+void LSession::WindowDamageEvent(WId win)
+{
+    if (TrayStopping) { return; }
+    if (RunningTrayApps.contains(win)) {
+        qDebug() << "SysTray: Damage Event";
+        emit TrayIconChanged(win); // trigger a repaint event
+    }
+}
+
+void LSession::WindowSelectionClearEvent(WId win)
+{
+    if (win==SystemTrayID && !TrayStopping) {
+        qDebug() << "Stopping system tray";
+        stopSystemTray(true); // make sure to detach all windows
+    }
 }
 
 
 //======================
 //   SYSTEM TRAY FUNCTIONS
 //======================
-bool LSession::registerVisualTray(WId visualTray){
-  //Only one visual tray can be registered at a time
-  //  (limitation of how tray apps are embedded)
-  if(TrayStopping){ return false; }
-  else if(VisualTrayID==0){ VisualTrayID = visualTray; return true; }
-  else if(VisualTrayID==visualTray){ return true; }
-  else{ return false; }
+bool LSession::registerVisualTray(WId visualTray)
+{
+    // Only one visual tray can be registered at a time
+    //  (limitation of how tray apps are embedded)
+    if (TrayStopping) { return false; }
+    else if (VisualTrayID==0) { VisualTrayID = visualTray; return true; }
+    else if (VisualTrayID==visualTray) { return true; }
+    else { return false; }
 }
 
-void LSession::unregisterVisualTray(WId visualTray){
-  if(VisualTrayID==visualTray){
-    qDebug() << "Unregistered Visual Tray";
-    VisualTrayID=0;
-    if(!TrayStopping){ emit VisualTrayAvailable(); }
-  }
-}
-
-QList<WId> LSession::currentTrayApps(WId visualTray){
-  if(visualTray==VisualTrayID){
-    //Check the validity of all the current tray apps (make sure nothing closed erratically)
-    for(int i=0; i<RunningTrayApps.length(); i++){
-      if(XCB->WindowClass(RunningTrayApps[i]).isEmpty()){ RunningTrayApps.removeAt(i); i--; }
+void LSession::unregisterVisualTray(WId visualTray)
+{
+    if (VisualTrayID==visualTray) {
+        qDebug() << "Unregistered Visual Tray";
+        VisualTrayID=0;
+        if (!TrayStopping) { emit VisualTrayAvailable(); }
     }
-    return RunningTrayApps;
-  }else if( registerVisualTray(visualTray) ){
-    return RunningTrayApps;
-  }else{
-    return QList<WId>();
-  }
 }
 
-void LSession::startSystemTray(){
-  if(SystemTrayID!=0){ return; }
-  RunningTrayApps.clear(); //nothing running yet
-  SystemTrayID = XCB->startSystemTray(0);
-  TrayStopping = false;
-  if(SystemTrayID!=0){
-    XCB->SelectInput(SystemTrayID); //make sure TrayID events get forwarded here
-    TrayDmgEvent = XCB->GenerateDamageID(SystemTrayID);
-    evFilter->setTrayDamageFlag(TrayDmgEvent);
-    qDebug() << "System Tray Started Successfully";
-    qDebug() << " - System Tray Flags:" << TrayDmgEvent << TrayDmgError;
-  }
-}
-
-void LSession::stopSystemTray(bool detachall){
-  if(TrayStopping){ return; } //already run
-  qDebug() << "Stopping system tray...";
-  TrayStopping = true; //make sure the internal list does not modified during this
-  //Close all the running Tray Apps
-  QList<WId> tmpApps = RunningTrayApps;
-  RunningTrayApps.clear(); //clear this ahead of time so tray's do not attempt to re-access the apps
-  if(!detachall){
-    for(int i=0; i<tmpApps.length(); i++){
-      qDebug() << " - Stopping tray app:" << XCB->WindowClass(tmpApps[i]);
-      //Tray apps are special and closing the window does not close the app
-      XCB->KillClient(tmpApps[i]);
-      LSession::processEvents();
+QList<WId> LSession::currentTrayApps(WId visualTray)
+{
+    if (visualTray==VisualTrayID) {
+        // Check the validity of all the current tray apps (make sure nothing closed erratically)
+        for (int i=0; i<RunningTrayApps.length(); i++) {
+            if (XCB->WindowClass(RunningTrayApps[i]).isEmpty()) { RunningTrayApps.removeAt(i); i--; }
+        }
+        return RunningTrayApps;
     }
-  }
-  //Now close down the tray backend
- XCB->closeSystemTray(SystemTrayID);
-  SystemTrayID = 0;
-  TrayDmgEvent = 0;
-  TrayDmgError = 0;
-  evFilter->setTrayDamageFlag(0); //turn off tray event handling
-  emit TrayListChanged();
-  LSession::processEvents();
-}
-
-void LSession::attachTrayWindow(WId win){
-  //static int appnum = 0;
-  if(TrayStopping){ return; }
-  if(RunningTrayApps.contains(win)){ return; } //already managed
-  qDebug() << "Session Tray: Window Added";
-  RunningTrayApps << win;
-  //LSession::restoreOverrideCursor();
-  qDebug() << "Tray List Changed";
-  emit TrayListChanged();
-}
-
-void LSession::removeTrayWindow(WId win){
-  if(SystemTrayID==0){ return; }
-  for(int i=0; i<RunningTrayApps.length(); i++){
-    if(win==RunningTrayApps[i]){
-      qDebug() << "Session Tray: Window Removed";
-      RunningTrayApps.removeAt(i);
-      emit TrayListChanged();
-      break;
+    else if (registerVisualTray(visualTray)) {
+        return RunningTrayApps;
+    } else {
+        return QList<WId>();
     }
-  }
 }
+
+void LSession::startSystemTray()
+{
+    if (SystemTrayID!=0) { return; }
+    RunningTrayApps.clear(); //nothing running yet
+    SystemTrayID = XCB->startSystemTray(0);
+    TrayStopping = false;
+    if (SystemTrayID!=0) {
+        XCB->SelectInput(SystemTrayID); // make sure TrayID events get forwarded here
+        TrayDmgEvent = XCB->GenerateDamageID(SystemTrayID);
+        evFilter->setTrayDamageFlag(TrayDmgEvent);
+        qDebug() << "System Tray Started Successfully";
+        qDebug() << " - System Tray Flags:" << TrayDmgEvent << TrayDmgError;
+    }
+}
+
+void LSession::stopSystemTray(bool detachall)
+{
+    if (TrayStopping) { return; } // already run
+    qDebug() << "Stopping system tray...";
+    TrayStopping = true; // make sure the internal list does not modified during this
+
+    // Close all the running Tray Apps
+    QList<WId> tmpApps = RunningTrayApps;
+    RunningTrayApps.clear(); // clear this ahead of time so tray's do not attempt to re-access the apps
+    if (!detachall){
+        for (int i=0; i<tmpApps.length(); i++) {
+            qDebug() << " - Stopping tray app:" << XCB->WindowClass(tmpApps[i]);
+            // Tray apps are special and closing the window does not close the app
+            XCB->KillClient(tmpApps[i]);
+            LSession::processEvents();
+        }
+    }
+
+    // Now close down the tray backend
+    XCB->closeSystemTray(SystemTrayID);
+    SystemTrayID = 0;
+    TrayDmgEvent = 0;
+    TrayDmgError = 0;
+    evFilter->setTrayDamageFlag(0); // turn off tray event handling
+    emit TrayListChanged();
+    LSession::processEvents();
+}
+
+void LSession::attachTrayWindow(WId win)
+{
+    if (TrayStopping) { return; }
+    if (RunningTrayApps.contains(win)) { return; } // already managed
+    qDebug() << "Session Tray: Window Added";
+    RunningTrayApps << win;
+    qDebug() << "Tray List Changed";
+    emit TrayListChanged();
+}
+
+void LSession::removeTrayWindow(WId win)
+{
+    if (SystemTrayID==0) { return; }
+    for (int i=0; i<RunningTrayApps.length(); i++) {
+        if (win==RunningTrayApps[i]) {
+            qDebug() << "Session Tray: Window Removed";
+            RunningTrayApps.removeAt(i);
+            emit TrayListChanged();
+            break;
+        }
+    }
+}
+
 //=========================
 //  START MENU FUNCTIONS
 //=========================
-bool LSession::registerStartButton(QString ID){
-  if(StartButtonID.isEmpty()){ StartButtonID = ID; }
-  return (StartButtonID==ID);
+bool LSession::registerStartButton(QString ID)
+{
+    if (StartButtonID.isEmpty()) { StartButtonID = ID; }
+    return (StartButtonID==ID);
 }
 
-void LSession::unregisterStartButton(QString ID){
-  if(StartButtonID == ID){
-    StartButtonID.clear();
-    emit StartButtonAvailable();
-  }
+void LSession::unregisterStartButton(QString ID)
+{
+    if (StartButtonID == ID) {
+        StartButtonID.clear();
+        emit StartButtonAvailable();
+    }
 }
