@@ -141,7 +141,7 @@ void XDGDesktop::sync(){
 
   file.clear(); //done with contents of file
   //If there are OnlyShowIn desktops listed, add them to the name
-  if( !showInList.isEmpty() && !showInList.contains("Lumina", Qt::CaseInsensitive) ){
+  if( !showInList.isEmpty() && !showInList.contains(DESKTOP_APP_NAME, Qt::CaseInsensitive) ){
       name.append(" ("+showInList.join(", ")+")");
   }
   //Quick fix for showing "wine" applications (which quite often don't list a category, or have other differences)
@@ -167,11 +167,11 @@ void XDGDesktop::sync(){
 bool XDGDesktop::isValid(bool showAll){
   bool ok=true;
   //bool DEBUG = false;
-  //if(DEBUG){ qDebug() << "[LXDG] Check File validity:" << dFile.name << dFile.filePath; }
+  //qDebug() << "[LXDG] Check File validity:" << dFile.name << dFile.filePath;
   switch (type){
     case XDGDesktop::BAD:
       ok=false;
-      //if(DEBUG){ qDebug() << " - Bad file type"; }
+      qDebug() << " - Bad file type";
       break;
     case XDGDesktop::APP:
       if(!tryexec.isEmpty() && !LXDG::checkExec(tryexec)){ ok=false; }//if(DEBUG){ qDebug() << " - tryexec does not exist";} }
@@ -180,19 +180,19 @@ bool XDGDesktop::isValid(bool showAll){
       break;
     case XDGDesktop::LINK:
       ok = !url.isEmpty();
-      //if(DEBUG && !ok){ qDebug() << " - Link with missing URL"; }
+      qDebug() << " - Link with missing URL";
       break;
     case XDGDesktop::DIR:
       ok = !path.isEmpty() && QFile::exists(path);
-      //if(DEBUG && !ok){ qDebug() << " - Dir with missing path"; }
+      qDebug() << " - Dir with missing path";
       break;
     default:
       ok=false;
-      //if(DEBUG){ qDebug() << " - Unknown file type"; }
+      qDebug() << " - Unknown file type";
   }
   if(!showAll){
     QString cdesk = getenv("XDG_CURRENT_DESKTOP");
-    if(cdesk.isEmpty()){ cdesk="Lumina"; }
+    if(cdesk.isEmpty()){ cdesk=DESKTOP_APP_NAME; }
     if(!showInList.isEmpty()){ ok = showInList.contains(cdesk, Qt::CaseInsensitive); }
     else if(!notShowInList.isEmpty()){ ok = !notShowInList.contains(cdesk,Qt::CaseInsensitive); }
     else if(name.isEmpty()){ ok = false; }
@@ -441,7 +441,7 @@ bool XDGDesktop::setAutoStarted(bool autostart){
   isHidden = !autostart; //if hidden, it will not be autostarted
   //Now save the file as necessary
   bool saved = false;
-  //qDebug() << " - Saving AutoStart File:" << filePath << name << isHidden;
+  qDebug() << " - Saving AutoStart File:" << filePath << name << isHidden;
   if(sysfile){
     //Just an override file for the "hidden" field - nothing more
     QStringList info;

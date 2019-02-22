@@ -289,10 +289,18 @@ void LSession::NewCommunication(QStringList list)
 
 void LSession::launchStartupApps()
 {
-    QList<XDGDesktop*> xdgapps = LXDG::findAutoStartFiles();
+    QList<XDGDesktop*> xdgapps = LXDG::findAutoStartFiles(true);
     if (startupApps) {
         qDebug() << " - launch startup apps";
         for(int i=0; i<xdgapps.length(); i++){
+            if (xdgapps[i]->isHidden) {
+                qDebug() << "skip since hidden" << xdgapps[i]->name;
+                continue;
+            }
+            if (!xdgapps[i]->isValid(false)) {
+                qDebug() << "skip invalid (including ShowOnlyIn!=Draco)" << xdgapps[i]->name;
+                continue;
+            }
             // Generate command and clean up any stray "Exec" field codes (should not be any here)
             QString cmd = xdgapps[i]->getDesktopExec();
             if (cmd.contains("%")){ cmd = cmd.remove("%U")

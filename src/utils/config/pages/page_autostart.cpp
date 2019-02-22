@@ -67,14 +67,14 @@ void page_autostart::SaveSettings(){
 void page_autostart::LoadSettings(int){
   emit HasPendingChanges(false);
   emit ChangePageTitle( tr("Startup Services") );
-  //qDebug() << "Load AutoStart Files";
+  qDebug() << "Load AutoStart Files";
   QList<XDGDesktop*> STARTAPPS = LXDG::findAutoStartFiles(true); //also want invalid/disabled items
-  //qDebug() << " - done:" << STARTAPPS.length();
-  //qDebug() << "StartApps:";
+  qDebug() << " - done:" << STARTAPPS.length();
+  qDebug() << "StartApps:";
   ui->list_session_start->clear();
   for(int i=0; i<STARTAPPS.length(); i++){
   qDebug() << STARTAPPS[i]->filePath +" -> " +STARTAPPS[i]->name << STARTAPPS[i]->isHidden;
-    if( !STARTAPPS[i]->isValid() || !QFile::exists(STARTAPPS[i]->filePath) ){ continue; }
+    if( !STARTAPPS[i]->isValid(false) || !QFile::exists(STARTAPPS[i]->filePath) ){ continue; }
     QListWidgetItem *it = new QListWidgetItem( LXDG::findIcon(STARTAPPS[i]->icon,"application-x-executable"), STARTAPPS[i]->name );
 	it->setWhatsThis(STARTAPPS[i]->filePath); //keep the file location
         it->setToolTip(STARTAPPS[i]->comment);
