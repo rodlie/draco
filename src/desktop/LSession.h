@@ -133,6 +133,8 @@ private:
     void CleanupSession();
     bool ignoreClipboard; // flag for (handle/store)Clipboard
 
+    bool startupApps;
+
 public slots:
     void StartLogout();
     void StartShutdown();

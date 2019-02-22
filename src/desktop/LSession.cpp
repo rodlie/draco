@@ -42,6 +42,7 @@ LSession::LSession(int &argc, char ** argv) :
   , TrayDmgError(0)
   , TrayStopping(false)
   , lastActiveWin(0)
+  , startupApps(true)
 {
     // temp icon theme (TODO)
     QIcon::setThemeName("Adwaita");
@@ -76,11 +77,12 @@ LSession::LSession(int &argc, char ** argv) :
                 this,
                 SLOT(updateDesktops()));
 
-        // check for clean session
+        // check for clean session and startup apps
         for (int i=1; i<argc; i++) {
             if (QString::fromLocal8Bit(argv[i]) == "--noclean") {
                 cleansession = false;
-                break;
+            } else if (QString::fromLocal8Bit(argv[i]) == "--nostartup") {
+                startupApps = false;
             }
         }
 
@@ -206,7 +208,6 @@ void LSession::setupSession()
 
     // Initialize startup applications
     launchStartupApps();
-    //QTimer::singleShot(500, this, SLOT(launchStartupApps()) );
 }
 
 void LSession::CleanupSession()
@@ -289,21 +290,24 @@ void LSession::NewCommunication(QStringList list)
 void LSession::launchStartupApps()
 {
     QList<XDGDesktop*> xdgapps = LXDG::findAutoStartFiles();
-    for(int i=0; i<xdgapps.length(); i++){
-        // Generate command and clean up any stray "Exec" field codes (should not be any here)
-        QString cmd = xdgapps[i]->getDesktopExec();
-        if (cmd.contains("%")){ cmd = cmd.remove("%U")
-                                      .remove("%u")
-                                      .remove("%F")
-                                      .remove("%f")
-                                      .remove("%i")
-                                      .remove("%c")
-                                      .remove("%k")
-                                      .simplified(); }
-        // Now run the command
-        if (!cmd.isEmpty()) {
-            qDebug() << " - Auto-Starting File:" << xdgapps[i]->filePath;
-            //QProcess::startDetached(cmd);
+    if (startupApps) {
+        qDebug() << " - launch startup apps";
+        for(int i=0; i<xdgapps.length(); i++){
+            // Generate command and clean up any stray "Exec" field codes (should not be any here)
+            QString cmd = xdgapps[i]->getDesktopExec();
+            if (cmd.contains("%")){ cmd = cmd.remove("%U")
+                                          .remove("%u")
+                                          .remove("%F")
+                                          .remove("%f")
+                                          .remove("%i")
+                                          .remove("%c")
+                                          .remove("%k")
+                                          .simplified(); }
+            // Now run the command
+            if (!cmd.isEmpty()) {
+                qDebug() << " - Auto-Starting File:" << xdgapps[i]->filePath;
+                //QProcess::startDetached(cmd);
+            }
         }
     }
     // make sure we clean up all the xdgapps structures
