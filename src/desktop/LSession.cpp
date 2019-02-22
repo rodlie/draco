@@ -208,6 +208,8 @@ void LSession::setupSession()
 
     // Initialize startup applications
     launchStartupApps();
+
+    qDebug() << "[DESKTOP INIT FINISHED]";
 }
 
 void LSession::CleanupSession()
@@ -289,38 +291,36 @@ void LSession::NewCommunication(QStringList list)
 
 void LSession::launchStartupApps()
 {
+    if (!startupApps) { return; }
     QList<XDGDesktop*> xdgapps = LXDG::findAutoStartFiles(true);
-    if (startupApps) {
-        qDebug() << " - launch startup apps";
-        for(int i=0; i<xdgapps.length(); i++){
-            if (xdgapps[i]->isHidden) {
-                qDebug() << "skip since hidden" << xdgapps[i]->name;
-                continue;
-            }
-            if (!xdgapps[i]->isValid(false)) {
-                qDebug() << "skip invalid (including ShowOnlyIn!=Draco)" << xdgapps[i]->name;
-                continue;
-            }
-            // Generate command and clean up any stray "Exec" field codes (should not be any here)
-            QString cmd = xdgapps[i]->getDesktopExec();
-            if (cmd.contains("%")){ cmd = cmd.remove("%U")
-                                          .remove("%u")
-                                          .remove("%F")
-                                          .remove("%f")
-                                          .remove("%i")
-                                          .remove("%c")
-                                          .remove("%k")
-                                          .simplified(); }
-            // Now run the command
-            if (!cmd.isEmpty()) {
-                qDebug() << " - Auto-Starting File:" << xdgapps[i]->filePath;
-                //QProcess::startDetached(cmd);
-            }
+    qDebug() << " - launch startup apps";
+    for(int i=0; i<xdgapps.length(); i++){
+        if (xdgapps[i]->isHidden) {
+            qDebug() << "skip since hidden" << xdgapps[i]->name;
+            continue;
+        }
+        if (!xdgapps[i]->isValid(false)) {
+            qDebug() << "skip invalid (including ShowOnlyIn!=Draco)" << xdgapps[i]->name;
+            continue;
+        }
+        // Generate command and clean up any stray "Exec" field codes (should not be any here)
+        QString cmd = xdgapps[i]->getDesktopExec();
+        if (cmd.contains("%")){ cmd = cmd.remove("%U")
+                                      .remove("%u")
+                                      .remove("%F")
+                                      .remove("%f")
+                                      .remove("%i")
+                                      .remove("%c")
+                                      .remove("%k")
+                                      .simplified(); }
+        // Now run the command
+        if (!cmd.isEmpty()) {
+            qDebug() << " - Auto-Starting File:" << xdgapps[i]->filePath;
+            //QProcess::startDetached(cmd);
         }
     }
     // make sure we clean up all the xdgapps structures
     for (int i=0;  i<xdgapps.length(); i++) { xdgapps[i]->deleteLater(); }
-    qDebug() << "[DESKTOP INIT FINISHED]";
 }
 
 void LSession::StartLogout()
