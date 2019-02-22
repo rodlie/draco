@@ -4,8 +4,9 @@
 //  Available under the 3-clause BSD license
 //  See the LICENSE file for full details
 //===========================================
-#ifndef _LUMINA_DESKTOP_SESSION_H
-#define _LUMINA_DESKTOP_SESSION_H
+
+#ifndef DESKTOP_SESSION_H
+#define DESKTOP_SESSION_H
 
 #include <QApplication>
 #include <QDebug>
@@ -18,190 +19,174 @@
 #include <QDesktopWidget>
 #include <QList>
 #include <QThread>
-//#include <QMediaPlayer>
 #include <QThread>
 #include <QUrl>
 #include <QClipboard>
 
-//#include "Globals.h"
 #include "AppMenu.h"
 #include "SettingsMenu.h"
 #include "SystemWindow.h"
 #include "LDesktop.h"
-//#include "WMProcess.h"
-//#include "BootSplash.h"
+#include "LuminaX11.h"
+#include "LuminaSingleApplication.h"
+#include "LIconCache.h"
 
-#include <LuminaX11.h>
-#include <LuminaSingleApplication.h>
-
-//SYSTEM TRAY STANDARD DEFINITIONS
+// SYSTEM TRAY STANDARD DEFINITIONS
 #define SYSTEM_TRAY_REQUEST_DOCK 0
 #define SYSTEM_TRAY_BEGIN_MESSAGE 1
 #define SYSTEM_TRAY_CANCEL_MESSAGE 2
 
-/*class MenuProxyStyle : public QProxyStyle{
+class LSession : public LSingleApplication
+{
+    Q_OBJECT
 public:
-	int pixelMetric(PixelMetric metric, const QStyleOption *option=0, const QWidget *widget=0) const{
-	  if(metric==PM_SmallIconSize){ return 22; } //override QMenu icon size (make it larger)
-	  else{ return QProxyStyle::pixelMetric(metric, option, widget); } //use the current style for everything else
-	}
-};*/
+    LSession(int &argc, char **argv);
+    ~LSession();
 
-class LSession : public LSingleApplication{
-	Q_OBJECT
-public:
-	LSession(int &argc, char **argv);
-	~LSession();
-
-    //static QString batteryIconName(int charge, bool charging);
-
-	static bool checkUserFiles();
-	//Functions to be called during startup
+    // Functions to be called during startup
     void setupFallbackDesktop(QSettings *dset);
-	void setupSession();
+    void setupSession();
 
-	//Public System Tray Functions
-	QList<WId> currentTrayApps(WId visualTray);
-	bool registerVisualTray(WId);
-	void unregisterVisualTray(WId);
+    // Public System Tray Functions
+    QList<WId> currentTrayApps(WId visualTray);
+    bool registerVisualTray(WId);
+    void unregisterVisualTray(WId);
 
-	//Public start menu buttons
-	bool registerStartButton(QString ID);
-	void unregisterStartButton(QString ID);
+    // Public start menu buttons
+    bool registerStartButton(QString ID);
+    void unregisterStartButton(QString ID);
 
-	//Special functions for XCB event filter parsing only
-	//  (DO NOT USE MANUALLY)
-	void RootSizeChange();
-	void WindowPropertyEvent();
-	void WindowPropertyEvent(WId);
-	void SysTrayDockRequest(WId);
-	void WindowClosedEvent(WId);
-	void WindowConfigureEvent(WId);
-	void WindowDamageEvent(WId);
-	void WindowSelectionClearEvent(WId);
+    // Special functions for XCB event filter parsing only
+    // DO NOT USE MANUALLY
+    void RootSizeChange();
+    void WindowPropertyEvent();
+    void WindowPropertyEvent(WId);
+    void SysTrayDockRequest(WId);
+    void WindowClosedEvent(WId);
+    void WindowConfigureEvent(WId);
+    void WindowDamageEvent(WId);
+    void WindowSelectionClearEvent(WId);
 
-	//System Access
-	//Return a pointer to the current session
-	static LSession* handle(){
-	  return static_cast<LSession*>(LSession::instance());
-	}
+    // System Access
+    // Return a pointer to the current session
+    static LSession* handle()
+    {
+        return static_cast<LSession*>(LSession::instance());
+    }
 
-	static void LaunchApplication(QString cmd);
-	QFileInfoList DesktopFiles();
+    static void LaunchApplication(QString cmd);
+    QFileInfoList DesktopFiles();
 
-	QRect screenGeom(int num);
+    QRect screenGeom(int num);
 
-	AppMenu* applicationMenu();
-	void systemWindow();
-	SettingsMenu* settingsMenu();
-	LXCB *XCB; //class for XCB usage
+    AppMenu* applicationMenu();
+    void systemWindow();
+    SettingsMenu* settingsMenu();
 
-	QSettings* sessionSettings();
-	QSettings* DesktopPluginSettings();
+    LXCB *XCB; //class for XCB usage
 
-	//Keep track of which non-desktop window should be treated as active
-	WId activeWindow(); //This will return the last active window if a desktop element is currently active
+    QSettings* sessionSettings();
+    QSettings* DesktopPluginSettings();
 
-	//Temporarily change the session locale (nothing saved between sessions)
-	void switchLocale(QString localeCode);
+    // Keep track of which non-desktop window should be treated as active
+    WId activeWindow(); // This will return the last active window if a desktop element is currently active
 
-	//Play System Audio
-	void playAudioFile(QString filepath);
-	//Window Adjustment Routine (due to Fluxbox not respecting _NET_WM_STRUT)
-	void adjustWindowGeom(WId win, bool maximize = false);
+    // Temporarily change the session locale (nothing saved between sessions)
+    void switchLocale(QString localeCode);
+
+    // REMOVE?
+    // Window Adjustment Routine (due to Fluxbox not respecting _NET_WM_STRUT)
+    void adjustWindowGeom(WId win, bool maximize = false);
 
 private:
-	//WMProcess *WM;
-	QList<LDesktop*> DESKTOPS;
-	QFileSystemWatcher *watcher;
-	QTimer *screenTimer;
-	QRect screenRect;
-	bool xchange; //flag for when the x11 session was adjusted
+    // WMProcess *WM;
+    QList<LDesktop*> DESKTOPS;
+    QFileSystemWatcher *watcher;
+    QTimer *screenTimer;
+    QRect screenRect;
+    bool xchange; //flag for when the x11 session was adjusted
 
-	//Internal variable for global usage
-	AppMenu *appmenu;
-	SettingsMenu *settingsmenu;
-	SystemWindow *sysWindow;
-	QTranslator *currTranslator;
-//	QMediaPlayer *mediaObj;
-	QSettings *sessionsettings, *DPlugSettings;
-	bool cleansession;
-	//QList<QRect> savedScreens;
+    // Internal variable for global usage
+    AppMenu *appmenu;
+    SettingsMenu *settingsmenu;
+    SystemWindow *sysWindow;
+    QTranslator *currTranslator;
+    QSettings *sessionsettings, *DPlugSettings;
+    bool cleansession;
+    // QList<QRect> savedScreens;
 
-	//System Tray Variables
-	WId SystemTrayID, VisualTrayID;
-	int TrayDmgEvent, TrayDmgError;
-	QList<WId> RunningTrayApps;
-	bool TrayStopping;
-	//Start Button Variables
-	QString StartButtonID;
+    // System Tray Variables
+    WId SystemTrayID, VisualTrayID;
+    int TrayDmgEvent, TrayDmgError;
+    QList<WId> RunningTrayApps;
+    bool TrayStopping;
 
-	//Task Manager Variables
-	WId lastActiveWin;
-	QList<WId> RunningApps;
-	QList<WId> checkWin;
-	QFileInfoList desktopFiles;
+    //Start Button Variables
+    QString StartButtonID;
 
-	void CleanupSession();
+    // Task Manager Variables
+    WId lastActiveWin;
+    QList<WId> RunningApps;
+    QList<WId> checkWin;
+    QFileInfoList desktopFiles;
 
-
-
+    void CleanupSession();
     bool ignoreClipboard; // flag for (handle/store)Clipboard
 
 public slots:
-	void StartLogout();
-	void StartShutdown(bool skipupdates = false);
-	void StartReboot(bool skipupdates = false);
-
-	void reloadIconTheme();
+    void StartLogout();
+    void StartShutdown();
+    void StartReboot();
+    void reloadIconTheme();
 
 private slots:
-	void NewCommunication(QStringList);
-	void launchStartupApps(); //used during initialization
-	void watcherChange(QString);
-	void screensChanged();
-	void screenResized(int);
-	void checkWindowGeoms();
+    void NewCommunication(QStringList);
+    void launchStartupApps(); //used during initialization
+    void watcherChange(QString);
+    void screensChanged();
+    void screenResized(int);
+    void checkWindowGeoms();
 
-	//System Tray Functions
-	void startSystemTray();
-	void stopSystemTray(bool detachall = false);
-	void attachTrayWindow(WId);
-	void removeTrayWindow(WId);
+    // System Tray Functions
+    void startSystemTray();
+    void stopSystemTray(bool detachall = false);
+    void attachTrayWindow(WId);
+    void removeTrayWindow(WId);
 
-	//Internal simplification functions
-	void refreshWindowManager();
-	void updateDesktops();
-	void registerDesktopWindows();
+    // Internal simplification functions
+    void refreshWindowManager();
+    void updateDesktops();
+    void registerDesktopWindows();
 
-
-	void SessionEnding();
+    void SessionEnding();
 
     // Clipboard
     void handleClipboard(QClipboard::Mode mode);
     void storeClipboard(QString text, QClipboard::Mode mode);
 
 signals:
-	//System Tray Signals
-	void VisualTrayAvailable(); //new Visual Tray Plugin can be registered
-	void TrayListChanged(); //Item added/removed from the list
-	void TrayIconChanged(WId); //WinID of Tray App
-	//Start Button signals
-	void StartButtonAvailable();
-	void StartButtonActivated();
-	//Task Manager Signals
-	void WindowListEvent(WId);
-	void WindowListEvent();
-	//General Signals
-	void LocaleChanged();
-	void IconThemeChanged();
-	void DesktopConfigChanged();
-	void SessionConfigChanged();
-	void FavoritesChanged();
-	void DesktopFilesChanged();
-	void MediaFilesChanged();
-	void WorkspaceChanged();
+    // System Tray Signals
+    void VisualTrayAvailable(); //new Visual Tray Plugin can be registered
+    void TrayListChanged(); //Item added/removed from the list
+    void TrayIconChanged(WId); //WinID of Tray App
 
+    // Start Button signals
+    void StartButtonAvailable();
+    void StartButtonActivated();
+
+    // Task Manager Signals
+    void WindowListEvent(WId);
+    void WindowListEvent();
+
+    // General Signals
+    void LocaleChanged();
+    void IconThemeChanged();
+    void DesktopConfigChanged();
+    void SessionConfigChanged();
+    void FavoritesChanged();
+    void DesktopFilesChanged();
+    void MediaFilesChanged();
+    void WorkspaceChanged();
 };
 
 #endif

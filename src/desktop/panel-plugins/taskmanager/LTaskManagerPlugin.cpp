@@ -74,7 +74,7 @@ void LTaskManagerPlugin::UpdateButtons(){
 	  updated = true; //prevent updating a removed button
 	  break; //break out of the button->window loop
 	}else{
-	  //qDebug() << "Window Closed: Remove from button:" << WI[w].windowID() << "Button:" << w;
+      //qDebug() << "Window Closed: Remove from button:" << WI[w].windowID() << "Button:" << w;
 	  BUTTONS[i]->rmWindow(WI[w]); // one of the multiple windows for the button
 	  WI.removeAt(w); //remove this window from the list
 	  w--;
@@ -103,7 +103,7 @@ void LTaskManagerPlugin::UpdateButtons(){
       if(BUTTONS[b]->classname()== ctxt && usegroups){
 	//This adds a window to an existing group
         found = true;
-	//qDebug() << "Add Window to Button:" << b;
+    //qDebug() << "Add Window to Button:" << b;
 	BUTTONS[b]->addWindow(winlist[i]);
 	break;
       }

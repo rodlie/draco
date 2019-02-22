@@ -83,7 +83,7 @@ void SystemWindow::sysRestart(){
   //if(!promptAboutUpdates(skip)){ this->close(); return; } //cancelled
   //this->close();
   //LSession::processEvents();
-  LSession::handle()->StartReboot(true);
+  LSession::handle()->StartReboot();
 }
 
 void SystemWindow::sysUpdate(){
@@ -91,7 +91,7 @@ void SystemWindow::sysUpdate(){
   //if(!promptAboutUpdates(skip)){ this->close(); return; } //cancelled
   //this->close();
   //LSession::processEvents();
-  LSession::handle()->StartReboot(false);
+  LSession::handle()->StartReboot();
 }
 
 void SystemWindow::sysShutdown(){

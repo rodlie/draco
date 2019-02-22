@@ -79,7 +79,7 @@ void LXCB::createWMAtoms(){
 
 // === WindowList() ===
 QList<WId> LXCB::WindowList(bool rawlist){
-  if(DEBUG){ qDebug() << "XCB: WindowList()" << rawlist; }
+  qDebug() << "XCB: WindowList()" << rawlist;
   QList<WId> output;
   //qDebug() << "Get Client list cookie";
   xcb_get_property_cookie_t cookie = xcb_ewmh_get_client_list_unchecked( &EWMH, 0);
@@ -89,8 +89,8 @@ QList<WId> LXCB::WindowList(bool rawlist){
     //qDebug() << " - Loop over items";
     unsigned int wkspace = CurrentWorkspace();
     for(unsigned int i=0; i<winlist.windows_len; i++){
-      //Filter out the Lumina Desktop windows
-      if(WindowClass(winlist.windows[i]) == "Lumina Desktop Environment"){ continue; }
+      //Filter out the Desktop windows
+      if(WindowClass(winlist.windows[i]) == QString("%1 Desktop Environment").arg(DESKTOP_APP_NAME)){ continue; }
       //Also filter out windows not on the active workspace
       else if( (WindowWorkspace(winlist.windows[i])!=wkspace) && !rawlist ){ continue; }
       else{
@@ -124,7 +124,7 @@ unsigned int LXCB::NumberOfWorkspaces(){
 
 // === ActiveWindow() ===
 WId LXCB::ActiveWindow(){
-  if(DEBUG){ qDebug() << "XCB: ActiveWindow()"; }
+  qDebug() << "XCB: ActiveWindow()";
   xcb_get_property_cookie_t cookie = xcb_ewmh_get_active_window_unchecked(&EWMH, 0);
   xcb_window_t actwin;
   if(1 == xcb_ewmh_get_active_window_reply(&EWMH, cookie, &actwin, NULL) ){
@@ -152,7 +152,7 @@ bool LXCB::CheckDisableXinerama(){
 
 // === RegisterVirtualRoots() ===
 void LXCB::RegisterVirtualRoots(QList<WId> roots){
-  if(DEBUG){ qDebug() << "XCB: RegisterVirtualRoots()"; }
+  qDebug() << "XCB: RegisterVirtualRoots()";
   //First convert the QList into the proper format
   xcb_window_t *list = new xcb_window_t[ roots.length() ];
   for(int i=0; i<roots.length(); i++){
