@@ -79,6 +79,22 @@
          </widget>
         </item>
         <item>
+         <widget class="QToolButton" name="tool_suspend">
+          <property name="text">
+           <string>Suspend</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>64</width>
+            <height>64</height>
+           </size>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextUnderIcon</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QToolButton" name="tool_restart">
           <property name="text">
            <string>Restart</string>
@@ -232,22 +248,6 @@
          <widget class="QToolButton" name="push_lock">
           <property name="text">
            <string>Lock</string>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextUnderIcon</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="tool_suspend">
-          <property name="text">
-           <string>Suspend</string>
           </property>
           <property name="iconSize">
            <size>

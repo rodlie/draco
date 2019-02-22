@@ -23,6 +23,7 @@
 #include <QUrl>
 #include <QClipboard>
 
+#include "powerkit.h"
 #include "AppMenu.h"
 #include "SettingsMenu.h"
 #include "SystemWindow.h"
@@ -135,11 +136,19 @@ private:
 
     bool startupApps;
 
+    PowerKit *pm;
+
 public slots:
     void StartLogout();
     void StartShutdown();
+    void StartSuspend(bool hibernate = false);
     void StartReboot();
     void reloadIconTheme();
+
+    bool canShutdown();
+    bool canReboot();
+    bool canSuspend();
+    bool canHibernate();
 
 private slots:
     void NewCommunication(QStringList);

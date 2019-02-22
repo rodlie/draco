@@ -43,6 +43,7 @@ LSession::LSession(int &argc, char ** argv) :
   , TrayStopping(false)
   , lastActiveWin(0)
   , startupApps(true)
+  , pm(Q_NULLPTR)
 {
     // temp icon theme (TODO)
     QIcon::setThemeName("Adwaita");
@@ -112,6 +113,9 @@ LSession::LSession(int &argc, char ** argv) :
               SIGNAL(changed(QClipboard::Mode)),
               this,
               SLOT(handleClipboard(QClipboard::Mode)));
+
+        // PM
+        pm = new PowerKit(this);
 
     } // end check for primary process
 }
@@ -332,16 +336,20 @@ void LSession::StartLogout()
 void LSession::StartShutdown()
 {
     CleanupSession();
-    //LOS::systemShutdown(skipupdates);
-    // TODO use powerkit
+    pm->PowerOff();
     QCoreApplication::exit(0);
+}
+
+void LSession::StartSuspend(bool hibernate)
+{
+    if (hibernate) { pm->Hibernate(); }
+    else { pm->Suspend(); }
 }
 
 void LSession::StartReboot()
 {
     CleanupSession();
-    //LOS::systemRestart(skipupdates);
-    // TODO use powerkit
+    pm->Restart();
     QCoreApplication::exit(0);
 }
 
@@ -351,6 +359,26 @@ void LSession::reloadIconTheme()
     QApplication::processEvents();
     QApplication::processEvents();
     emit IconThemeChanged();
+}
+
+bool LSession::canShutdown()
+{
+    return pm->CanPowerOff();
+}
+
+bool LSession::canReboot()
+{
+    return pm->CanRestart();
+}
+
+bool LSession::canSuspend()
+{
+    return  pm->CanSuspend();
+}
+
+bool LSession::canHibernate()
+{
+    return pm->CanHibernate();
 }
 
 void LSession::watcherChange(QString changed)

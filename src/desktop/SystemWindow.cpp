@@ -29,10 +29,10 @@ SystemWindow::SystemWindow() : QDialog(), ui(new Ui::SystemWindow){
   connect(ui->tool_suspend, SIGNAL(clicked()), this, SLOT(sysSuspend()) );
   connect(ui->push_cancel, SIGNAL(clicked()), this, SLOT(sysCancel()) );
   connect(ui->push_lock, SIGNAL(clicked()), this, SLOT(sysLock()) );
-  connect(ui->tool_restart_updates, SIGNAL(clicked()), this, SLOT(sysUpdate()) );
-  //Disable buttons if necessary
+  //connect(ui->tool_restart_updates, SIGNAL(clicked()), this, SLOT(sysUpdate()) );
+
   updateWindow();
-  ui->tool_suspend->setVisible(/*LOS::systemCanSuspend()*/ false); //does not change with time - just do a single check
+  ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
   connect(QApplication::instance(), SIGNAL(LocaleChanged()), this, SLOT(updateWindow()) );
   connect(QApplication::instance(), SIGNAL(IconThemeChanged()), this, SLOT(updateWindow()) );
 }
@@ -44,9 +44,12 @@ SystemWindow::~SystemWindow(){
 void SystemWindow::updateWindow(){
   //Disable the shutdown/restart buttons if necessary
   ui->retranslateUi(this);
-  bool ok = /*LOS::userHasShutdownAccess();*/false;
-    ui->tool_restart->setEnabled(ok);
-    ui->tool_shutdown->setEnabled(ok);
+
+  //ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
+  ui->tool_suspend->setEnabled(LSession::handle()->canSuspend());
+    ui->tool_restart->setEnabled(LSession::handle()->canReboot());
+    ui->tool_shutdown->setEnabled(LSession::handle()->canShutdown());
+
   //ui->frame_update->setVisible( !LOS::systemPendingUpdates().isEmpty() );
   //Center this window on the current screen
   QPoint center = QApplication::desktop()->screenGeometry(QCursor::pos()).center(); //get the center of the current screen
@@ -102,13 +105,13 @@ void SystemWindow::sysShutdown(){
   LSession::handle()->StartShutdown();
 }
 
-void SystemWindow::sysSuspend(){
-  this->hide();
-  LSession::processEvents();
-  //Make sure to lock the system first (otherwise anybody can access it again)
-  LUtils::runCmd("xscreensaver-command -lock");
-  //Now suspend the system
-  //LOS::systemSuspend();
+void SystemWindow::sysSuspend()
+{
+    this->hide();
+    LSession::processEvents();
+    //Make sure to lock the system first (otherwise anybody can access it again)
+    LUtils::runCmd("xscreensaver-command -lock");
+    LSession::handle()->StartSuspend();
 }
 
 void SystemWindow::sysLock(){

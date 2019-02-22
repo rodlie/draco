@@ -212,9 +212,9 @@ void LDesktop::checkResolution(){
 void LDesktop::InitDesktop(){
   //This is called *once* during the main initialization routines
   checkResolution(); //Adjust the desktop config file first (if necessary)
-  if(DEBUG){ qDebug() << "Init Desktop:" << Screen(); }
+  qDebug() << "Init Desktop:" << Screen();
     //connect(desktop, SIGNAL(resized(int)), this, SLOT(UpdateGeometry(int)));
-  if(DEBUG){ qDebug() << "Desktop #"<<Screen()<<" -> "<< LSession::desktop()->screenGeometry(Screen()) << LSession::handle()->screenGeom(Screen()); }
+  qDebug() << "Desktop #"<<Screen()<<" -> "<< LSession::desktop()->screenGeometry(Screen()) << LSession::handle()->screenGeom(Screen());
   deskMenu = new QMenu(0);
     connect(deskMenu, SIGNAL(triggered(QAction*)), this, SLOT(SystemApplication(QAction*)) );
   winMenu = new QMenu(0);
@@ -245,7 +245,7 @@ void LDesktop::InitDesktop(){
 	bgWindow->setGeometry(LSession::handle()->screenGeom(Screen()));
         bgWindow->setWindowOpacity(0.0);
 	connect(bgWindow, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(ShowMenu()) );*/
-  if(DEBUG){ qDebug() << "Create bgDesktop"; }
+  qDebug() << "Create bgDesktop";
   bgDesktop = new LDesktopPluginSpace();
       int grid = settings->value(DPREFIX+"GridSize",-1).toInt();
       if(grid<0 && LSession::desktop()->screenGeometry(Screen()).height() > 2000){ grid = 200; }
@@ -265,7 +265,7 @@ void LDesktop::InitDesktop(){
     desktopFolderActionMenu->addAction(LXDG::findIcon("folder-new",""), tr("New Folder"), this, SLOT(NewDesktopFolder()) );
     desktopFolderActionMenu->addAction(LXDG::findIcon("document-new",""), tr("New File"), this, SLOT(NewDesktopFile()) );
     desktopFolderActionMenu->addAction(LXDG::findIcon("edit-paste",""), tr("Paste"), this, SLOT(PasteInDesktop()) );
-  if(DEBUG){ qDebug() << " - Desktop Init Done:" << screenID; }
+  qDebug() << " - Desktop Init Done:" << screenID;
   //Start the update processes
   QTimer::singleShot(10,this, SLOT(UpdateMenu()) );
   QTimer::singleShot(0,this, SLOT(UpdateBackground()) );
