@@ -3,7 +3,7 @@
 ![screenshot](screenshot-01.jpg)
 
 
-A simple desktop environment based on Lumina. **This is work-in-progress, not for end-users (yet).**
+A simple desktop environment. This project is a fork of [Lumina](https://github.com/lumina-desktop/lumina/commit/9ca1d49ef773adae2a26758a61c9db3b029d93b1) with different goals/focus. **This is work-in-progress, not for end-users (yet).** First release is scheduled for Q1(-ish) 2019.
 
 ## Requirements
 
@@ -30,13 +30,8 @@ A simple desktop environment based on Lumina. **This is work-in-progress, not fo
   * x11
   * xdg-utils
   * powerkit
-    * xscreensaver
-    * libxss
-    * consolekit/logind
-    * upower
+  * xscreensaver
   * qtfm
-    * udisks/bsdisks
   * hicolor-icon-theme
   * adwaita-icon-theme (or compatible)
   * openbox
-    * obconf/obkey recommended
