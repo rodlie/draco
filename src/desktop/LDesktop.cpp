@@ -4,352 +4,426 @@
 //  Available under the 3-clause BSD license
 //  See the LICENSE file for full details
 //===========================================
+
 #include "LDesktop.h"
 #include "LSession.h"
 #include <QClipboard>
 #include <QMimeData>
 
-//#include <LuminaOS.h>
-#include <LuminaX11.h>
+#include "LuminaX11.h"
 #include "LWinInfo.h"
-//#include "JsonMenu.h"
-
 #include <QScreen>
-
 #include "common.h"
 
 #define DEBUG 1
 
-LDesktop::LDesktop(int deskNum, bool setdefault) : QObject(){
-  screenID = QApplication::screens().at(deskNum)->name();
-  DPREFIX = "desktop-"+screenID+"/";
-  i_dlg_folder = true;
-  inputDLG = 0;
-  if (deskNum==0) { setdefault = true;}
-  defaultdesktop = setdefault; //(desktop->screenGeometry(desktopnumber).x()==0);
-  //desktoplocked = true;
-  issyncing = bgupdating = false;
-  usewinmenu=false;
-  desktopFolderActionMenu = 0;
-  //Setup the internal variables
-  settings = new QSettings(QSettings::UserScope, QString("%1-desktop").arg(DESKTOP_APP),DE_DESKTOP_SETTINGS, this);
-  qDebug() << " - Desktop Settings File:" << settings->fileName();
-  if(!QFile::exists(settings->fileName())){ settings->setValue(DPREFIX+"background/filelist",QStringList()<<"default"); settings->sync(); }
-  //bgWindow = 0;
-  bgDesktop = 0;
-  QTimer::singleShot(1,this, SLOT(InitDesktop()) );
+LDesktop::LDesktop(int deskNum, bool setdefault) : QObject()
+  , settings(Q_NULLPTR)
+  , bgtimer(Q_NULLPTR)
+  , defaultdesktop(false)
+  , issyncing(false)
+  , usewinmenu(false)
+  , bgupdating(false)
+  , bgDesktop(Q_NULLPTR)
+  , deskMenu(Q_NULLPTR)
+  , winMenu(Q_NULLPTR)
+  , desktopFolderActionMenu(Q_NULLPTR)
+  , workspacelabel(Q_NULLPTR)
+  , wkspaceact(Q_NULLPTR)
+  , i_dlg_folder(true)
+  , inputDLG(Q_NULLPTR)
+{
+    screenID = QApplication::screens().at(deskNum)->name();
+    DPREFIX = "desktop-"+screenID+"/";
 
+    if (deskNum==0) { setdefault = true; }
+    defaultdesktop = setdefault; //(desktop->screenGeometry(desktopnumber).x()==0);
+
+    // Setup the internal variables
+    settings = new QSettings(QSettings::UserScope,
+                             QString("%1-desktop").arg(DESKTOP_APP),
+                             DE_DESKTOP_SETTINGS,
+                             this);
+    qDebug() << " - Desktop Settings File:" << settings->fileName();
+    if (!QFile::exists(settings->fileName())) {
+        settings->setValue(QString("%1background/filelist").arg(DPREFIX),
+                           QStringList()<<"default");
+        settings->sync();
+    }
+
+    QTimer::singleShot(1, this, SLOT(InitDesktop()));
 }
 
-LDesktop::~LDesktop(){
-  delete deskMenu;
-  delete winMenu;
-  delete desktopFolderActionMenu;
-  //delete bgWindow;
-  delete workspacelabel;
-  delete wkspaceact;
+LDesktop::~LDesktop()
+{
+    delete deskMenu;
+    delete winMenu;
+    delete desktopFolderActionMenu;
+    delete workspacelabel;
+    delete wkspaceact;
 }
 
-int LDesktop::Screen(){
-  QList<QScreen*> scrns = QApplication::screens();
-  for(int i=0; i<scrns.length(); i++){
-    if(scrns[i]->name()==screenID){ return i; }
-  }
-  return -1;
+int LDesktop::Screen()
+{
+    QList<QScreen*> scrns = QApplication::screens();
+    for (int i=0; i<scrns.length(); i++) {
+        if (scrns[i]->name()==screenID) { return i; }
+    }
+    return -1;
 }
 
-void LDesktop::show(){
-  //if(bgWindow!=0){ bgWindow->show(); }
-  if(bgDesktop!=0){ bgDesktop->show(); }
-  for(int i=0; i<PANELS.length(); i++){ PANELS[i]->show(); }
+void LDesktop::show()
+{
+    if (bgDesktop!=Q_NULLPTR){ bgDesktop->show(); }
+    for (int i=0; i<PANELS.length(); i++) { PANELS[i]->show(); }
 }
 
-void LDesktop::hide(){
-  //if(bgWindow!=0){ bgWindow->hide(); }
-  if(bgDesktop!=0){ bgDesktop->hide(); }
-  for(int i=0; i<PANELS.length(); i++){ PANELS[i]->hide(); }
+void LDesktop::hide()
+{
+    if (bgDesktop!=Q_NULLPTR){ bgDesktop->hide(); }
+    for (int i=0; i<PANELS.length(); i++) { PANELS[i]->hide(); }
 }
 
-void LDesktop::prepareToClose(){
-  //Get any panels ready to close
-  issyncing = true; //Stop handling any watcher events
-  for(int i=0; i<PANELS.length(); i++){ PANELS[i]->prepareToClose(); PANELS.takeAt(i)->deleteLater(); i--; }
-  //Now close down any desktop plugins
-  //desktoplocked = true; //make sure that plugin settings are preserved during removal
-  //Remove all the current containers
-  bgDesktop->cleanup();
+void LDesktop::prepareToClose()
+{
+    // Get any panels ready to close
+    issyncing = true; // Stop handling any watcher events
+    for (int i=0; i<PANELS.length(); i++) { PANELS[i]->prepareToClose(); PANELS.takeAt(i)->deleteLater(); i--; }
+    // Now close down any desktop plugins
+    // Remove all the current containers
+    bgDesktop->cleanup();
 }
 
-WId LDesktop::backgroundID(){
-  if(bgDesktop!=0){ return bgDesktop->winId(); }
-  else{ return QX11Info::appRootWindow(); }
+WId LDesktop::backgroundID()
+{
+    if (bgDesktop!=Q_NULLPTR) { return bgDesktop->winId(); }
+    else { return QX11Info::appRootWindow(); }
 }
 
-QRect LDesktop::availableScreenGeom(){
-  //Return a QRect containing the (global) screen area that is available (not under any panels)
-  if(bgDesktop!=0){
-    return globalWorkRect; //saved from previous calculations
-  }else{
-    return LSession::handle()->screenGeom( Screen() );
-  }
+QRect LDesktop::availableScreenGeom()
+{
+    // Return a QRect containing the (global) screen area that is available (not under any panels)
+    if (bgDesktop!=Q_NULLPTR) {
+        return globalWorkRect; // saved from previous calculations
+    } else {
+        return LSession::handle()->screenGeom( Screen() );
+    }
 }
 
-void LDesktop::UpdateGeometry(){
-    //First make sure there is something different about the geometry
-    //if(desktop->screenGeometry(Screen())==bgWindow->geometry()){ return; }
-    //Now update the screen
-    // NOTE: This functionality is highly event-driven based on X changes - so we need to keep things in order (no signals/slots)
-    //qDebug() << "Changing Desktop Geom:" << Screen();
-    //bgWindow->setGeometry(desktop->screenGeometry(Screen()));
-    /*for(int i=0; i<PANELS.length(); i++){
-      PANELS[i]->UpdatePanel(true); //geom only updates - do this before adjusting the background
-    }*/
-    //qDebug() << " - Update Desktop Plugin Area";
-    //UpdateDesktopPluginArea();
-    //qDebug() << " - Done With Desktop Geom Updates";
+void LDesktop::UpdateGeometry()
+{
     QTimer::singleShot(0, this, SLOT(UpdateBackground()));
     QTimer::singleShot(0, this, SLOT(UpdatePanels()));
 }
 
-void LDesktop::SystemLock(){
-  QProcess::startDetached("xscreensaver-command -lock");
+void LDesktop::SystemLock()
+{
+    QProcess::startDetached("xscreensaver-command -lock");
 }
 
-void LDesktop::SystemLogout(){
-  LSession::handle()->systemWindow();
+void LDesktop::SystemLogout()
+{
+    LSession::handle()->systemWindow();
 }
 
-void LDesktop::SystemTerminal(){
-  LSession::handle()->sessionSettings()->sync(); //make sure it is up to date
-  QString term = LXDG::findDefaultAppForMime("application/terminal"); //LSession::handle()->sessionSettings()->value("default-terminal","xterm").toString();
-  if(term.isEmpty() ||(!term.endsWith(".desktop") && !LUtils::isValidBinary(term)) ){ term = "xterm"; }
-  LSession::LaunchApplication("lumina-open \""+term+"\"");
+void LDesktop::SystemTerminal()
+{
+    LSession::handle()->sessionSettings()->sync(); // make sure it is up to date
+    QString term = LXDG::findDefaultAppForMime("application/terminal"); // LSession::handle()->sessionSettings()->value("default-terminal","xterm").toString();
+    if (term.isEmpty() ||(!term.endsWith(".desktop") && !LUtils::isValidBinary(term)) ) { term = "xterm"; }
+    LSession::LaunchApplication(QString("qtfm-launcher \"%1\"").arg(term));
 }
 
-void LDesktop::SystemFileManager(){
-  //Just open the home directory
-  /*QString fm =  "lumina-open \""+QDir::homePath()+"\"";
-  qDebug() << "system file manager" << fm;
-  LSession::LaunchApplication(fm);*/
-    QProcess::startDetached(QString("qtfm"));
+void LDesktop::SystemFileManager()
+{
+    QProcess::startDetached(QString("qtfm %1").arg(QDir::homePath()));
 }
 
-void LDesktop::SystemApplication(QAction* act){
-  if(!act->whatsThis().isEmpty() && act->parent()==deskMenu){
-      qDebug() << "system application" << act;
-    LSession::LaunchApplication("qtfm-launcher \""+act->whatsThis()+"\"");
-  }
-}
-
-void LDesktop::checkResolution(){
-  //Compare the current screen resolution with the last one used/saved and adjust config values *only*
-  //NOTE: This is only run the first time this desktop is created (before loading all the interface) - not on each desktop change
-  int oldWidth = settings->value(DPREFIX+"screen/lastWidth",-1).toInt();
-  int oldHeight = settings->value(DPREFIX+"screen/lastHeight",-1).toInt();
-  QRect scrn = LSession::handle()->screenGeom( Screen() );
-  if(scrn.isNull()){ return; }
-  issyncing = true;
-  settings->setValue(DPREFIX+"screen/lastWidth",scrn.width());
-  settings->setValue(DPREFIX+"screen/lastHeight",scrn.height());
-
-  if(oldWidth<1 || oldHeight<1 || scrn.width()<1 || scrn.height()<1){
-    //nothing to do - something invalid
-  }else if(scrn.width()==oldWidth && scrn.height()==oldHeight){
-    //nothing to do - same as before
-  }else{
-    //Calculate the scale factor between the old/new sizes in each dimension
-    //  and forward that on to all the interface elements
-    double xscale = scrn.width()/((double) oldWidth);
-    double yscale = scrn.height()/((double) oldHeight);
-    if(DEBUG){
-      qDebug() << "Screen Resolution Changed:" << screenID;
-      qDebug() << " - Old:" << QString::number(oldWidth)+"x"+QString::number(oldHeight);
-      qDebug() << " - New:" << QString::number(scrn.width())+"x"+QString::number(scrn.height());
-      qDebug() << " - Scale Factors:" << xscale << yscale;
+void LDesktop::SystemApplication(QAction* act)
+{
+    if (!act->whatsThis().isEmpty() && act->parent()==deskMenu) {
+        qDebug() << "system application" << act;
+        LSession::LaunchApplication(QString("qtfm-launcher \"%1\"").arg(act->whatsThis()));
     }
-    //Update any panels in the config file
-    for(int i=0; i<4; i++){
-      QString PPREFIX = "panel"+QString::number(Screen())+"."+QString::number(i)+"/";
-      int ht = settings->value(PPREFIX+"height",-1).toInt();
-      if(ht<1){ continue; } //no panel height defined
-      QString loc = settings->value(PPREFIX+"location","top").toString().toLower();
-      if(loc=="top" || loc=="bottom"){
-        settings->setValue(PPREFIX+"height", (int) ht*yscale); //vertical dimension
-      }else{
-        settings->setValue(PPREFIX+"height", (int) ht*xscale); //horizontal dimension
-      }
-    }
-    //Update any desktop plugins
-    QStringList plugs = settings->value(DPREFIX+"pluginlist").toStringList();
-    QFileInfoList files = LSession::handle()->DesktopFiles();
-    for(int i=0; i<files.length(); i++){
-      plugs << "applauncher::"+files[i].absoluteFilePath()+"---"+DPREFIX;
-    }
-    //QString pspath = QDir::homePath()+"/.lumina/desktop-plugins/%1.conf";
-    QSettings *DP = LSession::handle()->DesktopPluginSettings();
-    QStringList keys = DP->allKeys();
-    for(int i=0; i<plugs.length(); i++){
-      QStringList filter = keys.filter(plugs[i]);
-      for(int j=0; j<filter.length(); j++){
-        //Has existing settings - need to adjust it
-	  if(filter[j].endsWith("location/height")){ DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*yscale) ); }
-	  if(filter[j].endsWith("location/width")){ DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*xscale) ); }
-	  if(filter[j].endsWith("location/x")){ DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*xscale) ); }
-	  if(filter[j].endsWith("location/y")){ DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*yscale) ); }
-	  if(filter[j].endsWith("IconSize")){ DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*yscale) ); }
-	  if(filter[j].endsWith("iconsize")){ DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*yscale) ); }
-      }
-    }
-    DP->sync(); //make sure it gets saved to disk right away
-
-  }
-  issyncing = false;
 }
 
-// =====================
-//     PRIVATE SLOTS
-// =====================
-void LDesktop::InitDesktop(){
-  //This is called *once* during the main initialization routines
-  checkResolution(); //Adjust the desktop config file first (if necessary)
-  qDebug() << "Init Desktop:" << Screen();
-    //connect(desktop, SIGNAL(resized(int)), this, SLOT(UpdateGeometry(int)));
-  qDebug() << "Desktop #"<<Screen()<<" -> "<< LSession::desktop()->screenGeometry(Screen()) << LSession::handle()->screenGeom(Screen());
-  deskMenu = new QMenu(0);
-    connect(deskMenu, SIGNAL(triggered(QAction*)), this, SLOT(SystemApplication(QAction*)) );
-  winMenu = new QMenu(0);
+void LDesktop::checkResolution()
+{
+    // Compare the current screen resolution with the last one used/saved and adjust config values *only*
+    // NOTE: This is only run the first time this desktop is created (before loading all the interface) - not on each desktop change
+    int oldWidth = settings->value(QString("%1screen/lastWidth").arg(DPREFIX), -1).toInt();
+    int oldHeight = settings->value(QString("%1screen/lastHeight").arg(DPREFIX), -1).toInt();
+    QRect scrn = LSession::handle()->screenGeom(Screen());
+
+    if (scrn.isNull()) { return; }
+    issyncing = true;
+
+    settings->setValue(QString("%1screen/lastWidth").arg(DPREFIX), scrn.width());
+    settings->setValue(QString("%1screen/lastHeight").arg(DPREFIX), scrn.height());
+
+    if (oldWidth<1 || oldHeight<1 || scrn.width()<1 || scrn.height()<1) {
+        // nothing to do - something invalid
+    } else if (scrn.width()==oldWidth && scrn.height()==oldHeight) {
+        // nothing to do - same as before
+    } else {
+        // Calculate the scale factor between the old/new sizes in each dimension
+        // and forward that on to all the interface elements
+        double xscale = scrn.width()/((double) oldWidth);
+        double yscale = scrn.height()/((double) oldHeight);
+
+        qDebug() << "Screen Resolution Changed:" << screenID;
+        qDebug() << " - Old:" << QString::number(oldWidth)+"x"+QString::number(oldHeight);
+        qDebug() << " - New:" << QString::number(scrn.width())+"x"+QString::number(scrn.height());
+        qDebug() << " - Scale Factors:" << xscale << yscale;
+
+        // Update any panels in the config file
+        for (int i=0; i<4; i++) {
+            QString PPREFIX = "panel"+QString::number(Screen())+"."+QString::number(i)+"/";
+            int ht = settings->value(QString("%1height").arg(PPREFIX), -1).toInt();
+            if (ht<1) { continue; } // no panel height defined
+            QString loc = settings->value(QString("%1location").arg(PPREFIX), "top").toString().toLower();
+            if (loc=="top" || loc=="bottom") {
+                settings->setValue(QString("%1height").arg(PPREFIX), (int) ht*yscale); // vertical dimension
+            } else {
+                settings->setValue(QString("%1height").arg(PPREFIX), (int) ht*xscale); // horizontal dimension
+            }
+        }
+
+        // Update any desktop plugins
+        QStringList plugs = settings->value(QString("%1pluginlist").arg(DPREFIX)).toStringList();
+        QFileInfoList files = LSession::handle()->DesktopFiles();
+        for (int i=0; i<files.length(); i++) {
+            plugs << "applauncher::"+files[i].absoluteFilePath()+"---"+DPREFIX;
+        }
+
+        //QString pspath = QDir::homePath()+"/.lumina/desktop-plugins/%1.conf";
+        QSettings *DP = LSession::handle()->DesktopPluginSettings();
+        QStringList keys = DP->allKeys();
+        for (int i=0; i<plugs.length(); i++) {
+            QStringList filter = keys.filter(plugs[i]);
+            for (int j=0; j<filter.length(); j++) {
+                // Has existing settings - need to adjust it
+                if (filter[j].endsWith("location/height")) { DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*yscale) ); }
+                if (filter[j].endsWith("location/width")) { DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*xscale) ); }
+                if (filter[j].endsWith("location/x")) { DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*xscale) ); }
+                if (filter[j].endsWith("location/y")) { DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*yscale) ); }
+                if (filter[j].endsWith("IconSize")) { DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*yscale) ); }
+                if (filter[j].endsWith("iconsize")) { DP->setValue( filter[j], qRound(DP->value(filter[j]).toInt()*yscale) ); }
+            }
+        }
+        DP->sync(); // make sure it gets saved to disk right away
+    }
+    issyncing = false;
+}
+
+void LDesktop::InitDesktop()
+{
+    // This is called *once* during the main initialization routines
+    checkResolution(); // Adjust the desktop config file first (if necessary)
+    qDebug() << "Init Desktop:" << Screen();
+    qDebug() << "Desktop #"<<Screen()<<" -> "<< LSession::desktop()->screenGeometry(Screen()) << LSession::handle()->screenGeom(Screen());
+
+    deskMenu = new QMenu(Q_NULLPTR);
+    connect(deskMenu,
+            SIGNAL(triggered(QAction*)),
+            this,
+            SLOT(SystemApplication(QAction*)) );
+
+    winMenu = new QMenu(Q_NULLPTR);
     winMenu->setTitle(tr("Window List"));
-    winMenu->setIcon( LXDG::findIcon("preferences-system-windows","") );
-  connect(winMenu, SIGNAL(triggered(QAction*)), this, SLOT(winClicked(QAction*)) );
-  workspacelabel = new QLabel(0);
+    winMenu->setIcon(LXDG::findIcon("preferences-system-windows",""));
+    connect(winMenu,
+            SIGNAL(triggered(QAction*)),
+            this,
+            SLOT(winClicked(QAction*)));
+
+    workspacelabel = new QLabel(Q_NULLPTR);
     workspacelabel->setAlignment(Qt::AlignCenter);
     workspacelabel->setContentsMargins(3, 3, 3, 3);
-  wkspaceact = new QWidgetAction(0);
+
+    wkspaceact = new QWidgetAction(Q_NULLPTR);
     wkspaceact->setDefaultWidget(workspacelabel);
-  bgtimer = new QTimer(this);
+
+    bgtimer = new QTimer(this);
     bgtimer->setSingleShot(true);
-    connect(bgtimer, SIGNAL(timeout()), this, SLOT(UpdateBackground()) );
+    connect(bgtimer, SIGNAL(timeout()), this, SLOT(UpdateBackground()));
 
-    connect(QApplication::instance(), SIGNAL(DesktopConfigChanged()), this, SLOT(SettingsChanged()) );
-    connect(QApplication::instance(), SIGNAL(DesktopFilesChanged()), this, SLOT(UpdateDesktop()) );
-    connect(QApplication::instance(), SIGNAL(MediaFilesChanged()), this, SLOT(UpdateDesktop()) );
-    connect(QApplication::instance(), SIGNAL(LocaleChanged()), this, SLOT(LocaleChanged()) );
-    connect(QApplication::instance(), SIGNAL(WorkspaceChanged()), this, SLOT(UpdateBackground()) );
-  //if(DEBUG){ qDebug() << "Create bgWindow"; }
-  /*bgWindow = new QWidget(); //LDesktopBackground();
-	bgWindow->setObjectName("bgWindow");
-	bgWindow->setContextMenuPolicy(Qt::CustomContextMenu);
-	bgWindow->setFocusPolicy(Qt::StrongFocus);
-  	bgWindow->setWindowFlags(Qt::WindowStaysOnBottomHint | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-	LSession::handle()->XCB->SetAsDesktop(bgWindow->winId());
-	bgWindow->setGeometry(LSession::handle()->screenGeom(Screen()));
-        bgWindow->setWindowOpacity(0.0);
-	connect(bgWindow, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(ShowMenu()) );*/
-  qDebug() << "Create bgDesktop";
-  bgDesktop = new LDesktopPluginSpace();
-      int grid = settings->value(DPREFIX+"GridSize",-1).toInt();
-      if(grid<0 && LSession::desktop()->screenGeometry(Screen()).height() > 2000){ grid = 200; }
-      else if(grid<0){ grid = 100; }
-      bgDesktop->SetIconSize( grid );
-      bgDesktop->setContextMenuPolicy(Qt::CustomContextMenu);
-      //LSession::handle()->XCB->SetAsDesktop(bgDesktop->winId());
-      connect(bgDesktop, SIGNAL(PluginRemovedByUser(QString)), this, SLOT(RemoveDeskPlugin(QString)) );
-      connect(bgDesktop, SIGNAL(IncreaseIcons()), this, SLOT(IncreaseDesktopPluginIcons()) );
-      connect(bgDesktop, SIGNAL(DecreaseIcons()), this, SLOT(DecreaseDesktopPluginIcons()) );
-      connect(bgDesktop, SIGNAL(HideDesktopMenu()), deskMenu, SLOT(hide()));
-      connect(bgDesktop, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(ShowMenu()) );
+    connect(QApplication::instance(),
+            SIGNAL(DesktopConfigChanged()),
+            this,
+            SLOT(SettingsChanged()) );
+    connect(QApplication::instance(),
+            SIGNAL(DesktopFilesChanged()),
+            this,
+            SLOT(UpdateDesktop()) );
+    connect(QApplication::instance(),
+            SIGNAL(MediaFilesChanged()),
+            this,
+            SLOT(UpdateDesktop()) );
+    connect(QApplication::instance(),
+            SIGNAL(LocaleChanged()),
+            this,
+            SLOT(LocaleChanged()) );
+    connect(QApplication::instance(),
+            SIGNAL(WorkspaceChanged()),
+            this,
+            SLOT(UpdateBackground()) );
 
-  desktopFolderActionMenu = new QMenu(0);
+    qDebug() << "Create bgDesktop";
+    bgDesktop = new LDesktopPluginSpace();
+    int grid = settings->value(QString("%1GridSize").arg(DPREFIX), -1).toInt();
+    if (grid<0 && LSession::desktop()->screenGeometry(Screen()).height() > 2000) { grid = 200; }
+    else if (grid<0) { grid = 100; }
+
+    bgDesktop->SetIconSize( grid );
+    bgDesktop->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(bgDesktop,
+            SIGNAL(PluginRemovedByUser(QString)),
+            this,
+            SLOT(RemoveDeskPlugin(QString)));
+    connect(bgDesktop,
+            SIGNAL(IncreaseIcons()),
+            this,
+            SLOT(IncreaseDesktopPluginIcons()));
+    connect(bgDesktop,
+            SIGNAL(DecreaseIcons()),
+            this,
+            SLOT(DecreaseDesktopPluginIcons()));
+    connect(bgDesktop,
+            SIGNAL(HideDesktopMenu()),
+            deskMenu,
+            SLOT(hide()));
+    connect(bgDesktop,
+            SIGNAL(customContextMenuRequested(const QPoint&)),
+            this,
+            SLOT(ShowMenu()));
+
+    desktopFolderActionMenu = new QMenu(Q_NULLPTR);
     desktopFolderActionMenu->setTitle(tr("Desktop"));
-    desktopFolderActionMenu->setIcon(LXDG::findIcon("user-desktop",""));
-    desktopFolderActionMenu->addAction(LXDG::findIcon("folder-new",""), tr("New Folder"), this, SLOT(NewDesktopFolder()) );
-    desktopFolderActionMenu->addAction(LXDG::findIcon("document-new",""), tr("New File"), this, SLOT(NewDesktopFile()) );
-    desktopFolderActionMenu->addAction(LXDG::findIcon("edit-paste",""), tr("Paste"), this, SLOT(PasteInDesktop()) );
-  qDebug() << " - Desktop Init Done:" << screenID;
-  //Start the update processes
-  QTimer::singleShot(10,this, SLOT(UpdateMenu()) );
-  QTimer::singleShot(0,this, SLOT(UpdateBackground()) );
-  QTimer::singleShot(1,this, SLOT(UpdateDesktop()) );
-  QTimer::singleShot(2,this, SLOT(UpdatePanels()) );
+    desktopFolderActionMenu->setIcon(LXDG::findIcon("user-desktop", ""));
+    desktopFolderActionMenu->addAction(LXDG::findIcon("folder-new", ""),
+                                       tr("New Folder"),
+                                       this,
+                                       SLOT(NewDesktopFolder()));
+    desktopFolderActionMenu->addAction(LXDG::findIcon("document-new", ""),
+                                       tr("New File"),
+                                       this,
+                                       SLOT(NewDesktopFile()));
+    desktopFolderActionMenu->addAction(LXDG::findIcon("edit-paste", ""),
+                                       tr("Paste"),
+                                       this,
+                                       SLOT(PasteInDesktop()));
+
+    qDebug() << " - Desktop Init Done:" << screenID;
+
+    // Start the update processes
+    QTimer::singleShot(10,
+                       this,
+                       SLOT(UpdateMenu()));
+    QTimer::singleShot(0,
+                       this,
+                       SLOT(UpdateBackground()));
+    QTimer::singleShot(1,
+                       this,
+                       SLOT(UpdateDesktop()));
+    QTimer::singleShot(2,
+                       this,
+                       SLOT(UpdatePanels()));
 }
 
-void LDesktop::SettingsChanged(){
-  if(issyncing){ return; } //don't refresh for internal modifications to the
-  issyncing = true;
-  qDebug() << "Found Settings Change:" << screenID;
-  settings->sync(); //make sure to sync with external settings changes
-  UpdateBackground();
-  UpdateDesktop();
-  UpdatePanels();
-  UpdateMenu();
-  issyncing = false;
-  QTimer::singleShot(50, this, SLOT(UnlockSettings()) ); //give it a few moments to settle before performing another sync
+void LDesktop::SettingsChanged()
+{
+    if (issyncing){ return; } // don't refresh for internal modifications to the
+    issyncing = true;
+
+    qDebug() << "Found Settings Change:" << screenID;
+    settings->sync(); // make sure to sync with external settings changes
+    UpdateBackground();
+    UpdateDesktop();
+    UpdatePanels();
+    UpdateMenu();
+    issyncing = false;
+
+    QTimer::singleShot(50,
+                       this,
+                       SLOT(UnlockSettings())); // give it a few moments to settle before performing another sync
 }
 
-void LDesktop::LocaleChanged(){
-  //Update any elements which require a re-translation
-  UpdateMenu(false); //do the full menu refresh
+void LDesktop::LocaleChanged()
+{
+    // Update any elements which require a re-translation
+    UpdateMenu(false); // do the full menu refresh
 }
 
-void LDesktop::UpdateMenu(bool fast){
-  if(DEBUG){ qDebug() << " - Update Menu:" << screenID; }
-  //Put a label at the top
-  int num = LSession::handle()->XCB->CurrentWorkspace(); //LX11::GetCurrentDesktop();
-  if(DEBUG){ qDebug() << "Found workspace number:" << num; }
-  /*if(num < 0){*/ workspacelabel->setText(QString("%1 Desktop %2").arg(DESKTOP_APP_NAME).arg(DESKTOP_APP_VERSION));// }
-  //else{ workspacelabel->setText( "<b>"+QString(tr("Workspace %1")).arg(QString::number(num+1))+"</b>"); }
-  if(fast && usewinmenu){ UpdateWinMenu(); }
-  if(fast){ return; } //already done
-  deskMenu->clear(); //clear it for refresh
-  deskMenu->addAction(wkspaceact);
-  deskMenu->addSeparator();
-  //Now load the user's menu setup and fill the menu
-  QStringList items = settings->value("menu/itemlist", QStringList() << "windowlist" ).toStringList();
-  usewinmenu=false;
-  for(int i=0; i<items.length(); i++){
-    //if(items[i]=="terminal"){ deskMenu->addAction(LXDG::findIcon("utilities-terminal",""), tr("Terminal"), this, SLOT(SystemTerminal()) ); }
-    /*else*/ if(items[i]=="lockdesktop"){ deskMenu->addAction(LXDG::findIcon("system-lock-screen",""), tr("Lock Session"), this, SLOT(SystemLock()) ); }
-    //else if(items[i]=="filemanager"){ deskMenu->addAction( LXDG::findIcon("user-home",""), tr("Browse Files"), this, SLOT(SystemFileManager()) ); }
-    //else if(items[i]=="applications"){ deskMenu->addMenu( LSession::handle()->applicationMenu() ); }
-    else if(items[i]=="line"){ deskMenu->addSeparator(); }
-    //else if(items[i]=="settings"){ deskMenu->addMenu( LSession::handle()->settingsMenu() ); }
-    else if(items[i]=="windowlist"){ deskMenu->addMenu( winMenu); usewinmenu=true;}
-    else if(items[i].startsWith("app::::") && items[i].endsWith(".desktop")){
-      //Custom *.desktop application
-      QString file = items[i].section("::::",1,1).simplified();
-      XDGDesktop xdgf(file);// = LXDG::loadDesktopFile(file, ok);
-      if(xdgf.type!=XDGDesktop::BAD){
-        deskMenu->addAction( LXDG::findIcon(xdgf.icon,""), xdgf.name)->setWhatsThis(file);
-	}else{
-	  qDebug() << "Could not load application file:" << file;
-	}
+void LDesktop::UpdateMenu(bool fast)
+{
+    qDebug() << " - Update Menu:" << screenID;
+
+    // Put a label at the top
+    int num = LSession::handle()->XCB->CurrentWorkspace(); //LX11::GetCurrentDesktop();
+    qDebug() << "Found workspace number:" << num;
+    workspacelabel->setText(QString("%1 Desktop %2").arg(DESKTOP_APP_NAME).arg(DESKTOP_APP_VERSION));
+
+    if (fast && usewinmenu) { UpdateWinMenu(); }
+    if (fast) { return; } // already done
+    deskMenu->clear(); //clear it for refresh
+    deskMenu->addAction(wkspaceact);
+    deskMenu->addSeparator();
+
+    // Now load the user's menu setup and fill the menu
+    QStringList items = settings->value("menu/itemlist", QStringList() << "windowlist" ).toStringList();
+    usewinmenu=false;
+    for (int i=0; i<items.length(); i++) {
+        if (items[i]=="lockdesktop") { deskMenu->addAction(LXDG::findIcon("system-lock-screen",""), tr("Lock Session"), this, SLOT(SystemLock()) ); }
+        else if (items[i]=="line") { deskMenu->addSeparator(); }
+        else if (items[i]=="windowlist") {
+            deskMenu->addMenu( winMenu);
+            usewinmenu=true;
+        } else if (items[i].startsWith("app::::") && items[i].endsWith(".desktop")) {
+            // Custom *.desktop application
+            QString file = items[i].section("::::",1,1).simplified();
+            XDGDesktop xdgf(file); // = LXDG::loadDesktopFile(file, ok);
+            if (xdgf.type!=XDGDesktop::BAD) {
+                deskMenu->addAction(LXDG::findIcon(xdgf.icon,""),
+                                    xdgf.name)->setWhatsThis(file);
+            } else {
+                qDebug() << "Could not load application file:" << file;
+            }
+        }
     }
-  }
-  //Now add the desktop folder options (if desktop is icon-enabled)
-  if(settings->value(DPREFIX+"generateDesktopIcons",false).toBool()){
-    //deskMenu->addSeparator();
-    deskMenu->addMenu(desktopFolderActionMenu);
-  }
-  //Now add the system quit options
-  deskMenu->addSeparator();
-  deskMenu->addAction(LXDG::findIcon("system-log-out",""), tr("Leave"), this, SLOT(SystemLogout()) );
+
+    // Now add the desktop folder options (if desktop is icon-enabled)
+    if (settings->value(QString("%1generateDesktopIcons").arg(DPREFIX), false).toBool()) {
+        //deskMenu->addSeparator();
+        deskMenu->addMenu(desktopFolderActionMenu);
+    }
+
+    // Now add the system quit options
+    deskMenu->addSeparator();
+    deskMenu->addAction(LXDG::findIcon("system-log-out",""),
+                        tr("Leave"),
+                        this,
+                        SLOT(SystemLogout()) );
 }
 
-void LDesktop::UpdateWinMenu(){
-  winMenu->clear();
-  //Get the current list of windows
-  QList<WId> wins = LSession::handle()->XCB->WindowList();
-  //Now add them to the menu
-  for(int i=0; i<wins.length(); i++){
-    LWinInfo info(wins[i]);
-    bool junk;
-    QAction *act = winMenu->addAction( info.icon(junk), info.text() );
-      act->setData( QString::number(wins[i]) );
-  }
+void LDesktop::UpdateWinMenu()
+{
+    winMenu->clear();
+    // Get the current list of windows
+    QList<WId> wins = LSession::handle()->XCB->WindowList();
+    // Now add them to the menu
+    for (int i=0; i<wins.length(); i++) {
+        LWinInfo info(wins[i]);
+        bool junk;
+        QAction *act = winMenu->addAction(info.icon(junk), info.text());
+        act->setData(QString::number(wins[i]));
+    }
 }
 
-void LDesktop::winClicked(QAction* act){
-  LSession::handle()->XCB->ActivateWindow( act->data().toString().toULong() );
+void LDesktop::winClicked(QAction* act)
+{
+    LSession::handle()->XCB->ActivateWindow(act->data().toString().toULong());
 }
 
 void LDesktop::UpdateDesktop(){
