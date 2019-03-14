@@ -21,6 +21,10 @@
 
 #include "desktop-plugins/LDPlugin.h"
 
+
+#include "qtcopydialog.h"
+#include "qtfilecopier.h"
+
 #define MIMETYPE QString("x-special/lumina-desktop-plugin")
 
 class LDesktopPluginSpace : public QWidget{
@@ -280,44 +284,37 @@ protected:
 	  }
 	}
 	
-	void dropEvent(QDropEvent *ev){
-	  //QPoint grid = posToGrid(ev->pos());
-	  if(ev->mimeData()->hasFormat(MIMETYPE)){
-	    //Desktop Items getting moved around - already performed in the dragMoveEvent
-	    ev->accept();
-	  }else if(ev->mimeData()->hasUrls()){
-	    ev->accept();
-	    //Files getting dropped here
-	    QList<QUrl> urls = ev->mimeData()->urls();
-	    qDebug() << "Desktop Drop Event:" << urls;
-	    for(int i=0; i<urls.length(); i++){
-	      //If this file is not in the desktop folder, move/copy it here
-	      if(urls[i].isLocalFile()){
-		QFileInfo info(urls[i].toLocalFile());
-		if(info.exists() && !QFile::exists(QDir::homePath()+"/Desktop/"+info.fileName())){
-		  //Make a link to the file here
-		  QFile::link(info.absoluteFilePath(), QDir::homePath()+"/Desktop/"+info.fileName());
-          /*if (info.isFile()) {
-              if (!QFile::copy(info.absoluteFilePath(),
-                               QDir::homePath()+"/Desktop/"+info.fileName()))
-              {
-                  qWarning() << "Failed to copy file" << info.path();
-              }
-          } else if (info.isDir()) {
-
-          }*/
-		}else{
-		  qWarning() << "Invalid desktop file drop (ignored):" << urls[i].toString();
-		}
-	      }
-
-	    }
-	  }else{
-	    //Ignore this event
-	    ev->ignore();
-	  }
-	}
-
+    void dropEvent(QDropEvent *ev)
+    {
+        if (ev->mimeData()->hasFormat(MIMETYPE)) {
+            ev->accept();
+        } else if (ev->mimeData()->hasUrls()) {
+            ev->accept();
+            // Files getting dropped here
+            QList<QUrl> urls = ev->mimeData()->urls();
+            qDebug() << "DESKTOP DROP" << urls;
+            QStringList files;
+            QStringList dirs;
+            for (int i=0; i<urls.length(); i++) {
+                if (!urls[i].isLocalFile()) { continue; }
+                QFileInfo info(urls[i].toLocalFile());
+                if (info.isDir()) { dirs << info.absoluteFilePath(); }
+                else if (info.isFile()) { files << info.absoluteFilePath(); }
+            }
+            if (files.size()>0 || dirs.size()>0) {
+                // Copy files/folders to Desktop
+                QtFileCopier *copyHander = new QtFileCopier(this);
+                QtCopyDialog *copyDialog = new QtCopyDialog(copyHander,this);
+                copyDialog->setMinimumDuration(100);
+                copyDialog->setAutoClose(true);
+                if (files.size()>0) { copyHander->copyFiles(files, QString("%1/Desktop").arg(QDir::homePath())); }
+                for (int i=0;i<dirs.size();++i) {
+                    copyHander->copyDirectory(dirs.at(i), QString("%1/Desktop").arg(QDir::homePath()));
+                }
+            }
+        }
+        else { ev->ignore(); }
+    }
 };
 
 #endif
