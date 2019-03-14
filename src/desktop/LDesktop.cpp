@@ -15,6 +15,9 @@
 #include <QScreen>
 #include "common.h"
 
+#include "qtcopydialog.h"
+#include "qtfilecopier.h"
+
 #define DEBUG 1
 
 LDesktop::LDesktop(int deskNum, bool setdefault) : QObject()
@@ -759,24 +762,48 @@ void LDesktop::PasteInDesktop(){
       files << QString("copy::::")+urls[i].toLocalFile();
     }
   }
+  qDebug() << "PASTE IN DESKTOP" << files;
   //Now go through and paste all the designated files
   QString desktop = LUtils::standardDirectory(LUtils::Desktop);
+  QStringList copyFileList,copyDirList,moveFileList,moveDirList;
   for(int i=0; i<files.length(); i++){
     QString path = files[i].section("::::",1,-1);
     if(!QFile::exists(path)){ continue; } //does not exist any more - move on to next
-    QString newpath = desktop+"/"+path.section("/",-1);
-    if(QFile::exists(newpath)){
-      //Need to change the filename a bit to make it unique
-      int n = 2;
-      newpath = desktop+"/"+QString::number(n)+"_"+path.section("/",-1);
-      while(QFile::exists(newpath)){ n++; newpath = desktop+"/"+QString::number(n)+"_"+path.section("/",-1); }
+    bool isDir = QFileInfo(path).isDir();
+    if (files[i].section("::::",0,0)=="cut") { // move
+        if (isDir) { moveDirList << path; }
+        else { moveFileList << path; }
+    } else { // copy
+        if (isDir) { copyDirList << path; }
+        else { copyFileList << path; }
     }
-    bool isdir = QFileInfo(path).isDir();
-    if(files[i].section("::::",0,0)=="cut"){
-      QFile::rename(path, newpath);
-    }else{ //copy
-      if(isdir){ QFile::link(path, newpath); } //symlink for directories - never do a full copy
-      else{ QFile::copy(path, newpath); }
+
+    if (copyFileList.size()>0 ||
+        copyDirList.size()>0 ||
+        moveFileList.size()>0 ||
+        moveDirList.size()>0)
+    {
+        // Copy/move files/folders to Desktop
+        QtFileCopier *copyHander = new QtFileCopier(this);
+        QtCopyDialog *copyDialog = new QtCopyDialog(copyHander);
+        copyDialog->setMinimumDuration(100);
+        copyDialog->setAutoClose(true);
+
+        if (copyFileList.size()>0) { copyHander->copyFiles(copyFileList, desktop); }
+        if (moveFileList.size()>0) { copyHander->moveFiles(moveFileList, desktop); }
+        for (int i=0;i<copyDirList.size();++i) {
+            copyHander->copyDirectory(copyDirList.at(i), desktop);
+        }
+        for (int i=0;i<moveDirList.size();++i) {
+            copyHander->moveDirectory(moveDirList.at(i), desktop);
+        }
     }
+
+
+    /*else{ //copy
+      //if(isdir){ QFile::link(path, newpath); } //symlink for directories - never do a full copy
+      //else{ QFile::copy(path, newpath); }
+        qDebug() << "COPY" << path << newpath;
+    }*/
   }
 }
