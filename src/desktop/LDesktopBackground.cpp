@@ -4,6 +4,7 @@
 //  Available under the 3-clause BSD license
 //  See the LICENSE file for full details
 //===========================================
+
 #include "LDesktopBackground.h"
 
 #include <QPainter>
@@ -12,8 +13,9 @@
 
 #include "LSession.h"
 
-void LDesktopBackground::paintEvent(QPaintEvent *ev) {
-  //return; //do nothing - always invisible
+void LDesktopBackground::paintEvent(QPaintEvent *ev)
+{
+/*  //return; //do nothing - always invisible
     if (bgPixmap != NULL) {
         //qDebug() << "Wallpaper paint Event:" << ev->rect();
         //QPainter painter(this);
@@ -21,10 +23,14 @@ void LDesktopBackground::paintEvent(QPaintEvent *ev) {
         //painter.drawRect(ev->rect().adjusted(-1,-1,2,2));
     }else{
       QWidget::paintEvent(ev);
-   }
+   }*/
+    if (bgPixmap == Q_NULLPTR) { QWidget::paintEvent(ev); }
 }
 
-QPixmap LDesktopBackground::setBackground(const QString& bgFile, const QString& format, QRect geom) {
+QPixmap LDesktopBackground::setBackground(const QString& bgFile,
+                                          const QString& format,
+                                          QRect geom)
+{
     qDebug() << "SET BACKGROUND" << bgFile;
     QString imagefile = bgFile;
     if (imagefile == QString("default") || (!bgFile.startsWith("rgb(") && !QFile::exists(bgFile))) {
@@ -51,7 +57,7 @@ QPixmap LDesktopBackground::setBackground(const QString& bgFile, const QString& 
             } else {
                 mode = Qt::KeepAspectRatio;
             }
-            if(bgImage.height() != geom.height() && bgImage.width() != geom.width() ){ bgImage = bgImage.scaled(geom.size(), mode, Qt::SmoothTransformation);  }
+            if (bgImage.height() != geom.height() && bgImage.width() != geom.width()) { bgImage = bgImage.scaled(geom.size(), mode, Qt::SmoothTransformation); }
             //bgImage = bgImage.scaled(size(), mode);
         }
 
@@ -85,11 +91,13 @@ QPixmap LDesktopBackground::setBackground(const QString& bgFile, const QString& 
     //show();
 }
 
-LDesktopBackground::LDesktopBackground() : QWidget() {
-    bgPixmap = NULL;
+LDesktopBackground::LDesktopBackground() : QWidget()
+{
+    bgPixmap = Q_NULLPTR;
     this->setWindowOpacity(0);
 }
 
-LDesktopBackground::~LDesktopBackground() {
-    if (bgPixmap != NULL) delete bgPixmap;
+LDesktopBackground::~LDesktopBackground()
+{
+    if (bgPixmap != Q_NULLPTR) { delete bgPixmap; }
 }

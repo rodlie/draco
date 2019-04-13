@@ -4,30 +4,34 @@
 //  Available under the 3-clause BSD license
 //  See the LICENSE file for full details
 //===========================================
+
 #include "LXcbEventFilter.h"
 
-//For all the XCB interactions and atoms
+// For all the XCB interactions and atoms
 // is accessed via
 //    session->XCB->EWMH.(atom name)
 //    session->XCB->(do something)
 #include <LuminaX11.h>
 #include <QDebug>
 
-XCBEventFilter::XCBEventFilter(LSession *sessionhandle) : QAbstractNativeEventFilter(){
-  session = sessionhandle; //save this for interaction with the session later
-  TrayDmgFlag = 0;
-  stopping = false;
-  session->XCB->SelectInput(QX11Info::appRootWindow()); //make sure we get root window events
-  InitAtoms();
+XCBEventFilter::XCBEventFilter(LSession *sessionhandle) : QAbstractNativeEventFilter()
+{
+    session = sessionhandle; // save this for interaction with the session later
+    TrayDmgFlag = 0;
+    stopping = false;
+    session->XCB->SelectInput(QX11Info::appRootWindow()); // make sure we get root window events
+    InitAtoms();
 }
 
-void XCBEventFilter::setTrayDamageFlag(int flag){
-  //Special flag for system tray damage events
-  TrayDmgFlag = flag + XCB_DAMAGE_NOTIFY; //save the whole flag (no calculations later)
+void XCBEventFilter::setTrayDamageFlag(int flag)
+{
+    // Special flag for system tray damage events
+    TrayDmgFlag = flag + XCB_DAMAGE_NOTIFY; // save the whole flag (no calculations later)
 }
 
-//This function format taken directly from the Qt5.3 documentation
-bool XCBEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long *){
+// This function format taken directly from the Qt5.3 documentation
+bool XCBEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long *)
+{
 	if(stopping){ return false; } //don't do any parsing
 	//qDebug() << "New Event";
 	if(eventType=="xcb_generic_event_t"){

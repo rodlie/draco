@@ -10,53 +10,56 @@
 #include <QDesktopWidget>
 #include <QMessageBox>
 
-SystemWindow::SystemWindow() : QDialog(), ui(new Ui::SystemWindow){
-  ui->setupUi(this); //load the designer file
-  this->setObjectName("LeaveDialog");
-  //Setup the window flags
-  this->setWindowFlags( Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-  //Setup the icons based on the current theme
-  ui->tool_logout->setIcon( LXDG::findIcon("system-log-out","") );
-  ui->tool_restart->setIcon( LXDG::findIcon("system-reboot","") );
-  ui->tool_shutdown->setIcon( LXDG::findIcon("system-shutdown","") );
-  ui->tool_suspend->setIcon( LXDG::findIcon("system-suspend","") );
-  ui->push_cancel->setIcon( LXDG::findIcon("system-cancel","dialog-cancel") );
-  ui->push_lock->setIcon( LXDG::findIcon("system-lock-screen","") );
-  //Connect the signals/slots
-  connect(ui->tool_logout, SIGNAL(clicked()), this, SLOT(sysLogout()) );
-  connect(ui->tool_restart, SIGNAL(clicked()), this, SLOT(sysRestart()) );
-  connect(ui->tool_shutdown, SIGNAL(clicked()), this, SLOT(sysShutdown()) );
-  connect(ui->tool_suspend, SIGNAL(clicked()), this, SLOT(sysSuspend()) );
-  connect(ui->push_cancel, SIGNAL(clicked()), this, SLOT(sysCancel()) );
-  connect(ui->push_lock, SIGNAL(clicked()), this, SLOT(sysLock()) );
-  //connect(ui->tool_restart_updates, SIGNAL(clicked()), this, SLOT(sysUpdate()) );
+SystemWindow::SystemWindow() : QDialog(), ui(new Ui::SystemWindow)
+{
+    ui->setupUi(this); // load the designer file
+    this->setObjectName("LeaveDialog");
+    // Setup the window flags
+    this->setWindowFlags( Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    // Setup the icons based on the current theme
+    ui->tool_logout->setIcon( LXDG::findIcon("system-log-out","") );
+    ui->tool_restart->setIcon( LXDG::findIcon("system-reboot","") );
+    ui->tool_shutdown->setIcon( LXDG::findIcon("system-shutdown","") );
+    ui->tool_suspend->setIcon( LXDG::findIcon("system-suspend","") );
+    ui->push_cancel->setIcon( LXDG::findIcon("system-cancel","dialog-cancel") );
+    ui->push_lock->setIcon( LXDG::findIcon("system-lock-screen","") );
+    // Connect the signals/slots
+    connect(ui->tool_logout, SIGNAL(clicked()), this, SLOT(sysLogout()) );
+    connect(ui->tool_restart, SIGNAL(clicked()), this, SLOT(sysRestart()) );
+    connect(ui->tool_shutdown, SIGNAL(clicked()), this, SLOT(sysShutdown()) );
+    connect(ui->tool_suspend, SIGNAL(clicked()), this, SLOT(sysSuspend()) );
+    connect(ui->push_cancel, SIGNAL(clicked()), this, SLOT(sysCancel()) );
+    connect(ui->push_lock, SIGNAL(clicked()), this, SLOT(sysLock()) );
+    //connect(ui->tool_restart_updates, SIGNAL(clicked()), this, SLOT(sysUpdate()) );
 
-  updateWindow();
-  ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
-  connect(QApplication::instance(), SIGNAL(LocaleChanged()), this, SLOT(updateWindow()) );
-  connect(QApplication::instance(), SIGNAL(IconThemeChanged()), this, SLOT(updateWindow()) );
+    updateWindow();
+    ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
+    connect(QApplication::instance(), SIGNAL(LocaleChanged()), this, SLOT(updateWindow()) );
+    connect(QApplication::instance(), SIGNAL(IconThemeChanged()), this, SLOT(updateWindow()) );
 }
 
-SystemWindow::~SystemWindow(){
-
+SystemWindow::~SystemWindow()
+{
 }
 
-void SystemWindow::updateWindow(){
-  //Disable the shutdown/restart buttons if necessary
-  ui->retranslateUi(this);
+void SystemWindow::updateWindow()
+{
+    // Disable the shutdown/restart buttons if necessary
+    ui->retranslateUi(this);
 
-  //ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
-  ui->tool_suspend->setEnabled(LSession::handle()->canSuspend());
+    //ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
+    ui->tool_suspend->setEnabled(LSession::handle()->canSuspend());
     ui->tool_restart->setEnabled(LSession::handle()->canReboot());
     ui->tool_shutdown->setEnabled(LSession::handle()->canShutdown());
 
-  //ui->frame_update->setVisible( !LOS::systemPendingUpdates().isEmpty() );
-  //Center this window on the current screen
-  QPoint center = QApplication::desktop()->screenGeometry(QCursor::pos()).center(); //get the center of the current screen
-  this->move(center.x() - this->width()/2, center.y() - this->height()/2);
+    //ui->frame_update->setVisible( !LOS::systemPendingUpdates().isEmpty() );
+    // Center this window on the current screen
+    QPoint center = QApplication::desktop()->screenGeometry(QCursor::pos()).center(); //get the center of the current screen
+    this->move(center.x() - this->width()/2, center.y() - this->height()/2);
 }
 
-bool SystemWindow::promptAboutUpdates(bool &skip){
+bool SystemWindow::promptAboutUpdates(bool &skip)
+{
   /*QString pending = LOS::systemPendingUpdates();
   if(pending.isEmpty()){ skip = false; } //continue without skip
   else{
@@ -75,34 +78,38 @@ bool SystemWindow::promptAboutUpdates(bool &skip){
     return false;
 }
 
-void SystemWindow::sysLogout(){
-  this->close();
-  LSession::processEvents();
-  QTimer::singleShot(0, LSession::handle(), SLOT(StartLogout()) );
+void SystemWindow::sysLogout()
+{
+    this->close();
+    LSession::processEvents();
+    QTimer::singleShot(0, LSession::handle(), SLOT(StartLogout()) );
 }
 
-void SystemWindow::sysRestart(){
+void SystemWindow::sysRestart()
+{
   //bool skip = false;
   //if(!promptAboutUpdates(skip)){ this->close(); return; } //cancelled
   //this->close();
   //LSession::processEvents();
-  LSession::handle()->StartReboot();
+    LSession::handle()->StartReboot();
 }
 
-void SystemWindow::sysUpdate(){
+void SystemWindow::sysUpdate()
+{
   //bool skip = false;
   //if(!promptAboutUpdates(skip)){ this->close(); return; } //cancelled
   //this->close();
   //LSession::processEvents();
-  LSession::handle()->StartReboot();
+    LSession::handle()->StartReboot();
 }
 
-void SystemWindow::sysShutdown(){
+void SystemWindow::sysShutdown()
+{
   //bool skip = false;
   //if(!promptAboutUpdates(skip)){ this->close(); return; } //cancelled
   //this->close();
   //LSession::processEvents();
-  LSession::handle()->StartShutdown();
+    LSession::handle()->StartShutdown();
 }
 
 void SystemWindow::sysSuspend()
@@ -114,9 +121,10 @@ void SystemWindow::sysSuspend()
     LSession::handle()->StartSuspend();
 }
 
-void SystemWindow::sysLock(){
-  this->hide();
-  LSession::processEvents();
-  qDebug() << "Locking the desktop...";
-  QProcess::startDetached("xscreensaver-command -lock");
+void SystemWindow::sysLock()
+{
+    this->hide();
+    LSession::processEvents();
+    qDebug() << "Locking the desktop...";
+    QProcess::startDetached("xscreensaver-command -lock");
 }

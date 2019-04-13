@@ -26,7 +26,7 @@ AppMenu::~AppMenu()
 
 QHash<QString, QList<XDGDesktop*> >* AppMenu::currentAppHash()
 {
-  return &APPS;
+    return &APPS;
 }
 
 void AppMenu::updateAppList()

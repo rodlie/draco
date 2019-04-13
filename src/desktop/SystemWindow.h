@@ -1,43 +1,46 @@
-#ifndef _LUMINA_DESKTOP_SYSTEM_WINDOW_H
-#define _LUMINA_DESKTOP_SYSTEM_WINDOW_H
+#ifndef DESKTOP_SYSTEM_WINDOW_H
+#define DESKTOP_SYSTEM_WINDOW_H
 
 #include <QDialog>
 
 #include "ui_SystemWindow.h"
 
-namespace Ui{
-	class SystemWindow;
+namespace Ui
+{
+    class SystemWindow;
 };
 
-class SystemWindow : public QDialog{
-	Q_OBJECT
-public:
-	SystemWindow();
-	~SystemWindow();
+class SystemWindow : public QDialog
+{
+    Q_OBJECT
+    public:
+    SystemWindow();
+    ~SystemWindow();
 
-public slots:
-	void updateWindow();
+    public slots:
+    void updateWindow();
 
-private:
-	Ui::SystemWindow *ui;
+    private:
+    Ui::SystemWindow *ui;
 
-	//void closeAllWindows();
-	bool promptAboutUpdates(bool &skip); //main bool return: continue/cancel, skip: skip updates or not
+    //void closeAllWindows();
+    bool promptAboutUpdates(bool &skip); // main bool return: continue/cancel, skip: skip updates or not
 
-private slots:
-	void sysLogout();
+    private slots:
+    void sysLogout();
 
-	void sysRestart();
-	void sysUpdate();
-	void sysShutdown();
+    void sysRestart();
+    void sysUpdate();
+    void sysShutdown();
 
-	void sysSuspend();
+    void sysSuspend();
 
-	void sysCancel(){
-	  this->close();
-	}
+    void sysCancel()
+    {
+        this->close();
+    }
 
-	void sysLock();
+    void sysLock();
 };
 
 #endif
