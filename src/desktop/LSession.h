@@ -25,7 +25,7 @@
 
 #include "powerkit.h"
 #include "AppMenu.h"
-#include "SettingsMenu.h"
+//#include "SettingsMenu.h"
 #include "SystemWindow.h"
 #include "LDesktop.h"
 #include "LuminaX11.h"
@@ -82,7 +82,7 @@ public:
 
     AppMenu* applicationMenu();
     void systemWindow();
-    SettingsMenu* settingsMenu();
+//    SettingsMenu* settingsMenu();
 
     LXCB *XCB; //class for XCB usage
 
@@ -109,7 +109,7 @@ private:
 
     // Internal variable for global usage
     AppMenu *appmenu;
-    SettingsMenu *settingsmenu;
+    //SettingsMenu *settingsmenu;
     SystemWindow *sysWindow;
     QTranslator *currTranslator;
     QSettings *sessionsettings, *DPlugSettings;

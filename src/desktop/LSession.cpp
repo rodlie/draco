@@ -30,7 +30,7 @@ LSession::LSession(int &argc, char ** argv) :
   , screenTimer(Q_NULLPTR)
   , xchange(false)
   , appmenu(Q_NULLPTR)
-  , settingsmenu(Q_NULLPTR)
+  //, settingsmenu(Q_NULLPTR)
   , sysWindow(Q_NULLPTR)
   , currTranslator(Q_NULLPTR)
   , sessionsettings(Q_NULLPTR)
@@ -128,7 +128,7 @@ LSession::~LSession()
             DESKTOPS[i]->deleteLater();
         }
         //delete WM;
-        settingsmenu->deleteLater();
+        //settingsmenu->deleteLater();
         appmenu->deleteLater();
         delete currTranslator;
     }
@@ -162,7 +162,7 @@ void LSession::setupSession()
     appmenu = new AppMenu();
 
     // Initialize settings menu
-    settingsmenu = new SettingsMenu();
+    //settingsmenu = new SettingsMenu();
 
     // Initialize system window
     sysWindow = new SystemWindow();
@@ -726,10 +726,10 @@ AppMenu* LSession::applicationMenu()
     return appmenu;
 }
 
-SettingsMenu* LSession::settingsMenu()
+/*SettingsMenu* LSession::settingsMenu()
 {
-    return settingsmenu;
-}
+    //return settingsmenu;
+}*/
 
 QSettings* LSession::sessionSettings()
 {
