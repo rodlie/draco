@@ -4,6 +4,7 @@
 //  Available under the 3-clause BSD license
 //  See the LICENSE file for full details
 //===========================================
+
 #include "session.h"
 
 #include <QObject>
@@ -57,7 +58,7 @@ void LSession::procFinished(){
     //Note about compton: It does not like running multiple sessions under the *same user*
     // (even on different displays). Run a blanket killall on it when closing down so that
     // any other Lumina sessions will automatically restart compton on that specific display
-    QProcess::execute("killall compton");
+    //QProcess::execute("killall compton");
     QCoreApplication::exit(0);
   }else{
     //Make sure we restart the process as needed
@@ -73,7 +74,7 @@ void LSession::procFinished(){
 }
 
 void LSession::startProcess(QString ID, QString command, QStringList watchfiles){
-  QString dir = QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/logs";
+  QString dir = QString(getenv("XDG_CONFIG_HOME"))+"/draco-desktop/logs";
   QString display = QString(getenv("DISPLAY")).section(":",1,1);
   if(!QFile::exists(dir)){ QDir tmp(dir); tmp.mkpath(dir); }
   QString logfile = dir+"/"+ID+"_"+display+".log";
@@ -104,35 +105,48 @@ void LSession::startProcess(QString ID, QString command, QStringList watchfiles)
 
 
 
-void LSession::start(){
-    //First check for a valid installation
-    if(!LUtils::isValidBinary("lumina-desktop") ){
+void LSession::start()
+{
+    // First check for a valid installation
+    if (!LUtils::isValidBinary("draco-desktop")) {
+        qWarning() << "Unable to find 'draco-desktop' in PATH";
+        exit(1);
+    }
+    if (!LUtils::isValidBinary("powerkit")) {
+        qWarning() << "Unable to find 'powerkit' in PATH";
+        exit(1);
+    }
+    if (!LUtils::isValidBinary("qtfm-tray")) {
+        qWarning() << "Unable to find 'qtfm-tray' in PATH";
+        exit(1);
+    }
+    if (!LUtils::isValidBinary("qtfm-launcher")) {
+        qWarning() << "Unable to find 'qtfm-launcher' in PATH";
         exit(1);
     }
 
-    setenv("DESKTOP_SESSION","Lumina",1);
-    setenv("XDG_CURRENT_DESKTOP","Lumina",1);
-    //setenv("QT_QPA_PLATFORMTHEME","lthemeengine", true);
-    setenv("QT_NO_GLIB", "1", 1); //Disable the glib event loop within Qt at runtime (performance hit + bugs)
-    unsetenv("QT_AUTO_SCREEN_SCALE_FACTOR"); //need exact-pixel measurements (no fake scaling)
+    setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
+    setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
+    setenv("QT_QPA_PLATFORMTHEME","qt5ct", true);
+    setenv("QT_NO_GLIB", "1", 1); // Disable the glib event loop within Qt at runtime (performance hit + bugs)
+    unsetenv("QT_AUTO_SCREEN_SCALE_FACTOR"); // need exact-pixel measurements (no fake scaling)
 
     if(LUtils::isValidBinary("xdg-user-dirs-update")){
-        //Make sure the XDG user directories are created as needed first
+        // Make sure the XDG user directories are created as needed first
         QProcess::execute("xdg-user-dirs-update");
     }
 
-    QSettings sessionsettings("lumina-desktop","sessionsettings");
+    QSettings sessionsettings(QString("%1-desktop").arg(DESKTOP_APP), "sessionsettings");
     QString WM = sessionsettings.value("WindowManager", "openbox").toString();
 
-    //Window Manager First
+    // Window Manager First
     if(!LUtils::isValidBinary(WM)){
+        qWarning() << "WM not found!" << WM;
         exit(1);
     }
     startProcess("wm", WM);
 
-    //Desktop Next
-    LSingleApplication::removeLocks("lumina-desktop");
-    startProcess("runtime","lumina-desktop");
+    // Desktop Next
+    LSingleApplication::removeLocks("draco-desktop");
+    startProcess("runtime","draco-desktop");
 }
-
-

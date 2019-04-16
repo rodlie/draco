@@ -320,7 +320,7 @@ void LSession::launchStartupApps()
         // Now run the command
         if (!cmd.isEmpty()) {
             qDebug() << " - Auto-Starting File:" << xdgapps[i]->filePath;
-            //QProcess::startDetached(cmd);
+            QProcess::startDetached(cmd);
         }
     }
     // make sure we clean up all the xdgapps structures
