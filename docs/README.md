@@ -32,6 +32,9 @@ A simple desktop environment. This project is a fork of [Lumina](https://github.
   * powerkit
   * xscreensaver
   * qtfm
+  * qt5ct
   * hicolor-icon-theme
-  * adwaita-icon-theme (or compatible)
+  * adwaita-icon-theme
   * openbox
+  * dbus
+
