@@ -57,8 +57,8 @@ QString LIconCache::findFile(QString icon){
   //Get the currently-set theme
   QString cTheme = QIcon::themeName();
   if(cTheme.isEmpty()){
-    QIcon::setThemeName("material-design-light");
-    cTheme = "material-design-light";
+    QIcon::setThemeName("Adwaita");
+    cTheme = "Adwaita";
   }
   //Make sure the current search paths correspond to this theme
   if( QDir::searchPaths("icontheme").filter("/"+cTheme+"/").isEmpty() ){

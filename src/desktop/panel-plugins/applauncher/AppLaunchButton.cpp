@@ -12,6 +12,8 @@
 #include <QInputDialog>
 #include <LFileInfo.h>
 
+#include "common.h"
+
 AppLaunchButtonPlugin::AppLaunchButtonPlugin(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, id, horizontal){
   button = new QToolButton(this);
     button->setAutoRaise(true);
@@ -33,21 +35,28 @@ AppLaunchButtonPlugin::~AppLaunchButtonPlugin(){
 
 }
 
-void AppLaunchButtonPlugin::updateButtonVisuals(){
-  QIcon icon;
-  QString tooltip = tr("Click to assign an application");
-  LFileInfo info(appfile);
-  if(info.isDesktopFile()){
-      icon = LXDG::findIcon(info.iconfile(), "unknown");
-      tooltip = QString(tr("Launch %1")).arg(info.XDG()->name);
-  }else if(info.exists()){
-    icon = LXDG::findIcon(info.iconfile(), "unknown");
-    tooltip = QString(tr("Open %1")).arg(appfile.section("/",-1));
-  }else{
-    icon =  LXDG::findIcon("task-attention", "");
-  }
-  button->setIcon( icon );
-  button->setToolTip(tooltip);
+void AppLaunchButtonPlugin::updateButtonVisuals()
+{
+    QIcon icon;
+    QString tooltip = tr("Click to assign an application");
+    LFileInfo info(appfile);
+    //qDebug() << "UPDATE BUTTON VISUALS" << appfile << info.iconfile() << info.isDesktopFile();
+    if (info.iconfile().isEmpty()) {
+        if (!info.XDG()->icon.isEmpty()) { icon = LXDG::findIcon(info.XDG()->icon, "application-x-executable"); }
+    } else {
+        icon = LXDG::findIcon(info.iconfile(), "application-x-executable");
+    }
+    if (info.isDesktopFile()) {
+        if (icon.isNull()) { icon = LXDG::findIcon("application-x-executable"); }
+        tooltip = QString(tr("Launch %1")).arg(info.XDG()->name);
+    } else if (info.exists()) {
+        if (icon.isNull()) { icon = LXDG::findIcon("application-x-executable"); }
+        tooltip = QString(tr("Open %1")).arg(appfile.section("/",-1));
+    } else {
+        icon =  LXDG::findIcon("task-attention", "application-x-executable");
+    }
+    button->setIcon( icon );
+    button->setToolTip(tooltip);
 }
 
 // ========================
@@ -68,6 +77,6 @@ void AppLaunchButtonPlugin::AppClicked(){
     // --- "applauncher::broken---<something>"  -> "applauncher::fixed---<something>" ?
     QTimer::singleShot(0,this, SLOT(updateButtonVisuals()));
   }else{
-    LSession::LaunchApplication("lumina-open \""+appfile+"\"");
+    LSession::LaunchApplication("qtfm-launcher \""+appfile+"\"");
   }
 }

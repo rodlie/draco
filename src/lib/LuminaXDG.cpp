@@ -99,6 +99,8 @@ void XDGDesktop::sync(){
       else if(comment.isEmpty() && loc==slang){ comment = val; } //short locale code
       else if(loc == lang){ comment = val; }
     }else if(var=="Icon"){
+        // Quick fix for bad-registrations which add the icon suffix for theme icons
+        if (!val.startsWith("/") && val.endsWith(".png") ) { val = val.section(".",0,-2); }
       if(insection){
         if(icon.isEmpty() && loc.isEmpty()){ icon = val; }
 	else if(icon.isEmpty() && loc==slang){ icon = val; } //short locale code
@@ -862,33 +864,46 @@ void LXDG::setEnvironmentVars(){
 
 QIcon LXDG::findIcon(QString iconName, QString fallback)
 {
-    qDebug() << "FIND ICON" << iconName << fallback;
-    if (iconName.isEmpty()){ return QIcon(); }
 
-    QIcon tmp = QIcon::fromTheme(iconName);
-    if(!tmp.isNull() &&
-       tmp.name()==iconName){ return tmp; }
-    if (!fallback.isEmpty() &&
-       QIcon::hasThemeIcon(fallback))
-    {
-        tmp = QIcon::fromTheme(fallback);
-        return tmp;
+    // Get the currently-set theme
+    QString cTheme = QIcon::themeName();
+    if (cTheme.isEmpty() || cTheme == "hicolor") {
+        QIcon::setThemeName("Adwaita");
+        cTheme = "Adwaita";
+    }
+
+    qDebug() << "FIND ICON" << iconName << fallback;
+    if (iconName.isEmpty()){
+        qDebug() << "EMPTY ICONNAME" << iconName << fallback;
+        QIcon fallbackIcon = QIcon::fromTheme(fallback);
+        if (!fallbackIcon.isNull()) {
+            qDebug() << "USE FALLBACK";
+            return fallbackIcon;
+        }
+        qDebug() << "NO ICON, RETURN DUMMY";
+        return QIcon::fromTheme("application-x-executable");
     }
 
     if (QFile::exists(iconName) &&
-        iconName.startsWith(QString("/"))) { return QIcon(iconName); }
+        iconName.startsWith(QString("/")))
+    {
+        qDebug() << "FOUND VALID ICON WITH ABSOLUTE PATH" << iconName;
+        return QIcon(iconName);
+    }
     else if (iconName.startsWith("/")) { iconName.section("/",-1); }
 
+    QIcon tmp = QIcon::fromTheme(iconName);
+    if (!tmp.isNull() &&
+       tmp.name()==iconName)
+    {
+        qDebug() << "FOUND ICON FROM THEME" << iconName;
+        return tmp;
+    }
 
 
-  //Now try to find the icon from the theme
-  qDebug() << "[LXDG] Start search for icon" << iconName;
-  //Get the currently-set theme
-  QString cTheme = QIcon::themeName();
-  if(cTheme.isEmpty()){
-    QIcon::setThemeName("Adwaita");
-    cTheme = "Adwaita";
-  }
+    // Now try to find the icon from the theme
+    qDebug() << "[LXDG] Start search for icon" << iconName;
+
 
   //Make sure the current search paths correspond to this theme
   if( QDir::searchPaths("icontheme").filter("/"+cTheme+"/").isEmpty() ){
@@ -908,7 +923,7 @@ QIcon LXDG::findIcon(QString iconName, QString fallback)
     for(int i=0; i<paths.length(); i++){
       theme << getChildIconDirs( paths[i]+cTheme);
       for(int j=0; j<themedeps.length(); j++){ theme << getChildIconDirs(paths[i]+themedeps[j]); }
-      oxy << getChildIconDirs(paths[i]+"material-design-light"); //Lumina base icon set
+      //oxy << getChildIconDirs(paths[i]+"material-design-light"); //Lumina base icon set
       fall << getChildIconDirs(paths[i]+"hicolor"); //XDG fallback (apps add to this)
     }
     //Now load all the icon theme dependencies in order (Theme1 -> Theme2 -> Theme3 -> Fallback)
@@ -927,12 +942,19 @@ QIcon LXDG::findIcon(QString iconName, QString fallback)
     if(QFile::exists(srch[i]+":"+iconName+".png")){
       //simple PNG image - load directly into the QIcon structure
       ico.addFile(srch[i]+":"+iconName+".png");
-    }
+    } else if(QFile::exists(srch[i]+":"+iconName+".jpg")){
+        //simple JPG image - load directly into the QIcon structure
+        ico.addFile(srch[i]+":"+iconName+".jpg");
+      } else if(QFile::exists(srch[i]+":"+iconName+".xpm")){
+        // simple XPM image - load directly into the QIcon structure
+        ico.addFile(srch[i]+":"+iconName+".xpm");
+      }
 
 
   }
   //If still no icon found, look for any image format in the "pixmaps" directory
   if(ico.isNull()){
+      qDebug() << "FALLBACK TO PIXMAPS!";
     /*if(QFile::exists(LOS::AppPrefix()+"share/pixmaps/"+iconName)){
       ico.addFile(LOS::AppPrefix()+"share/pixmaps/"+iconName);
     }else{*/
@@ -949,7 +971,15 @@ QIcon LXDG::findIcon(QString iconName, QString fallback)
       //Use the first one found that is a valid format
       for(int i=0; i<found.length(); i++){
         if( formats.contains(found[i].section(".",-1).toLower()) ){
-	  ico.addFile( pix.absoluteFilePath(found[i]) );
+            QString pixFound = pix.absoluteFilePath(found[i]);
+            qDebug() << "FOUND PIXMAP!" << pixFound;
+      //ico.addFile( pix.absoluteFilePath(found[i]) );
+            ico.addFile(pixFound);
+             /*QIcon pixIco(pixFound);
+             if (!pixIco.isNull()) {
+                 qDebug() << "RETURN VALID PIX";
+                 return pixIco;
+             }*/
 	  break;
 	}
       //}
@@ -958,8 +988,12 @@ QIcon LXDG::findIcon(QString iconName, QString fallback)
 
       }
   }
+
+
+
   //Use the fallback icon if necessary
   if(ico.isNull() ){
+      qDebug() << "STILL NO ICON!";
     if(!fallback.isEmpty()){ ico = LXDG::findIcon(fallback,""); }
     else if(iconName.contains("-x-") && !iconName.endsWith("-x-generic")){
       //mimetype - try to use the generic type icon
@@ -969,10 +1003,18 @@ QIcon LXDG::findIcon(QString iconName, QString fallback)
     }
   }
   if(ico.isNull()){
-    qDebug() << "Could not find icon:" << iconName << fallback;
+      if (!fallback.isEmpty() &&
+         QIcon::hasThemeIcon(fallback))
+      {
+          qDebug() << "RETURN FALLBACK";
+          tmp = QIcon::fromTheme(fallback);
+          return tmp;
+      }
+    qDebug() << "FIND ICON FAIL!!!!!!" << iconName << fallback;
     ico = QIcon::fromTheme("application-x-executable");
   }
   //Return the icon
+  qDebug() << "RETURN ICON FOR" << iconName << fallback << !ico.isNull();
   return ico;
 }
 
