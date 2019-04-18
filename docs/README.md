@@ -37,4 +37,6 @@ A simple desktop environment. This project is a fork of [Lumina](https://github.
   * adwaita-icon-theme
   * openbox
   * dbus
+  * nm-applet
+
 
