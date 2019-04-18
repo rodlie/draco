@@ -16,6 +16,8 @@
 #include <QScreen>
 #include <QtConcurrent>
 #include <QMimeData>
+#include <QHotkey>
+
 #include <unistd.h> //for usleep() usage
 
 XCBEventFilter *evFilter = Q_NULLPTR;
@@ -61,10 +63,19 @@ LSession::LSession(int &argc, char ** argv) :
         setOrganizationName(QString("%1Linux").arg(DESKTOP_APP_NAME));
         setQuitOnLastWindowClosed(false); // since the LDesktop's are not necessarily "window"s
 
-        // disable effects by default
-        setEffectEnabled( Qt::UI_AnimateMenu, false);
-        setEffectEnabled( Qt::UI_AnimateCombo, false);
-        setEffectEnabled( Qt::UI_AnimateTooltip, false);
+        // set "global" shortcuts
+        auto hotkey1 = new QHotkey(QKeySequence("alt+F1"), true, this);
+        if (hotkey1->isRegistered()) {
+            QObject::connect(hotkey1, &QHotkey::activated, this, [&](){
+                QProcess::startDetached("qterminal");
+            });
+        }
+        auto hotkey2 = new QHotkey(QKeySequence("alt+F2"), true, this);
+        if (hotkey2->isRegistered()) {
+            QObject::connect(hotkey2, &QHotkey::activated, this, [&](){
+                QProcess::startDetached("qtfm-launcher");
+            });
+        }
 
         //setAttribute(Qt::AA_UseDesktopOpenGL);
         setAttribute(Qt::AA_UseHighDpiPixmaps); // allow pixmaps to be scaled up as well as down
