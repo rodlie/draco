@@ -17,7 +17,12 @@ int main(int argc, char *argv[])
             if (fileName.endsWith(QString(".desktop"))) { // open app
                 DesktopFile desktop(fileName);
                 if (!desktop.getExec().isEmpty()) {
-                    QProcess::startDetached(desktop.getExec());
+                    QString exe = desktop.getExec();
+                    exe.replace("%u","");
+                    exe.replace("%U","");
+                    exe.replace("%f","");
+                    exe.replace("%F","");
+                    QProcess::startDetached(exe);
                     return 0;
                 }
             } else { // run file
@@ -33,13 +38,35 @@ int main(int argc, char *argv[])
                         DesktopFile desktop(Common::findApplication(qApp->applicationFilePath(),
                                                                     appNames.at(0)));
                         if (!desktop.getExec().isEmpty()) {
+                            QString exe = desktop.getExec();
+                            exe.replace("%u","");
+                            exe.replace("%U","");
+                            exe.replace("%f","");
+                            exe.replace("%F","");
                             QFileInfo fileInfo(fileName);
-                            mimeUtils.openInApp(desktop.getExec(),
+                            mimeUtils.openInApp(exe,
                                                 fileInfo,
                                                 QString());
                             return 0;
                         }
                     }
+                }
+            }
+        } else if (fileName.startsWith("http") || fileName.startsWith("ftp")) { // open url in browser
+            MimeUtils mimeUtils;
+            QString app = mimeUtils.getAppForMimeType("text/html");
+            if (!app.isEmpty()) {
+                QString desktopPath = Common::findApplication(qApp->applicationDirPath(), app);
+                DesktopFile desktop(desktopPath);
+                if (!desktop.getExec().isEmpty()) {
+                    QString exe = desktop.getExec();
+                    exe.replace("%u","");
+                    exe.replace("%U","");
+                    exe.replace("%f","");
+                    exe.replace("%F","");
+                    qDebug() << "OPEN BROWSER" << exe << fileName;
+                    QProcess::startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName));
+                    return 0;
                 }
             }
         }
