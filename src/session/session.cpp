@@ -109,23 +109,28 @@ void LSession::startProcess(QString ID, QString command, QStringList watchfiles)
 void LSession::start()
 {
     // First check for a valid installation
-    if (!LUtils::isValidBinary("draco-desktop")) {
-        qWarning() << "Unable to find 'draco-desktop' in PATH";
+    if (!LUtils::isValidBinary(QString("%1-desktop").arg(DESKTOP_APP).toUtf8())) {
+        qWarning() << "Desktop manager not found!";
         exit(1);
     }
     if (!LUtils::isValidBinary("powerkit")) {
-        qWarning() << "Unable to find 'powerkit' in PATH";
+        qWarning() << "Power manager not found!";
         exit(1);
     }
     if (!LUtils::isValidBinary("qtfm-tray")) {
-        qWarning() << "Unable to find 'qtfm-tray' in PATH";
+        qWarning() << "Disk manager not found!";
         exit(1);
     }
     if (!LUtils::isValidBinary(Draco::launcherApp().toUtf8())) {
-        qWarning() << "Unable to find 'draco-launcher' in PATH";
+        qWarning() << "Application Launcher not found";
+        exit(1);
+    }
+    if(!LUtils::isValidBinary(Draco::windowManager().toUtf8())){
+        qWarning() << "Window manager not found!";
         exit(1);
     }
 
+    LXDG::setEnvironmentVars();
     setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
     setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
     setenv("QT_QPA_PLATFORMTHEME","qt5ct", true);
@@ -137,15 +142,8 @@ void LSession::start()
         QProcess::execute("xdg-user-dirs-update");
     }
 
-    QSettings sessionsettings(QString("%1-desktop").arg(DESKTOP_APP), "sessionsettings");
-    QString WM = sessionsettings.value("WindowManager", "openbox").toString();
-
     // Window Manager First
-    if(!LUtils::isValidBinary(WM)){
-        qWarning() << "WM not found!" << WM;
-        exit(1);
-    }
-    startProcess("wm", WM);
+    startProcess("wm", Draco::windowManagerCmdStart());
 
     // Desktop Next
     LSingleApplication::removeLocks("draco-desktop");
