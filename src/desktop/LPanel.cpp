@@ -11,6 +11,8 @@
 
 #include "panel-plugins/systemtray/LSysTray.h"
 
+#include "common.h"
+
 static bool hascompositer = !LUtils::getCmdOutput("ps -x").filter("compton").filter("--backend").isEmpty(); //LUtils::isValidBinary("xcompmgr"); //NOT WORKING YET - xcompmgr issue with special window flags?
 
 LPanel::LPanel(QSettings *file, QString scr, int num, QWidget *parent, bool reservespace) : QWidget()
@@ -55,7 +57,8 @@ LPanel::LPanel(QSettings *file, QString scr, int num, QWidget *parent, bool rese
 
     this->setWindowTitle("LuminaPanel");
     this->setObjectName("LuminaPanelBackgroundWidget");
-    this->setStyleSheet("QToolButton::menu-indicator{ image: none; } QWidget#LuminaPanelBackgroundWidget{ background: transparent; }");
+    //this->setStyleSheet("QToolButton::menu-indicator{ image: none; } QWidget#LuminaPanelBackgroundWidget{ background: transparent; }");
+    this->setStyleSheet(Draco::panelStyleSheet());
     panelArea->setObjectName("LuminaPanelColor");
     layout = new QBoxLayout(QBoxLayout::LeftToRight);
     layout->setContentsMargins(0,0,0,0);
@@ -385,13 +388,13 @@ void LPanel::setupFallbackPanel(const QString &panel)
     // add default settings for panel
     qDebug() << "setting default settings for panel" << panel;
     QStringList plugins;
-    plugins << "appmenu" << "desktopswitcher" << "taskmanager"  << "systemtray" << "clock" << "homebutton";
+    plugins << "appmenu" << "taskmanager"  << "systemtray" << "clock";
     settings->setValue(QString("%1hidepanel").arg(panel), false);
     settings->setValue(QString("%1location").arg(panel), QString("bottom"));
     settings->setValue(QString("%1height").arg(panel), 30);
     settings->setValue(QString("%1lengthPercent").arg(panel), 100);
-    settings->setValue(QString("%1customColor").arg(panel), true);
-    settings->setValue(QString("%1color").arg(panel), QString("rgba(239,235,231,255)"));
+    //settings->setValue(QString("%1customColor").arg(panel), true);
+    //settings->setValue(QString("%1color").arg(panel), QString("rgba(239,235,231,255)"));
     settings->setValue(QString("%1pluginlist").arg(panel), plugins);
     settings->sync();
 }

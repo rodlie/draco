@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>theme/rc.xml</file>
+        <file>theme/draco.qss</file>
     </qresource>
 </RCC>

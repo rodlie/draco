@@ -18,7 +18,7 @@ int main(int argc, char ** argv)
     setenv("QT_QPA_PLATFORMTHEME", "qt5ct", 1);
     unsetenv("QT_AUTO_SCREEN_SCALE_FACTOR"); // causes pixel-specific scaling issues with the desktop - turn this on after-the-fact for other apps
 
-    Draco::xdgOpenCheck();
+    Draco::checkConfigs();
 
     // Startup the session
     LSession a(argc, argv);

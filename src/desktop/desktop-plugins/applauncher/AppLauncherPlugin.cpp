@@ -14,12 +14,14 @@ AppLauncherPlugin::AppLauncherPlugin(QWidget* parent, QString ID) : LDPlugin(par
   QVBoxLayout *lay = new QVBoxLayout();
   inputDLG = 0;
   this->setLayout(lay);
+  this->setStyleSheet(Draco::desktopStyleSheet());
     lay->setContentsMargins(0,0,0,0);
   button = new OutlineToolButton(this);
     button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     button->setAutoRaise(true);
     button->setText("...\n..."); //Need to set something here so that initial sizing works properly
     button->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
   lay->addWidget(button, 0, Qt::AlignCenter);
 	connect(button, SIGNAL(DoubleClicked()), this, SLOT(buttonClicked()) );
   button->setContextMenuPolicy(Qt::NoContextMenu);
