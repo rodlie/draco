@@ -20,19 +20,25 @@ int main(int argc, char *argv[])
                     QProcess::startDetached(desktop.getExec());
                     return 0;
                 }
-            } else { // open file
-                MimeUtils mimeUtils;
-                QString mime = mimeUtils.getMimeType(fileName);
-                if (!mime.isEmpty()) {
-                    QStringList appNames = mimeUtils.getDefault(mime);
-                    DesktopFile desktop(Common::findApplication(qApp->applicationFilePath(),
-                                                                appNames.at(0)));
-                    if (!desktop.getExec().isEmpty()) {
-                        QFileInfo fileInfo(fileName);
-                        mimeUtils.openInApp(desktop.getExec(),
-                                            fileInfo,
-                                            QString());
-                        return 0;
+            } else { // run file
+                QFileInfo info(fileName);
+                if (info.isExecutable()) {
+                    QProcess::startDetached(fileName);
+                    return 0;
+                } else { // open file
+                    MimeUtils mimeUtils;
+                    QString mime = mimeUtils.getMimeType(fileName);
+                    if (!mime.isEmpty()) {
+                        QStringList appNames = mimeUtils.getDefault(mime);
+                        DesktopFile desktop(Common::findApplication(qApp->applicationFilePath(),
+                                                                    appNames.at(0)));
+                        if (!desktop.getExec().isEmpty()) {
+                            QFileInfo fileInfo(fileName);
+                            mimeUtils.openInApp(desktop.getExec(),
+                                                fileInfo,
+                                                QString());
+                            return 0;
+                        }
                     }
                 }
             }
