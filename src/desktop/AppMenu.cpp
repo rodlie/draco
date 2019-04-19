@@ -8,6 +8,7 @@
 #include "AppMenu.h"
 #include "LSession.h"
 #include "LIconCache.h"
+#include "common.h"
 
 extern LIconCache *ICONS;
 
@@ -146,8 +147,12 @@ void AppMenu::launchApp(QAction *act)
     QString appFile = act->whatsThis();
     qDebug() << "LAUNCH APP" << appFile;
     if (appFile.startsWith("-action")) {
-        LSession::LaunchApplication("qtfm-launcher "+appFile); // already has quotes put in place properly
+        LSession::LaunchApplication(QString("%1 %2")
+                                    .arg(Draco::launcherApp())
+                                    .arg(appFile)); // already has quotes put in place properly
     } else {
-        LSession::LaunchApplication("qtfm-launcher \""+appFile+"\"");
+        LSession::LaunchApplication(QString("%1 \"%2\"")
+                                    .arg(Draco::launcherApp())
+                                    .arg(appFile));
     }
 }

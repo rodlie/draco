@@ -132,7 +132,7 @@ void LDesktop::SystemTerminal()
     LSession::handle()->sessionSettings()->sync(); // make sure it is up to date
     QString term = LXDG::findDefaultAppForMime("application/terminal"); // LSession::handle()->sessionSettings()->value("default-terminal","xterm").toString();
     if (term.isEmpty() ||(!term.endsWith(".desktop") && !LUtils::isValidBinary(term)) ) { term = "xterm"; }
-    LSession::LaunchApplication(QString("qtfm-launcher \"%1\"").arg(term));
+    LSession::LaunchApplication(QString("%1 \"%2\"").arg(Draco::launcherApp()).arg(term));
 }
 
 void LDesktop::SystemFileManager()
@@ -144,7 +144,9 @@ void LDesktop::SystemApplication(QAction* act)
 {
     if (!act->whatsThis().isEmpty() && act->parent()==deskMenu) {
         qDebug() << "system application" << act;
-        LSession::LaunchApplication(QString("qtfm-launcher \"%1\"").arg(act->whatsThis()));
+        LSession::LaunchApplication(QString("%1 \"%2\"")
+                                    .arg(Draco::launcherApp())
+                                    .arg(act->whatsThis()));
     }
 }
 

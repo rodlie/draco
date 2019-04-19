@@ -18,6 +18,7 @@
 //#include <LuminaOS.h>
 #include <LDesktopUtils.h>
 #include <LuminaSingleApplication.h>
+#include "common.h"
 
 void LSession::stopall(){
   stopping = true;
@@ -120,8 +121,8 @@ void LSession::start()
         qWarning() << "Unable to find 'qtfm-tray' in PATH";
         exit(1);
     }
-    if (!LUtils::isValidBinary("qtfm-launcher")) {
-        qWarning() << "Unable to find 'qtfm-launcher' in PATH";
+    if (!LUtils::isValidBinary(Draco::launcherApp().toUtf8())) {
+        qWarning() << "Unable to find 'draco-launcher' in PATH";
         exit(1);
     }
 

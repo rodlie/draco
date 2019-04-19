@@ -73,7 +73,7 @@ LSession::LSession(int &argc, char ** argv) :
         auto hotkey2 = new QHotkey(QKeySequence("alt+F2"), true, this);
         if (hotkey2->isRegistered()) {
             QObject::connect(hotkey2, &QHotkey::activated, this, [&](){
-                QProcess::startDetached("qtfm-launcher");
+                QProcess::startDetached(Draco::launcherApp());
             });
         }
 

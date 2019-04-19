@@ -424,7 +424,8 @@ bool XDGDesktop::setAutoStarted(bool autostart){
   if( !filePath.startsWith(upath) && autostart){
     //Some other non-override autostart file - set it up to open with lumina-open
     if(!filePath.endsWith(".desktop")){
-      exec = "qtfm-launcher \""+filePath+"\"";
+      //exec = "qtfm-launcher \""+filePath+"\"";
+      exec = QString("%1 \"%2\"").arg(Draco::launcherApp()).arg(filePath);
       tryexec = filePath; //make sure this file exists
       if(name.isEmpty()){ name = filePath.section("/",-1); }
       if(icon.isEmpty()){ icon = LXDG::findAppMimeForFile(filePath); icon.replace("/","-"); }
@@ -433,7 +434,8 @@ bool XDGDesktop::setAutoStarted(bool autostart){
     }else{
       //Some other *.desktop file on the system (keep almost all the existing settings/values)
       // - setup a redirect to the other file
-      exec = "qtfm-launcher \""+filePath+"\"";
+      //exec = "qtfm-launcher \""+filePath+"\"";
+      exec = QString("%1 \"%2\"").arg(Draco::launcherApp()).arg(filePath);
       tryexec = filePath; //make sure this file exists
       // - Adjust the actual path where this file will get saved
       filePath = upath+filePath.section("/",-1);

@@ -4,6 +4,7 @@
 #include <QClipboard>
 
 #include <LIconCache.h>
+#include "common.h"
 
 #define OUTMARGIN 10 //special margin for fonts due to the outlining effect from the OutlineToolbutton
 extern LIconCache *ICONS;
@@ -219,9 +220,9 @@ void AppLauncherPlugin::buttonClicked(bool openwith){
     this->saveSetting("applicationpath", apps[ names.indexOf(app) ]->filePath);
     QTimer::singleShot(0,this, SLOT(loadButton()));
   }else if(openwith){ // TODO
-    LSession::LaunchApplication("qtfm-launcher \""+path+"\"");
+    LSession::LaunchApplication(QString("%1 \"%2\"").arg(Draco::launcherApp()).arg(path));
   }else{
-    LSession::LaunchApplication("qtfm-launcher \""+path+"\"");
+    LSession::LaunchApplication(QString("%1 \"%2\"").arg(Draco::launcherApp()).arg(path));
   }
 
 }

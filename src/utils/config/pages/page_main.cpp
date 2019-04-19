@@ -10,6 +10,7 @@
 
 #include <LuminaXDG.h>
 #include <QProcess>
+#include "common.h"
 
 extern XDGDesktopList* APPSLIST;
 
@@ -206,7 +207,7 @@ void page_main::itemTriggered(QTreeWidgetItem *it, int col){
     it->setSelected(false);
   }else if(!it->whatsThis(col).isEmpty()){
     QString id = it->whatsThis(col);
-    if(id.endsWith(".desktop")){ QProcess::startDetached("qtfm-launcher \""+id+"\""); } //external setting utility
+    if(id.endsWith(".desktop")){ QProcess::startDetached(QString("%1 \"%2\"").arg(Draco::launcherApp()).arg(id)); } //external setting utility
     else{ emit ChangePage(it->whatsThis(col)); } //internal page
   }else{
    it->setSelected(false);

@@ -8,6 +8,7 @@
 #include "LSession.h"
 
 #include <LuminaXDG.h>
+#include "common.h"
 
 LAppMenuPlugin::LAppMenuPlugin(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, id, horizontal){
   button = new QToolButton(this);
@@ -62,7 +63,7 @@ void LAppMenuPlugin::LaunchItem(QAction* item){
             qDebug() << "command" << desktop.getDesktopExec();
             QProcess::startDetached(desktop.getDesktopExec());
         }*/
-        QProcess::startDetached(QString("qtfm-launcher %1").arg(appFile));
+        QProcess::startDetached(QString("%1 %2").arg(Draco::launcherApp()).arg(appFile));
     }
 }
 

@@ -77,6 +77,6 @@ void AppLaunchButtonPlugin::AppClicked(){
     // --- "applauncher::broken---<something>"  -> "applauncher::fixed---<something>" ?
     QTimer::singleShot(0,this, SLOT(updateButtonVisuals()));
   }else{
-    LSession::LaunchApplication("qtfm-launcher \""+appfile+"\"");
+    LSession::LaunchApplication(QString("%1 \"%2\"").arg(Draco::launcherApp()).arg(appfile));
   }
 }
