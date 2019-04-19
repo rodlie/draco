@@ -862,6 +862,15 @@ void LXDG::setEnvironmentVars(){
   setenv("XDG_CONFIG_DIRS","/etc/xdg:/usr/local/etc/xdg", 0);
   setenv("XDG_CACHE_HOME",QString(QDir::homePath()+"/.cache").toUtf8(), 0);
   //Don't set "XDG_RUNTIME_DIR" yet - need to look into the specs
+
+  QString path = getenv("PATH");
+  if (!path.contains(QString("%1-desktop").arg(DESKTOP_APP))) {
+      QString shadowPath =  QString("%1/bin").arg(Draco::configDir());
+      qDebug() << "MISSING SHADOW BIN DIR!" << shadowPath;
+      path.prepend(QString("%1:").arg(shadowPath));
+      setenv("PATH", path.toUtf8(), 1);
+      qDebug() << "SET PATH" << path;
+  }
 }
 
 QIcon LXDG::findIcon(QString iconName, QString fallback)
