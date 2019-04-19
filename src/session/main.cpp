@@ -85,7 +85,7 @@ int main(int argc, char ** argv)
 
     qDebug() << " - Starting the session...";
     // Setup any initialization values
-    LTHEME::LoadCustomEnvSettings();
+    //LTHEME::LoadCustomEnvSettings();
     LXDG::setEnvironmentVars();
     setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
     setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);

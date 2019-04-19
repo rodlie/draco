@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>theme/rc.xml</file>
+    </qresource>
+</RCC>
