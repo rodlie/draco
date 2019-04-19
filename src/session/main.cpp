@@ -46,6 +46,9 @@ int main(int argc, char ** argv)
     }*/
 
 
+    // setup configs
+    Draco::themeEngineCheckConf();
+
     // Start X11 if needed
     QString disp = QString(getenv("DISPLAY")).simplified();
     if (disp.isEmpty()) {

@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>theme/rc.xml</file>
         <file>theme/draco.qss</file>
+        <file>theme/qt5ct.conf</file>
     </qresource>
 </RCC>
