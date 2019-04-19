@@ -3,5 +3,7 @@
         <file>theme/rc.xml</file>
         <file>theme/draco.qss</file>
         <file>theme/qt5ct.conf</file>
+        <file>theme/gtkrc-2.0</file>
+        <file>theme/settings.ini</file>
     </qresource>
 </RCC>
