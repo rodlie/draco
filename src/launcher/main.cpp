@@ -22,7 +22,14 @@ int main(int argc, char *argv[])
                     exe.replace("%U","");
                     exe.replace("%f","");
                     exe.replace("%F","");
-                    QProcess::startDetached(exe);
+                    if (exe.contains("google-chrome") || exe.contains("chromium")) {
+                        setenv("DESKTOP_SESSION", "xfce", 1);
+                        setenv("XDG_CURRENT_DESKTOP", "xfce", 1);
+                        QProcess proc;
+                        proc.startDetached(exe);
+                        setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
+                        setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
+                    } else { QProcess::startDetached(exe); }
                     return 0;
                 }
             } else { // run file
@@ -43,10 +50,18 @@ int main(int argc, char *argv[])
                             exe.replace("%U","");
                             exe.replace("%f","");
                             exe.replace("%F","");
-                            QFileInfo fileInfo(fileName);
+                            if (exe.contains("google-chrome") || exe.contains("chromium")) {
+                                setenv("DESKTOP_SESSION", "xfce", 1);
+                                setenv("XDG_CURRENT_DESKTOP", "xfce", 1);
+                                QProcess proc;
+                                proc.startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName));
+                                setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
+                                setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
+                            } else { QProcess::startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName)); }
+                            /*QFileInfo fileInfo(fileName);
                             mimeUtils.openInApp(exe,
                                                 fileInfo,
-                                                QString());
+                                                QString());*/
                             return 0;
                         }
                     }
@@ -65,7 +80,14 @@ int main(int argc, char *argv[])
                     exe.replace("%f","");
                     exe.replace("%F","");
                     qDebug() << "OPEN BROWSER" << exe << fileName;
-                    QProcess::startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName));
+                    if (exe.contains("google-chrome") || exe.contains("chromium")) {
+                        setenv("DESKTOP_SESSION", "xfce", 1);
+                        setenv("XDG_CURRENT_DESKTOP", "xfce", 1);
+                        QProcess proc;
+                        proc.startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName));
+                        setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
+                        setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
+                    } else { QProcess::startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName)); }
                     return 0;
                 }
             }
