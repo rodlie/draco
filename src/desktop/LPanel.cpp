@@ -349,6 +349,8 @@ void LPanel::UpdateTheme()
 {
     // The panel itself has no theme-based icons, just forward the signal to all the plugins
     qDebug() << "Update Theme for plugins";
+    this->setStyleSheet(Draco::panelStyleSheet());
+
     for (int i=0; i<PLUGINS.length(); i++) {
         QTimer::singleShot(1,PLUGINS[i], SLOT(ThemeChange()));
     }

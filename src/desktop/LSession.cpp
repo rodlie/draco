@@ -47,8 +47,12 @@ LSession::LSession(int &argc, char ** argv) :
   , startupApps(true)
   , pm(Q_NULLPTR)
 {
-    // temp icon theme (TODO)
-    QIcon::setThemeName("Adwaita");
+    // Get the currently-set theme
+    QString cTheme = QIcon::themeName();
+    if (cTheme.isEmpty() || cTheme == "hicolor") {
+        qDebug() << "SET FALLBACK ICON THEME";
+        QIcon::setThemeName("Adwaita");
+    }
 
     // setup primary
     if (isPrimaryProcess()) {
@@ -67,13 +71,13 @@ LSession::LSession(int &argc, char ** argv) :
         auto hotkey1 = new QHotkey(QKeySequence("alt+F1"), true, this);
         if (hotkey1->isRegistered()) {
             QObject::connect(hotkey1, &QHotkey::activated, this, [&](){
-                QProcess::startDetached("qterminal");
+                QProcess::startDetached(Draco::terminalApp()); // launch terminal on ALT+F1
             });
         }
         auto hotkey2 = new QHotkey(QKeySequence("alt+F2"), true, this);
         if (hotkey2->isRegistered()) {
             QObject::connect(hotkey2, &QHotkey::activated, this, [&](){
-                QProcess::startDetached(Draco::launcherApp());
+                QProcess::startDetached(Draco::launcherApp()); // app launcher on ALT+F2
             });
         }
 
@@ -200,7 +204,12 @@ void LSession::setupSession()
     watcherChange(LUtils::standardDirectory(LUtils::Desktop));
 
     // watch openbox settings
-    // TODO
+    watcherChange(Draco::windowManagerConf());
+
+    // watch user qss
+    if (QFile::exists(Draco::dracoStyleConf())) {
+        watcherChange(Draco::dracoStyleConf());
+    }
 
     // watch settings
     watcherChange(Draco::sessionSettingsFile());
@@ -397,19 +406,11 @@ void LSession::watcherChange(QString changed)
     if (!sessionSettings()) { return; }
 
     qDebug() << "Session Watcher Change:" << changed;
-    // OPENBOX TODO if(changed.endsWith("fluxbox-init") || changed.endsWith("fluxbox-keys")){ refreshWindowManager(); }
 
-    if (changed.endsWith("sessionsettings.conf") ){
+    if (changed.contains(Draco::windowManagerConf())) { refreshWindowManager(); }
+    if (changed.contains(Draco::dracoStyleConf())) { emit IconThemeChanged(); }
+    if (changed.endsWith("sessionsettings.conf") ) {
         sessionsettings->sync();
-        qDebug() << "Session Settings Changed";
-        /*if (sessionsettings->contains("Qt5_theme_engine")) {
-            QString engine = sessionsettings->value("Qt5_theme_engine","").toString();
-            qDebug() << "Set Qt5 theme engine: " << engine;
-            if (engine.isEmpty()) { unsetenv("QT_QPA_PLATFORMTHEME"); }
-            else { setenv("QT_QPA_PLATFORMTHEME", engine.toUtf8().data(),1); }
-        } else {
-            setenv("QT_QPA_PLATFORMTHEME", "lthemeengine",1); //ensure the lumina theme engine is always enabled
-        }*/
         emit SessionConfigChanged();
     }
     else if (changed.endsWith("desktopsettings.conf") ) { emit DesktopConfigChanged(); }
@@ -514,7 +515,7 @@ void LSession::setupFallbackDesktop(QSettings *dset)
 
 void LSession::refreshWindowManager()
 {
-    //LUtils::runCmd("touch \""+QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/fluxbox-init\"" );
+    QProcess::startDetached(Draco::windowManagerCmdReConf());
 }
 
 void LSession::updateDesktops()
