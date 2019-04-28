@@ -76,11 +76,20 @@ protected:
 	  LDPlugin::resizeEvent(ev);
 	  QTimer::singleShot(100, this, SLOT(loadButton()) );
 	}
-	void changeEvent(QEvent *ev){
-	  LDPlugin::changeEvent(ev);
-	  QEvent::Type tmp = ev->type();
-	  if(tmp == QEvent::StyleChange || tmp==QEvent::ThemeChange || tmp==QEvent::LanguageChange || tmp==QEvent::LocaleChange){ loadButton(); }
-	}
+    void changeEvent(QEvent *ev)
+    {
+        LDPlugin::changeEvent(ev);
+        QEvent::Type tmp = ev->type();
+        if (tmp == QEvent::StyleChange ||
+        tmp==QEvent::ThemeChange ||
+        tmp==QEvent::LanguageChange ||
+        tmp==QEvent::LocaleChange)
+        {
+            QTimer::singleShot(100,
+                               this,
+                               SLOT(loadButton()));
+        }
+    }
 
 	void mousePressEvent(QMouseEvent *ev){
 	  if(ev->button()==Qt::LeftButton){
