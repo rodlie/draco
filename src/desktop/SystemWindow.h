@@ -34,6 +34,7 @@ class SystemWindow : public QDialog
     void sysShutdown();
 
     void sysSuspend();
+    void sysHibernate();
 
     void sysCancel()
     {

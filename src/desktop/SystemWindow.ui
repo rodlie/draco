@@ -95,9 +95,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="tool_restart">
+         <widget class="QToolButton" name="tool_hibernate">
           <property name="text">
-           <string>Restart</string>
+           <string>Hibernate</string>
           </property>
           <property name="iconSize">
            <size>
@@ -192,6 +192,35 @@
         </item>
         <item>
          <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QToolButton" name="tool_restart">
+          <property name="text">
+           <string>Restart</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextUnderIcon</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
