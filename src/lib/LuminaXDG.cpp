@@ -101,6 +101,8 @@ void XDGDesktop::sync(){
     }else if(var=="Icon"){
         // Quick fix for bad-registrations which add the icon suffix for theme icons
         if (!val.startsWith("/") && val.endsWith(".png") ) { val = val.section(".",0,-2); }
+        // filter "bad" icons
+        val = Draco::filterIconName(val);
       if(insection){
         if(icon.isEmpty() && loc.isEmpty()){ icon = val; }
 	else if(icon.isEmpty() && loc==slang){ icon = val; } //short locale code
@@ -882,6 +884,9 @@ QIcon LXDG::findIcon(QString iconName, QString fallback)
         QIcon::setThemeName("Adwaita");
         cTheme = "Adwaita";
     }
+
+    // filter "bad" icons
+    iconName = Draco::filterIconName(iconName);
 
     qDebug() << "FIND ICON" << iconName << fallback;
     if (iconName.isEmpty()){
