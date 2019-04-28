@@ -13,7 +13,7 @@
 #include <QToolButton>
 #include <QString>
 #include <QWidget>
-
+#include <QTimer>
 
 // Lumina-desktop includes
 #include "../LPPlugin.h" //main plugin widget
@@ -60,7 +60,15 @@ protected:
 	void changeEvent(QEvent *ev){
 	  LPPlugin::changeEvent(ev);
 	  QEvent::Type tmp = ev->type();
-	  if(tmp == QEvent::StyleChange || tmp==QEvent::ThemeChange || tmp==QEvent::LanguageChange || tmp==QEvent::LocaleChange){ updateButtonVisuals(); }
+      if (tmp == QEvent::StyleChange ||
+          tmp==QEvent::ThemeChange ||
+          tmp==QEvent::LanguageChange ||
+          tmp==QEvent::LocaleChange)
+      {
+          QTimer::singleShot(100,
+                             this,
+                             SLOT(updateButtonVisuals()));
+      }
 	}
 };
 
