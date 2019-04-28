@@ -1,6 +1,6 @@
 # Draco Desktop Environment
 
-![screenshot](screenshot-01.jpg)
+![screenshot](draco-screenshot.gif)
 
 
 A simple desktop environment. This project is a fork of [Lumina](https://github.com/lumina-desktop/lumina/commit/9ca1d49ef773adae2a26758a61c9db3b029d93b1) with different goals/focus. **This is work-in-progress, not for end-users (yet).** First release is scheduled for Q1(-ish) 2019.
