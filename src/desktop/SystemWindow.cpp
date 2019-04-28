@@ -23,6 +23,7 @@ SystemWindow::SystemWindow() : QDialog(), ui(new Ui::SystemWindow)
     ui->tool_suspend->setIcon( LXDG::findIcon("system-suspend","") );
     ui->push_cancel->setIcon( LXDG::findIcon("system-cancel","dialog-cancel") );
     ui->push_lock->setIcon( LXDG::findIcon("system-lock-screen","") );
+    ui->tool_hibernate->setIcon(LXDG::findIcon("system-hibernate"));
     // Connect the signals/slots
     connect(ui->tool_logout, SIGNAL(clicked()), this, SLOT(sysLogout()) );
     connect(ui->tool_restart, SIGNAL(clicked()), this, SLOT(sysRestart()) );
@@ -30,6 +31,7 @@ SystemWindow::SystemWindow() : QDialog(), ui(new Ui::SystemWindow)
     connect(ui->tool_suspend, SIGNAL(clicked()), this, SLOT(sysSuspend()) );
     connect(ui->push_cancel, SIGNAL(clicked()), this, SLOT(sysCancel()) );
     connect(ui->push_lock, SIGNAL(clicked()), this, SLOT(sysLock()) );
+    connect(ui->tool_hibernate, SIGNAL(clicked()), this, SLOT(sysHibernate()));
     //connect(ui->tool_restart_updates, SIGNAL(clicked()), this, SLOT(sysUpdate()) );
 
     updateWindow();
@@ -119,6 +121,15 @@ void SystemWindow::sysSuspend()
     //Make sure to lock the system first (otherwise anybody can access it again)
     LUtils::runCmd("xscreensaver-command -lock");
     LSession::handle()->StartSuspend();
+}
+
+void SystemWindow::sysHibernate()
+{
+    this->hide();
+    LSession::processEvents();
+    //Make sure to lock the system first (otherwise anybody can access it again)
+    LUtils::runCmd("xscreensaver-command -lock");
+    LSession::handle()->StartSuspend(true);
 }
 
 void SystemWindow::sysLock()
