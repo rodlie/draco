@@ -46,7 +46,7 @@ void AppLauncherPlugin::loadButton(){
   QString path = this->readSetting("applicationpath",def).toString(); //use the default if necessary
   QFileInfo info(path);
   this->contextMenu()->clear();
-  //qDebug() << "Default Application Launcher:" << def << path;
+  qDebug() << "Default Application Launcher:" << def << path;
   bool ok = info.canonicalPath().startsWith("/net/");
   if(!ok){ ok = QFile::exists(path); } //do it this way to ensure the file existance check never runs for /net/ files
   if(!ok){ emit RemovePlugin(this->ID()); return;}
@@ -58,6 +58,7 @@ void AppLauncherPlugin::loadButton(){
   QString txt;
   iconID.clear();
   if(path.endsWith(".desktop") && ok){
+      qDebug() << "LAUNCHER IS DOT DESKTOP";
     XDGDesktop file(path);
     ok = !file.name.isEmpty();
     if(!ok){
@@ -106,14 +107,16 @@ void AppLauncherPlugin::loadButton(){
       //if(pix.load(path)){ button->setIcon( QIcon(pix.scaled(256,256)) ); } //max size for thumbnails in memory
       //else{ iconame = "dialog-cancel"; } //button->setIcon( LXDG::findIcon("dialog-cancel","") );
     }else{
-      iconame = LXDG::findAppMimeForFile(path).replace("/","-");
-      //button->setIcon( QIcon(LXDG::findMimeIcon(path).pixmap(QSize(icosize,icosize)).scaledToHeight(icosize, Qt::SmoothTransformation) ) );
+      iconame = Draco::getProperMime(LXDG::findAppMimeForFile(path).replace("/","-"));
+      qDebug() << "FOUND ICON APP MIME?" << iconame;
     }
     if(!iconame.isEmpty()){ iconID = iconame; }
     txt = info.fileName();
+    qDebug() << "ICONID" << iconID << "TXT" << txt;
     if(!watcher->files().isEmpty()){ watcher->removePaths(watcher->files()); }
     watcher->addPath(path); //make sure to update this shortcut if the file changes
   }else{
+      qDebug() << "INVALID FILE!";
     //InValid File
     button->setWhatsThis("");
     iconID = "quickopen";
@@ -122,6 +125,7 @@ void AppLauncherPlugin::loadButton(){
     if(!watcher->files().isEmpty()){ watcher->removePaths(watcher->files()); }
   }
   if(!iconID.isEmpty()){
+      qDebug() << "LOAD ICON?" << iconID;
     if(ICONS->isLoaded(iconID)){
       ICONS->loadIcon(button, iconID);
       iconLoaded(iconID); //will not get a signal - already loaded right now
