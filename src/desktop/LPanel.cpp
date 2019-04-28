@@ -242,8 +242,8 @@ void LPanel::UpdatePanel(bool geomonly)
     if (needsticky) { LSession::handle()->XCB->SetAsSticky(this->winId()); }
     if (geomonly) { return; }
     // Now update the appearance of the toolbar
-    if (settings->value(PPREFIX+"customColor", false).toBool()) {
-        QString color = settings->value(PPREFIX+"color", "rgba(239,235,231,255)").toString();
+    if (settings->value(PPREFIX+"customColor", true).toBool()) {
+        QString color = settings->value(PPREFIX+"color", "rgba(0,0,0,160)").toString();
         int borderRadius = 3;
         if (panelPercent>99) { borderRadius=0; }
         //QString style = "QWidget#LuminaPanelColor{ background: %1; border: 1px solid %1; }";
