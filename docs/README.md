@@ -58,8 +58,8 @@ Feature requests will have a low priority while bug reports will have a high pri
     * *Needed to change the (Qt) theme (and icons). Not strictly needed, but highly recommended.*
   * **``xdg-utils``**
   * **``hicolor-icon-theme``**
-  * **``adwaita-icon-theme``**
-    * *Fallback icon theme, this is the only icon theme tested. Do not use higher version than 3.30.x. Version 3.18 is recommended. We might fork ``Adwaita`` in the future.*
+  * **``adwaita-icon-theme``** (=< 3.30.0)
+    * *The standard icon set for ``Draco``. **Do not use version higher than 3.30.x.***
   * **``openbox``**
     * *Window manager. Will not work without.*
   * **``D-Bus``**
