@@ -59,7 +59,7 @@ Feature requests will have a low priority while bug reports will have a high pri
   * **``xdg-utils``**
   * **``hicolor-icon-theme``**
   * **``adwaita-icon-theme``** (=< 3.30.0)
-    * *The standard icon set for ``Draco``. **Do not use version higher than 3.30.x.***
+    * *The standard icon set for ``Draco``. Version 3.18 is recommended, **Do not use version 3.32.x.***
   * **``openbox``**
     * *Window manager. Will not work without.*
   * **``D-Bus``**
