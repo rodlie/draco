@@ -15,7 +15,7 @@
 #include "session.h"
 #include <LUtils.h>
 #include <LDesktopUtils.h>
-#include <LuminaThemes.h>
+//#include <LuminaThemes.h>
 #include <LuminaXDG.h>
 
 

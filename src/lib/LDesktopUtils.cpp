@@ -11,7 +11,7 @@
 #include <QScreen>
 #include <QSettings>
 
-#include "LuminaThemes.h"
+//#include "LuminaThemes.h"
 
 
 
