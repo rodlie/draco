@@ -1,14 +1,48 @@
-# Draco Desktop Environment
+# Simple Desktop Environment
 
 ![screenshot](draco-screenshot.gif)
 
-A simple and modern desktop environment for Linux. 
-
-**Currently not ready for usage, (first) version ``0.9.0`` will be released during May of 2019.**
+### **Currently not ready for usage, (first) version ``0.9.0`` will be released during May of 2019.**
 
 ## Features
+
+### Desktop
+### Panel
+### Storage
+### Power management
+
+* Implements [org.freedesktop.ScreenSaver](https://people.freedesktop.org/~hadess/idle-inhibition-spec/re01.html) service
+ * Implements [org.freedesktop.PowerManagement](https://www.freedesktop.org/wiki/Specifications/power-management-spec/) service
+ * Automatically suspend on idle
+ * Automatically lock screen on idle
+ * Automatically hibernate or shutdown on critical battery
+ * Inhibit actions if external monitor(s) is connected
+ * Enables applications to inhibit display and suspend
+ * Advanced power settings
+ * Screen locking support
+ * Good laptop support
+ * Display backlight support
+ * Display hotplug support
+ * RTC support
+ * CPU support
+
+
 ## Usage
 ## FAQ
+
+### How does an application inhibit the screen saver?
+
+The preferred way to inhibit the screen saver from an application is to use the [org.freedesktop.ScreenSaver](https://people.freedesktop.org/~hadess/idle-inhibition-spec/re01.html) specification. Any application that uses [org.freedesktop.ScreenSaver](https://people.freedesktop.org/~hadess/idle-inhibition-spec/re01.html) will work with Draco.
+
+*Note that Draco also includes ``SimulateUserActivity`` for backwards compatibility*.
+
+Popular applications that uses this feature is Mozilla Firefox, Google Chrome, VideoLAN VLC and many more.
+
+### How does an application inhibit suspend actions?
+
+The preferred way to inhibit suspend actions from an application is to use the [org.freedesktop.PowerManagement](https://www.freedesktop.org/wiki/Specifications/power-management-spec/) specification. Any application that uses [org.freedesktop.PowerManagement](https://www.freedesktop.org/wiki/Specifications/power-management-spec/) will work with Draco.
+
+Common use cases are audio playback, downloading and more.
 
 ### Hey, this looks very similar to Lumina!?
 
@@ -18,18 +52,12 @@ This fork is aimed at working as good as possible on (``Slackware``) Linux with 
 
 ``(1)``: We use and implement most of the common desktop services and specs from [freedesktop.org](https://www.freedesktop.org/wiki/).
 
-``(2)``: While we do reinvent the wheel in regards to the desktop/panel, we don't want to reinvent the complete wheel (just the important part ;) ). Draco does not include any applications. Why make another text editor? Why make another image viewer? etc ... Meh, most users already have their own list of prefered applications, why force them to install stuff they don't need or use?
+``(2)``: While we do reinvent the wheel in regards to the desktop/panel, we don't want to reinvent the complete wheel (just the important part ;) ). Draco does not include any applications. Why make another text editor? Why make another image viewer? etc ... Most users already have their own suite of preferred applications.
 
-
-### Project goals/focus?
-
-To provide a simple and modern desktop environment on Linux with minimal fuzz.
-
-Feature requests will have a low priority while bug reports will have a high priority.
 
 ## Requirements
 
-  * **``Qt``** *(5.2+, 5.9.7/5.12.x LTS recommended)*
+  * **``Qt``** *(5.2+, latest LTS recommended)*
     * ``QtCore``
     * ``QtDBus``
     * ``QtGui``
@@ -39,6 +67,7 @@ Feature requests will have a low priority while bug reports will have a high pri
     * ``QtX11Extras``
   * **``X11``**
     * ``libX11``
+    * ``libXss``
     * ``libXdamage``
     * ``libXrandr``
     * ``xrandr``
@@ -54,20 +83,14 @@ Feature requests will have a low priority while bug reports will have a high pri
       * ``xcb-util``
       * ``xcb-atom``
 
-  * **``powerkit``** (2.0+)
-    * *Takes care of everything power related and implements important ``org.freedesktop`` services.*
   * **``xscreensaver``**
-    * *Takes care of screen blanking and locking. Also required by powerkit.*
   * **``qt5ct``**
-    * *Needed to set/change the desktop and applications theme (look, color, font, icons). Not strictly needed, but highly recommended.*
   * **``xdg-utils``**
   * **``hicolor-icon-theme``**
-  * **``adwaita-icon-theme``** (=< 3.28.0)
-    * *The standard icon set used. **Do not use v3.3x, we recommend v3.18.***
+  * **``adwaita-icon-theme``** *(=< 3.28.0)*
   * **``openbox``**
-    * *The standard window manager used. ***We do not support any other window manager for the desktop enviroment***, you can however combine ``draco-desktop`` with any window manager and setup, more information regarding this will be added later. Note that we (currently) do not provide any GUI application(s) to adjust the window manager settings.*
-  * **``ConsoleKit``**/**``logind``**
-    * *``ConsoleKit`` or ``logind`` is needed by some power(kit) related features, will work without but it's not recommended to run without them.*
+  * **``UPower``** *(>= 0.9.23)*
+  * **``ConsoleKit``**/**``logind``** (or compatible ``freedesktop`` service)
 
 ## Build
 ## License

@@ -6,7 +6,7 @@
 //===========================================
 #include "LClock.h"
 #include "LSession.h"
-#include <LuminaThemes.h>
+//#include <LuminaThemes.h>
 #include <LuminaXDG.h>
 
 LClock::LClock(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, id, horizontal){
@@ -154,8 +154,8 @@ void LClock::closeMenu(){
 }
 	
 void LClock::ChangeTZ(QAction *act){
-  LTHEME::setCustomEnvSetting("TZ",act->whatsThis());
-  QTimer::singleShot(500, this, SLOT(updateTime()) );
+  //LTHEME::setCustomEnvSetting("TZ",act->whatsThis());
+  //QTimer::singleShot(500, this, SLOT(updateTime()) );
 }
 
 void LClock::LocaleChange(){

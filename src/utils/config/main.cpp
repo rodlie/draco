@@ -8,7 +8,7 @@
 #include "mainWindow.h"
 //#include <LuminaOS.h>
 #include <LUtils.h>
-#include <LuminaThemes.h>
+//#include <LuminaThemes.h>
 #include <LuminaSingleApplication.h>
 #include <LuminaXDG.h>
 
@@ -16,7 +16,7 @@ XDGDesktopList *APPSLIST = 0;
 
 int main(int argc, char ** argv)
 {
-    LTHEME::LoadCustomEnvSettings();
+    //LTHEME::LoadCustomEnvSettings();
     LSingleApplication a(argc, argv, "lumina-config"); //loads translations inside constructor
     if(!a.isPrimaryProcess()){ return 0; } 
     //LuminaThemeEngine theme(&a);
