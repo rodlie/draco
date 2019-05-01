@@ -46,8 +46,6 @@
 //#include "powerkit_x11_screens.h"
 //#include "powerkit.h"
 
-#undef Bool
-#undef Status
 #include <X11/extensions/scrnsaver.h>
 #undef CursorShape
 
