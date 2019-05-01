@@ -197,6 +197,28 @@ bool LUtils::writeFile(QString filepath, QStringList contents, bool overwrite){
   return ok;
 }
 
+const QString LUtils::isValidBinaryWithPath(QString bin)
+{
+    //Trim off any quotes
+    if(bin.startsWith("\"") && bin.endsWith("\"")){ bin.chop(1); bin = bin.remove(0,1); }
+    if(bin.startsWith("\'") && bin.endsWith("\'")){ bin.chop(1); bin = bin.remove(0,1); }
+    //Now look for relative/absolute path
+    if(!bin.startsWith("/")){
+      //Relative path: search for it on the current "PATH" settings
+      QStringList paths = QString(qgetenv("PATH")).split(":");
+      for(int i=0; i<paths.length(); i++){
+        if(QFile::exists(paths[i]+"/"+bin)){ bin = paths[i]+"/"+bin; break;}
+        if(QFile::exists(paths[i]+"/../libexec/"+bin)){ bin = paths[i]+"/../libexec/"+bin; break;}
+      }
+    }
+    //bin should be the full path by now
+    if(!bin.startsWith("/")){ return QString(); }
+    QFileInfo info(bin);
+    bool good = (info.exists() && info.isExecutable());
+    if(good){ bin = info.absoluteFilePath(); }
+    return bin;
+}
+
 bool LUtils::isValidBinary(QString& bin){
   //Trim off any quotes
   if(bin.startsWith("\"") && bin.endsWith("\"")){ bin.chop(1); bin = bin.remove(0,1); }

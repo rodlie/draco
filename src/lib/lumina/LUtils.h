@@ -58,6 +58,7 @@ public:
 	static bool writeFile(QString filepath, QStringList contents, bool overwrite=false);
 
 	//Check whether a file/path is a valid binary
+    static const QString isValidBinaryWithPath(QString bin);
 	static bool isValidBinary(QString& bin); //full path or name only
 	static bool isValidBinary(const char *bin){
 	  QString bins(bin);

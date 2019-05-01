@@ -132,5 +132,5 @@ void LSession::start()
     startProcess("wm", Draco::windowManagerCmdStart());
 
     // Desktop Next
-    startProcess("runtime", Draco::desktopApp());
+    startProcess("runtime", LUtils::isValidBinaryWithPath(Draco::desktopApp()));
 }
