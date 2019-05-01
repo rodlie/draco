@@ -377,3 +377,9 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/dbus-1/system-services
 )
+install(
+    FILES
+    share/xinit/xinitrc.draco
+    DESTINATION
+    ${DEFAULT_SYSCONFDIR}/X11/xinit
+)
