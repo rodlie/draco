@@ -62,10 +62,10 @@ int main(int argc, char ** argv)
     }
 
     // check for dbus
-    if (!QDBusConnection::sessionBus().isConnected()) {
+    /*if (!QDBusConnection::sessionBus().isConnected()) {
         qWarning("Cannot connect to the D-Bus session bus!");
         return 1;
-    }
+    }*/
 
     // check for running desktop
     QDBusInterface session(Draco::desktopSessionName(),
