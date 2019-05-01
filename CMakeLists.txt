@@ -130,6 +130,8 @@ add_library(
     src/lib/qtcopydialog/qtcopydialog.ui
     src/lib/qtcopydialog/qtoverwritedialog.ui
     src/lib/qtcopydialog/qtotherdialog.ui
+
+    # res
     share/share.qrc
 )
 set_target_properties(
@@ -198,60 +200,32 @@ install(
     ${LIB_INSTALL_DIR}
 )
 
-# start-draco-desktop
-add_executable(
-    start-${PROJECT_NAME}-desktop
-    src/session/main.cpp
-    src/session/session.cpp
-)
-target_include_directories(
-    start-${PROJECT_NAME}-desktop
-    PRIVATE
-    src/lib
-    src/lib/lumina
-)
-target_link_libraries(
-    start-${PROJECT_NAME}-desktop
-    Qt5::Core
-    Qt5::DBus
-    ${LIB_NAME}
-)
-install(
-    TARGETS
-    start-${PROJECT_NAME}-desktop
-    DESTINATION
-    ${CMAKE_INSTALL_BINDIR}
-)
-install(
-    FILES
-    share/xsessions/${PROJECT_NAME}.desktop
-    DESTINATION
-    ${CMAKE_INSTALL_DATAROOTDIR}/xsessions
-)
-
-# draco-desktop
+# org.dracolinux.Desktop
 add_executable(
     ${DESKTOP_SERVICE_NAME}
+
+    # desktop and panel
     src/desktop/main.cpp
     src/desktop/LXcbEventFilter.cpp
+    src/desktop/LWinInfo.cpp
     src/desktop/LSession.cpp
+    src/desktop/AppMenu.cpp
     src/desktop/LDesktop.cpp
     src/desktop/LDesktopBackground.cpp
     src/desktop/LDesktopPluginSpace.cpp
     src/desktop/LPanel.cpp
-    src/desktop/LWinInfo.cpp
-    src/desktop/AppMenu.cpp
-    src/desktop/SystemWindow.cpp
-    src/desktop/LWinInfo.cpp
+
+    # desktop plugins
     src/desktop/desktop-plugins/LDPlugin.cpp
-    src/desktop/panel-plugins/LPPlugin.h
-    src/desktop/panel-plugins/NewPP.h
-    src/desktop/panel-plugins/LTBWidget.h
     src/desktop/desktop-plugins/NewDP.h
-    src/desktop/SystemWindow.ui
     src/desktop/desktop-plugins/applauncher/AppLauncherPlugin.cpp
     src/desktop/desktop-plugins/applauncher/AppLauncherPlugin.h
     src/desktop/desktop-plugins/applauncher/OutlineToolButton.h
+
+    # panel plugins
+    src/desktop/panel-plugins/LPPlugin.h
+    src/desktop/panel-plugins/NewPP.h
+    src/desktop/panel-plugins/LTBWidget.h
     src/desktop/panel-plugins/taskmanager/LTaskManagerPlugin.cpp
     src/desktop/panel-plugins/taskmanager/LTaskButton.cpp
     src/desktop/panel-plugins/systemtray/LSysTray.cpp
@@ -263,6 +237,9 @@ add_executable(
     src/desktop/panel-plugins/applauncher/AppLaunchButton.cpp
     src/desktop/panel-plugins/spacer/LSpacer.h
     src/desktop/panel-plugins/line/LLine.h
+
+    src/desktop/SystemWindow.cpp
+    src/desktop/SystemWindow.ui
     src/desktop/desktop.qrc
 )
 target_include_directories(
@@ -271,11 +248,8 @@ target_include_directories(
     src/desktop
     src/lib
     src/lib/lumina
-    src/lib/qtcopydialog
     src/lib/hotkey/QHotkey
-    src/desktop
-    src/desktop/desktop-plugins
-    src/desktop/panel-plugins
+    src/lib/qtcopydialog
 )
 target_link_libraries(
     ${DESKTOP_SERVICE_NAME}
@@ -318,6 +292,36 @@ install(
     ${CMAKE_INSTALL_LIBEXECDIR}
 )
 
+# start-draco-desktop
+add_executable(
+    start-${PROJECT_NAME}-desktop
+    src/session/main.cpp
+    src/session/session.cpp
+)
+target_include_directories(
+    start-${PROJECT_NAME}-desktop
+    PRIVATE
+    src/lib
+    src/lib/lumina
+)
+target_link_libraries(
+    start-${PROJECT_NAME}-desktop
+    Qt5::Core
+    Qt5::DBus
+    ${LIB_NAME}
+)
+install(
+    TARGETS
+    start-${PROJECT_NAME}-desktop
+    DESTINATION
+    ${CMAKE_INSTALL_BINDIR}
+)
+install(
+    FILES
+    share/xsessions/${PROJECT_NAME}.desktop
+    DESTINATION
+    ${CMAKE_INSTALL_DATAROOTDIR}/xsessions
+)
 
 # draco-xdg
 # dracod

@@ -16,11 +16,11 @@
 #include "org.dracolinux.Power.ScreenX11.h"
 #include <X11/extensions/Xrandr.h>
 
-#undef Bool // fix X11 inc
+// fix X11 inc
+#undef Bool
 #undef None
-//#undef UrlFormattingOption
-//#undef ParsingMode
-//#undef TolerantMode
+#undef Status
+
 #define OCNE(X) ((XRROutputChangeNotifyEvent*)X)
 
 class HotPlug : public QObject
