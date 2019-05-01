@@ -108,6 +108,8 @@ add_library(
     # Draco
     src/lib/draco.cpp
     src/lib/power_def.h
+    src/lib/org.dracolinux.Disks.cpp
+    src/lib/org.dracolinux.Power.cpp
     src/lib/org.dracolinux.Power.Client.cpp
     src/lib/org.dracolinux.Power.Device.cpp
     src/lib/org.dracolinux.Power.HotPlugX11.cpp
@@ -118,6 +120,7 @@ add_library(
     src/lib/org.dracolinux.Powerd.Manager.cpp
     src/lib/org.freedesktop.PowerManagement.cpp
     src/lib/org.freedesktop.ScreenSaver.cpp
+    src/lib/org.freedesktop.UDisks2.cpp
 
     # QHotkey
     src/lib/hotkey/QHotkey/qhotkey.cpp
@@ -271,13 +274,12 @@ install(
 # org.dracolinux.Powerd
 add_executable(
     ${POWERD_SERVICE_NAME}
-    src/${POWERD_SERVICE_NAME}.cpp
+    src/daemon/${POWERD_SERVICE_NAME}.cpp
 )
 target_include_directories(
     ${POWERD_SERVICE_NAME}
     PRIVATE
     src/lib
-    src/lib/lumina
 )
 target_link_libraries(
     ${POWERD_SERVICE_NAME}
