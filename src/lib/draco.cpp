@@ -6,7 +6,7 @@ Draco::~Draco() {}
 
 const QString Draco::desktopSessionName()
 {
-    return QString("%1.Desktop").arg(DESKTOP_APP_DOMAIN);
+    return DESKTOP_SERVICE_NAME;
 }
 
 const QString Draco::desktopSessionPath()
@@ -16,8 +16,22 @@ const QString Draco::desktopSessionPath()
 
 const QString Draco::desktopSessionFullPath()
 {
-    return QString();
-    //return QString("%1/%2").arg(QString(DESKTOP_APP_DOMAIN)).arg(DESKTOP_APP_NAME);
+    return QString(DESKTOP_SERVICE_NAME).replace(".", "/");
+}
+
+const QString Draco::daemonSessionName()
+{
+    return POWERD_SERVICE_NAME;
+}
+
+const QString Draco::daemonSessionPath()
+{
+    return QString("/Powerd");
+}
+
+const QString Draco::daemonSessionFullPath()
+{
+    return QString(POWERD_SERVICE_NAME).replace(".", "/");
 }
 
 const QString Draco::xconfig()
@@ -37,7 +51,7 @@ const QString Draco::powerApp()
 
 const QString Draco::desktopApp()
 {
-    return QString("%1-desktop").arg(DESKTOP_APP);
+    return QString("%1").arg(DESKTOP_SERVICE_NAME);
 }
 
 const QString Draco::launcherApp()
@@ -48,13 +62,6 @@ const QString Draco::launcherApp()
 const QString Draco::terminalApp()
 {
     return "qterminal";
-}
-
-const QString Draco::sessionFile()
-{
-    return QString("%1/.%2-desktop-session")
-            .arg(QDir::tempPath())
-            .arg(DESKTOP_APP);
 }
 
 const QString Draco::configDir()

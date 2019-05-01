@@ -16,6 +16,7 @@
 
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QUrl>
 
 static QStringList mimeglobs;
 static qint64 mimechecktime;

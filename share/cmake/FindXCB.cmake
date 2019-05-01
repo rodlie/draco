@@ -7,6 +7,7 @@ find_package(PkgConfig)
 if(NOT XCB_FIND_COMPONENTS)
     set(XCB_FIND_COMPONENTS
         xcb
+        xcb-util
         xcb-xinput
         xcb-randr 
         xcb-ewmh
@@ -32,7 +33,8 @@ foreach(comp ${XCB_FIND_COMPONENTS})
     # fixes
     if(comp STREQUAL "xcb-ewmh" OR
        comp STREQUAL "xcb-icccm" OR
-       comp STREQUAL "xcb-image")
+       comp STREQUAL "xcb-image" OR
+       comp STREQUAL "xcb-util")
         string(REPLACE "-" "_" headername xcb/${comp}.h)
     endif()
 

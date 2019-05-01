@@ -154,9 +154,6 @@ void LSession::setupSession()
     // Seed random number generator (if needed)
     qsrand( QTime::currentTime().msec() );
 
-    // Remove existing session file
-    if (QFile::exists(Draco::sessionFile())) { QFile::remove(Draco::sessionFile()); }
-
     // Initialize settings files
     sessionsettings = new QSettings(QString("%1-desktop").arg(DESKTOP_APP),
                                     QString(DE_SESSION_SETTINGS));
@@ -241,11 +238,6 @@ void LSession::CleanupSession()
     QDateTime time = QDateTime::currentDateTime();
     qDebug() << "Start closing down the session: " << time.toString(Qt::SystemLocaleShortDate);
 
-    // Create a temporary flag to prevent crash dialogs from opening during cleanup
-    LUtils::writeFile(Draco::sessionFile(),
-                      QStringList() << "yes",
-                      true);
-
     // Stop the background system tray (detaching/closing apps as necessary)
     stopSystemTray(!cleansession);
 
@@ -289,9 +281,6 @@ void LSession::CleanupSession()
 
     // Now wait a moment for things to close down before quitting
     for (int i=0; i<20; i++) { LSession::processEvents(); usleep(25000); } //1/2 second pause
-
-    // Clean up the temporary flag
-    if (QFile::exists(Draco::sessionFile())) { QFile::remove(Draco::sessionFile()); }
 }
 
 

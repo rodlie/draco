@@ -1,5 +1,5 @@
 build
-*.pro.user*
+*.user*
 global.h
 *.qm
 Makefile.Debug

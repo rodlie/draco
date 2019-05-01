@@ -84,19 +84,24 @@ find -L . \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
 # Configure
-qmake-qt5 \
-  PREFIX=/usr \
-  DOCDIR=/usr/doc \
-  MANDIR=/usr/man \
-  LIBSUFFIX=${LIBDIRSUFFIX} \
-  QMAKE_CFLAGS="${SLKCFLAGS}" \
-  QMAKE_CXXFLAGS="${SLKCFLAGS}"
+mkdir build
+cd build
+cmake \
+-DSERVICE_USER=root \
+-DSERVICE_GROUP=power \
+-DCMAKE_INSTALL_PREFIX=/usr \
+-DCMAKE_INSTALL_LIBDIR=lib64 \
+-DCMAKE_INSTALL_MANDIR=/usr/man \
+-DCMAKE_INSTALL_DOCDIR=/usr/doc \
+-DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
+-DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" ..
 
 # Build
 make -j${NUMJOBS}
 
 # Install
-make INSTALL_ROOT=$PKG install
+make DESTDIR=$PKG install
 
 # Strip
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \

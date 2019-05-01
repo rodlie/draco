@@ -1,5 +1,5 @@
 #
-# Draco Desktop Environment <https://desktop.dracolinux.org>
+# Draco Desktop Environment <https://dracolinux.org>
 # Copyright (c) 2019, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
 #
 # Available under the 3-clause BSD license
@@ -17,27 +17,37 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/share/cmake")
 
-set(SERVICE_NAME org.dracolinux.Desktop)
+set(LIB_NAME Draco)
+set(PUBLISHER dracolinux)
+set(DOMAIN org.${PUBLISHER})
+set(POWER_SERVICE_NAME ${DOMAIN}.Power)
+set(POWERD_SERVICE_NAME ${DOMAIN}.Powerd)
+set(STORAGE_SERVICE_NAME ${DOMAIN}.Storage)
+set(DESKTOP_SERVICE_NAME ${DOMAIN}.Desktop)
 set(
-    SERVICE_USER
+    POWERD_SERVICE_USER
     "root"
     CACHE
     STRING
-    "Run ${PROJECT_NAME}d as this user (needs access to /sys)."
+    "Run powerd service as this user (needs access to /sys)."
 )
 set(
-    SERVICE_GROUP
+    POWERD_SERVICE_GROUP
     "power"
     CACHE
     STRING
-    "group that have access to ${PROJECT_NAME}d, this should be all desktop users."
+    "group that have access to powerd service, this should be all desktop users."
 )
 
 add_definitions(-DDESKTOP_APP="${PROJECT_NAME}")
-add_definitions(-DDESKTOP_APP_NAME="Draco")
-add_definitions(-DDESKTOP_APP_DOMAIN="dracolinux.org")
+add_definitions(-DDESKTOP_APP_NAME="${LIB_NAME}")
+add_definitions(-DDESKTOP_APP_DOMAIN="${DOMAIN}")
 add_definitions(-DDESKTOP_APP_VERSION="${PROJECT_VERSION}")
-add_definitions(-DDESKTOP_SERVICE_NAME="${SERVICE_NAME}")
+add_definitions(-DDESKTOP_SERVICE_NAME="${DESKTOP_SERVICE_NAME}")
+add_definitions(-DPOWER_SERVICE_NAME="${POWER_SERVICE_NAME}")
+add_definitions(-DPOWERD_SERVICE_NAME="${POWERD_SERVICE_NAME}")
+add_definitions(-DSTORAGE_SERVICE_NAME="${STORAGE_SERVICE_NAME}")
+add_definitions(-DDAEMON_APP_NAME="${PUBLISHER}.Powerd")
 
 if(CMAKE_BUILD_TYPE MATCHES RELEASE)
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
@@ -79,47 +89,67 @@ endif()
 
 # libDraco
 add_library(
-    Draco
+    ${LIB_NAME}
     SHARED
-    src/lib/DesktopSettings.cpp
-    src/lib/LDesktopUtils.cpp
-    src/lib/LIconCache.cpp
-    src/lib/LInputDevice.cpp
-    src/lib/LUtils.cpp
-    src/lib/LuminaRandR-X11.cpp
-    src/lib/LuminaX11.cpp
-    src/lib/LuminaXDG.cpp
-    src/lib/LFileInfo.cpp
-    src/lib/ResizeMenu.cpp
-    src/lib/XDGMime.cpp
+
+    # Lumina
+    src/lib/lumina/DesktopSettings.cpp
+    src/lib/lumina/LDesktopUtils.cpp
+    src/lib/lumina/LIconCache.cpp
+    src/lib/lumina/LInputDevice.cpp
+    src/lib/lumina/LUtils.cpp
+    src/lib/lumina/LuminaRandR-X11.cpp
+    src/lib/lumina/LuminaX11.cpp
+    src/lib/lumina/LuminaXDG.cpp
+    src/lib/lumina/LFileInfo.cpp
+    src/lib/lumina/ResizeMenu.cpp
+    src/lib/lumina/XDGMime.cpp
+
+    # Draco
     src/lib/draco.cpp
+    src/lib/power_def.h
+    src/lib/org.dracolinux.Power.Client.cpp
+    src/lib/org.dracolinux.Power.Device.cpp
+    src/lib/org.dracolinux.Power.HotPlugX11.cpp
+    src/lib/org.dracolinux.Power.ScreenX11.cpp
+    src/lib/org.dracolinux.Powerd.Manager.Backlight.cpp
+    src/lib/org.dracolinux.Powerd.Manager.CPU.cpp
+    src/lib/org.dracolinux.Powerd.Manager.RTC.cpp
+    src/lib/org.dracolinux.Powerd.Manager.cpp
+    src/lib/org.freedesktop.PowerManagement.cpp
+    src/lib/org.freedesktop.ScreenSaver.cpp
+
+    # QHotkey
     src/lib/hotkey/QHotkey/qhotkey.cpp
     src/lib/hotkey/QHotkey/qhotkey_x11.cpp
     src/lib/hotkey/QHotkey/qhotkey_p.h
-    src/lib/fm/libfm/qtcopydialog/qtcopydialog.cpp
-    src/lib/fm/libfm/qtcopydialog/qtfilecopier.cpp
-    src/lib/fm/libfm/qtcopydialog/qtcopydialog.ui
-    src/lib/fm/libfm/qtcopydialog/qtoverwritedialog.ui
-    src/lib/fm/libfm/qtcopydialog/qtotherdialog.ui
+
+    # qtcopydialog
+    src/lib/qtcopydialog/qtcopydialog.cpp
+    src/lib/qtcopydialog/qtfilecopier.cpp
+    src/lib/qtcopydialog/qtcopydialog.ui
+    src/lib/qtcopydialog/qtoverwritedialog.ui
+    src/lib/qtcopydialog/qtotherdialog.ui
     share/share.qrc
 )
 set_target_properties(
-    Draco
+    ${LIB_NAME}
     PROPERTIES
     VERSION
     ${PROJECT_VERSION}
 )
 set_target_properties(
-    Draco
+    ${LIB_NAME}
     PROPERTIES
     SOVERSION
     ${PROJECT_VERSION_MAJOR}
 )
 target_include_directories(
-    Draco
+    ${LIB_NAME}
     PRIVATE
     src/lib
-    src/lib/fm/libfm/qtcopydialog
+    src/lib/lumina
+    src/lib/qtcopydialog
     src/lib/hotkey/QHotkey
 )
 if(${CMAKE_VERSION} VERSION_LESS "3.14.3")
@@ -130,7 +160,7 @@ else()
     set(XSS_LIB ${X11_Xss_LIB})
 endif()
 target_include_directories(
-    Draco
+    ${LIB_NAME}
     PUBLIC
     src
     ${X11_X11_INCLUDE_PATH}
@@ -141,7 +171,7 @@ target_include_directories(
     ${X11_Xdamage_INCLUDE}
 )
 target_link_libraries(
-    Draco
+    ${LIB_NAME}
     ${X11_LIBRARIES}
     ${XCB_LIBRARIES}
     ${X11_Xrandr_LIB}
@@ -153,13 +183,19 @@ target_link_libraries(
     Qt5::Gui
     Qt5::Widgets
     Qt5::Concurrent
+    Qt5::Network
     Qt5::X11Extras
 )
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
+else()
+    set(LIB_INSTALL_DIR ${CMAKE_INSTALL_FULL_LIBDIR})
+endif()
 install(
     TARGETS
-    Draco
+    ${LIB_NAME}
     DESTINATION
-    ${CMAKE_INSTALL_LIBDIR}
+    ${LIB_INSTALL_DIR}
 )
 
 # start-draco-desktop
@@ -172,12 +208,13 @@ target_include_directories(
     start-${PROJECT_NAME}-desktop
     PRIVATE
     src/lib
+    src/lib/lumina
 )
 target_link_libraries(
     start-${PROJECT_NAME}-desktop
     Qt5::Core
     Qt5::DBus
-    Draco
+    ${LIB_NAME}
 )
 install(
     TARGETS
@@ -194,7 +231,7 @@ install(
 
 # draco-desktop
 add_executable(
-    ${PROJECT_NAME}-desktop
+    ${DESKTOP_SERVICE_NAME}
     src/desktop/main.cpp
     src/desktop/LXcbEventFilter.cpp
     src/desktop/LSession.cpp
@@ -229,32 +266,58 @@ add_executable(
     src/desktop/desktop.qrc
 )
 target_include_directories(
-    ${PROJECT_NAME}-desktop
+    ${DESKTOP_SERVICE_NAME}
     PRIVATE
     src/desktop
     src/lib
-    src/lib/fm/libfm/qtcopydialog
+    src/lib/lumina
+    src/lib/qtcopydialog
     src/lib/hotkey/QHotkey
     src/desktop
     src/desktop/desktop-plugins
     src/desktop/panel-plugins
 )
 target_link_libraries(
-    ${PROJECT_NAME}-desktop
+    ${DESKTOP_SERVICE_NAME}
     Qt5::Core
     Qt5::DBus
     Qt5::Gui
     Qt5::Widgets
     Qt5::Concurrent
     Qt5::X11Extras
-    Draco
+    ${LIB_NAME}
 )
 install(
     TARGETS
-    ${PROJECT_NAME}-desktop
+    ${DESKTOP_SERVICE_NAME}
     DESTINATION
-    ${CMAKE_INSTALL_BINDIR}
+    ${CMAKE_INSTALL_LIBEXECDIR}
 )
+
+# org.dracolinux.Powerd
+add_executable(
+    ${POWERD_SERVICE_NAME}
+    src/${POWERD_SERVICE_NAME}.cpp
+)
+target_include_directories(
+    ${POWERD_SERVICE_NAME}
+    PRIVATE
+    src/lib
+    src/lib/lumina
+)
+target_link_libraries(
+    ${POWERD_SERVICE_NAME}
+    Qt5::Core
+    Qt5::DBus
+    ${LIB_NAME}
+)
+install(
+    TARGETS
+    ${POWERD_SERVICE_NAME}
+    DESTINATION
+    ${CMAKE_INSTALL_LIBEXECDIR}
+)
+
 
 # draco-xdg
 # dracod
@@ -273,7 +336,7 @@ install(
     #docs/ChangeLog
     docs/README.md
     DESTINATION
-    ${CMAKE_INSTALL_DOCDIR}/${PROJECT_NAME}-desktop-${PROJECT_VERSION}
+    ${CMAKE_INSTALL_DOCDIR}/${PROJECT_NAME}-${PROJECT_VERSION}
 )
 
 # etc
@@ -284,24 +347,24 @@ endif()
 
 # install
 configure_file(
-    src/lib/power/share/conf.in
-    ${CMAKE_BINARY_DIR}/${SERVICE_NAME}.conf
+    share/daemon/conf.in
+    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.conf
     @ONLY
 )
 configure_file(
-    src/lib/power/share/service.in
-    ${CMAKE_BINARY_DIR}/${SERVICE_NAME}.service
+    share/daemon/service.in
+    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.service
     @ONLY
 )
 install(
     FILES
-    ${CMAKE_BINARY_DIR}/${SERVICE_NAME}.conf
+    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.conf
     DESTINATION
     ${DEFAULT_SYSCONFDIR}/dbus-1/system.d
 )
 install(
     FILES
-    ${CMAKE_BINARY_DIR}/${SERVICE_NAME}.service
+    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.service
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/dbus-1/system-services
 )

@@ -197,6 +197,7 @@ bool LUtils::isValidBinary(QString& bin){
     QStringList paths = QString(qgetenv("PATH")).split(":");
     for(int i=0; i<paths.length(); i++){
       if(QFile::exists(paths[i]+"/"+bin)){ bin = paths[i]+"/"+bin; break;}
+      if(QFile::exists(paths[i]+"/../libexec/"+bin)){ bin = paths[i]+"/../libexec/"+bin; break;}
     }
   }
   //bin should be the full path by now
