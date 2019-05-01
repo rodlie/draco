@@ -17,7 +17,7 @@
 #include <LUtils.h>
 //#include <LuminaOS.h>
 #include <LDesktopUtils.h>
-#include <LuminaSingleApplication.h>
+//#include <LuminaSingleApplication.h>
 #include "common.h"
 
 void LSession::stopall(){
@@ -108,28 +108,7 @@ void LSession::startProcess(QString ID, QString command, QStringList watchfiles)
 
 void LSession::start()
 {
-    // First check for a valid installation
-    if (!LUtils::isValidBinary(QString("%1-desktop").arg(DESKTOP_APP).toUtf8())) {
-        qWarning() << "Desktop manager not found!";
-        exit(1);
-    }
-    if (!LUtils::isValidBinary("powerkit")) {
-        qWarning() << "Power manager not found!";
-        exit(1);
-    }
-    if (!LUtils::isValidBinary("qtfm-tray")) {
-        qWarning() << "Disk manager not found!";
-        exit(1);
-    }
-    if (!LUtils::isValidBinary(Draco::launcherApp().toUtf8())) {
-        qWarning() << "Application Launcher not found";
-        exit(1);
-    }
-    if(!LUtils::isValidBinary(Draco::windowManager().toUtf8())){
-        qWarning() << "Window manager not found!";
-        exit(1);
-    }
-
+    // set environment
     LXDG::setEnvironmentVars();
     setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
     setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
@@ -137,8 +116,8 @@ void LSession::start()
     setenv("QT_NO_GLIB", "1", 1); // Disable the glib event loop within Qt at runtime (performance hit + bugs)
     unsetenv("QT_AUTO_SCREEN_SCALE_FACTOR"); // need exact-pixel measurements (no fake scaling)
 
+    // Make sure the XDG user directories are created as needed first
     if(LUtils::isValidBinary("xdg-user-dirs-update")){
-        // Make sure the XDG user directories are created as needed first
         QProcess::execute("xdg-user-dirs-update");
     }
 
@@ -146,6 +125,5 @@ void LSession::start()
     startProcess("wm", Draco::windowManagerCmdStart());
 
     // Desktop Next
-    LSingleApplication::removeLocks("draco-desktop");
-    startProcess("runtime","draco-desktop");
+    startProcess("runtime", Draco::desktopApp());
 }

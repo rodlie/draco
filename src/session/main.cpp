@@ -9,44 +9,65 @@
 #include <QCoreApplication>
 #include <QProcess>
 #include <QString>
-#include <QLockFile>
 #include <QX11Info>
-
-#include "session.h"
-#include <LUtils.h>
-#include <LDesktopUtils.h>
-//#include <LuminaThemes.h>
-#include <LuminaXDG.h>
-
-
+#include <QDBusConnection>
+#include <QDBusInterface>
 #include <unistd.h>
 
-#include "common.h" // common stuff
+#include "common.h"
+#include "session.h"
+#include "LUtils.h"
+#include "LDesktopUtils.h"
+#include "LuminaXDG.h"
 
-int findAvailableSession(){
-  int num = 0;
-  while(QFile::exists("/tmp/.X11-unix/X"+QString::number(num))){ num++; }
-  return num;
+int findAvailableSession()
+{
+    int num = 0;
+    while (QFile::exists(QString("/tmp/.X11-unix/X%1").arg(num))) { num++; }
+    return num;
 }
 
 int main(int argc, char ** argv)
 {
-    //bool unified = false;
-    /*if (argc > 1) {
-      if (QString(argv[1]) == QString("--version")){
-        qDebug() << LDesktopUtils::LuminaDesktopVersion();
-        return 0;
-      }else if(QString(argv[1]) == QString("--unified")){
-        unified = true;
-      }
+    // check for required binaries
+    if (!LUtils::isValidBinary(Draco::desktopApp().toUtf8())) {
+        qWarning("Desktop manager not found!");
+        return 1;
+    }
+    /*if (!LUtils::isValidBinary("powerkit")) {
+        qWarning() << "Power manager not found!";
+        return 1;
+    }
+    if (!LUtils::isValidBinary("qtfm-tray")) {
+        qWarning() << "Disk manager not found!";
+        return 1;
     }*/
-    /*if(!QFile::exists(LOS::LuminaShare())){
-      qDebug() << "Lumina does not appear to be installed correctly. Cannot find: " << LOS::LuminaShare();
-      return 1;
-    }*/
+    if (!LUtils::isValidBinary(Draco::launcherApp().toUtf8())) {
+        qWarning("Application launcher not found");
+        return 1;
+    }
+    if(!LUtils::isValidBinary(Draco::windowManager().toUtf8())){
+        qWarning("Window manager not found!");
+        return 1;
+    }
 
+    // check for dbus
+    if (!QDBusConnection::sessionBus().isConnected()) {
+        qWarning("Cannot connect to the D-Bus session bus.");
+        return 1;
+    }
 
-    // setup configs
+    // check for running desktop
+    QDBusInterface session(Draco::desktopSessionName(),
+                           Draco::desktopSessionPath(),
+                           Draco::desktopSessionName(),
+                           QDBusConnection::sessionBus());
+    if (session.isValid()) {
+        qWarning() << QObject::tr("A desktop session is already running");
+        return 1;
+    }
+
+    // Check configs
     Draco::themeEngineCheckConf();
 
     // Start X11 if needed
@@ -56,48 +77,27 @@ int main(int argc, char ** argv)
         // No X session found. Go ahead and re-init this binary within an xinit call
         QString prog = QString(argv[0]).section("/", -1);
         LUtils::isValidBinary(prog); //will adjust the path to be absolute
-        //if(unified){ prog = prog+" --unified"; }
         QStringList args; args << prog << "--" << ":" + QString::number(findAvailableSession());
         //if(LUtils::isValidBinary("x11vnc")){ args << "--" << "-listen" << "tcp"; } //need to be able to VNC into this session
         return QProcess::execute("xinit", args);
     }
     qDebug() << "Starting the desktop on current X11 session:" << disp;
 
-    // Check for any stale desktop lock files and clean them up
-    QString cfile = QDir::tempPath()+"/.LSingleApp-%1-%2-%3";
-    QString desk = QString("%1-desktop").arg(DESKTOP_APP);
-    //if(unified){ desk.append("-unified"); }
-    cfile = cfile.arg( QString(getlogin()), desk, QString::number(QX11Info::appScreen()) );
-    if (QFile::exists(cfile)) {
-        qDebug() << "Found Desktop Lock for X session:" << disp;
-        qDebug() << " - Disabling Lock and starting new desktop session";
-        QLockFile lock(cfile+"-lock");
-        if (lock.isLocked()) { lock.unlock(); }
-        QFile::remove(cfile);
-    }
-    if (QFile::exists(QDir::tempPath()+QString("/.%1stopping").arg(DESKTOP_APP))) {
-        QFile::remove(QDir::tempPath()+QString("/.%1stopping").arg(DESKTOP_APP));
-    }
-
     // Configure X11 monitors if needed
-    QString xconf = QString("%1-xconfig").arg(DESKTOP_APP);
-    if (LUtils::isValidBinary(xconf)) {
+    if (LUtils::isValidBinary(Draco::xconfig().toUtf8())) {
         qDebug() << " - Resetting monitor configuration to last-used settings";
-        QProcess::execute(QString("%1 --reset-monitors").arg(xconf));
+        QProcess::execute(QString("%1 --reset-monitors").arg(Draco::xconfig()));
     }
 
-    qDebug() << " - Starting the session...";
     // Setup any initialization values
-    //LTHEME::LoadCustomEnvSettings();
     LXDG::setEnvironmentVars();
     setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
     setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
 
     // Startup the session
     QApplication a(argc, argv);
-    setenv("QT_QPA_PLATFORMTHEME","qt5ct",1); //make sure this is after the QApplication - not actually using the theme plugin for **this** process
+    setenv("QT_QPA_PLATFORMTHEME", "qt5ct", 1); // make sure this is after the QApplication - not actually using the theme plugin for **this** process
     LSession sess;
-    //sess.checkFiles(); //Make sure user files are created/installed first
     sess.start();
     return a.exec();
 }

@@ -24,9 +24,7 @@ XCBEventFilter *evFilter = Q_NULLPTR;
 LIconCache *ICONS = Q_NULLPTR;
 
 LSession::LSession(int &argc, char ** argv) :
-    LSingleApplication(argc,
-                       argv,
-                       QString("%1-desktop").arg(DESKTOP_APP))
+    QApplication(argc, argv)
   , XCB(Q_NULLPTR)
   , watcher(Q_NULLPTR)
   , screenTimer(Q_NULLPTR)
@@ -55,7 +53,7 @@ LSession::LSession(int &argc, char ** argv) :
     }
 
     // setup primary
-    if (isPrimaryProcess()) {
+    //if (isPrimaryProcess()) {
         qDebug() << "IS PRIMARY";
         connect(this,
                 SIGNAL(InputsAvailable(QStringList)),
@@ -132,12 +130,12 @@ LSession::LSession(int &argc, char ** argv) :
         // PM
         pm = new PowerKit(this);
 
-    } // end check for primary process
+    //} // end check for primary process
 }
 
 LSession::~LSession()
 {
-    if (this->isPrimaryProcess()) {
+   // if (this->isPrimaryProcess()) {
         //WM->stopWM();
         for (int i=0; i<DESKTOPS.length(); i++) {
             DESKTOPS[i]->deleteLater();
@@ -146,7 +144,7 @@ LSession::~LSession()
         //settingsmenu->deleteLater();
         appmenu->deleteLater();
         delete currTranslator;
-    }
+    //}
 }
 
 void LSession::setupSession()

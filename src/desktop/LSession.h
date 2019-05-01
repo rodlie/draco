@@ -29,7 +29,7 @@
 #include "SystemWindow.h"
 #include "LDesktop.h"
 #include "LuminaX11.h"
-#include "LuminaSingleApplication.h"
+//#include "LuminaSingleApplication.h"
 #include "LIconCache.h"
 
 // SYSTEM TRAY STANDARD DEFINITIONS
@@ -37,7 +37,7 @@
 #define SYSTEM_TRAY_BEGIN_MESSAGE 1
 #define SYSTEM_TRAY_CANCEL_MESSAGE 2
 
-class LSession : public LSingleApplication
+class LSession : public QApplication
 {
     Q_OBJECT
 public:

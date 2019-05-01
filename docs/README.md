@@ -8,24 +8,28 @@
 
 ### Desktop
 ### Panel
-### Storage
+### Storage management
+
+  * Show available storage/optical devices in system tray
+  * Auto mount (and open) storage/optical devices when added *(not default)*
+  * Auto play CD/DVD *(not default)*
+
 ### Power management
 
-* Implements [org.freedesktop.ScreenSaver](https://people.freedesktop.org/~hadess/idle-inhibition-spec/re01.html) service
- * Implements [org.freedesktop.PowerManagement](https://www.freedesktop.org/wiki/Specifications/power-management-spec/) service
- * Automatically suspend on idle
- * Automatically lock screen on idle
- * Automatically hibernate or shutdown on critical battery
- * Inhibit actions if external monitor(s) is connected
- * Enables applications to inhibit display and suspend
- * Advanced power settings
- * Screen locking support
- * Good laptop support
- * Display backlight support
- * Display hotplug support
- * RTC support
- * CPU support
-
+  * Implements [org.freedesktop.ScreenSaver](https://people.freedesktop.org/~hadess/idle-inhibition-spec/re01.html) service
+  * Implements [org.freedesktop.PowerManagement](https://www.freedesktop.org/wiki/Specifications/power-management-spec/) service
+  * Automatically suspend on idle
+  * Automatically lock screen on idle
+  * Automatically hibernate or shutdown on critical battery
+  * Inhibit actions if external monitor(s) is connected
+  * Enables applications to inhibit display and suspend
+  * Advanced power settings
+  * Screen locking support
+  * Good laptop support
+  * Display backlight support
+  * Display hotplug support
+  * RTC support
+  * CPU support
 
 ## Usage
 ## FAQ
@@ -46,14 +50,7 @@ Common use cases are audio playback, downloading and more.
 
 ### Hey, this looks very similar to Lumina!?
 
-And right you are, this is a fork of the [Lumina Desktop Enviroment](https://github.com/lumina-desktop/lumina). Why? Well, difference of opinion is probably the best answer. 
-
-This fork is aimed at working as good as possible on (``Slackware``) Linux with the ``freedesktop(1)`` services and specs while including the ``bare essentials(2)`` for a modern desktop experience.
-
-``(1)``: We use and implement most of the common desktop services and specs from [freedesktop.org](https://www.freedesktop.org/wiki/).
-
-``(2)``: While we do reinvent the wheel in regards to the desktop/panel, we don't want to reinvent the complete wheel (just the important part ;) ). Draco does not include any applications. Why make another text editor? Why make another image viewer? etc ... Most users already have their own suite of preferred applications.
-
+And right you are, this is a fork of the [Lumina Desktop Enviroment](https://github.com/lumina-desktop/lumina). Why? Well, difference of opinion is probably the best answer. We have different focus and goals.
 
 ## Requirements
 

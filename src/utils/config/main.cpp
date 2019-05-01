@@ -9,7 +9,7 @@
 //#include <LuminaOS.h>
 #include <LUtils.h>
 //#include <LuminaThemes.h>
-#include <LuminaSingleApplication.h>
+//#include <LuminaSingleApplication.h>
 #include <LuminaXDG.h>
 
 XDGDesktopList *APPSLIST = 0;
@@ -17,13 +17,13 @@ XDGDesktopList *APPSLIST = 0;
 int main(int argc, char ** argv)
 {
     //LTHEME::LoadCustomEnvSettings();
-    LSingleApplication a(argc, argv, "lumina-config"); //loads translations inside constructor
-    if(!a.isPrimaryProcess()){ return 0; } 
+    QApplication a(argc, argv); //loads translations inside constructor
+    //if(!a.isPrimaryProcess()){ return 0; }
     //LuminaThemeEngine theme(&a);
     QStringList args;
     for(int i=1; i<argc; i++){ args << QString(argv[i]); }
     mainWindow w;
-    QObject::connect(&a, SIGNAL(InputsAvailable(QStringList)), &w, SLOT(slotSingleInstance(QStringList)) );
+    //QObject::connect(&a, SIGNAL(InputsAvailable(QStringList)), &w, SLOT(slotSingleInstance(QStringList)) );
     w.slotSingleInstance(args);
     w.show();
 

@@ -5,12 +5,37 @@
 //  See the LICENSE file for full details
 //===========================================
 
+#include <QDBusConnection>
+#include <QDBusInterface>
+
 #include "LSession.h"
 #include "LuminaXDG.h"
 #include "common.h"
 
 int main(int argc, char ** argv)
 {
+    // Check for dbus
+    if (!QDBusConnection::sessionBus().isConnected()) {
+        qWarning("Cannot connect to the D-Bus session bus.");
+        return 1;
+    }
+
+    // Check for running desktop
+    QDBusInterface session(Draco::desktopSessionName(),
+                           Draco::desktopSessionPath(),
+                           Draco::desktopSessionName(),
+                           QDBusConnection::sessionBus());
+    if (session.isValid()) {
+        qWarning("A desktop session is already running");
+        return 1;
+    }
+
+    // Register desktop session
+    if (!QDBusConnection::sessionBus().registerService(Draco::desktopSessionName())) {
+        qWarning() << QDBusConnection::sessionBus().lastError().message();
+        return 1;
+    }
+
     // Setup any pre-QApplication initialization values
     LXDG::setEnvironmentVars();
     setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
@@ -22,7 +47,6 @@ int main(int argc, char ** argv)
 
     // Startup the session
     LSession a(argc, argv);
-    if (!a.isPrimaryProcess()) { return 0; }
     a.setupSession();
     return a.exec();
 }
