@@ -61,7 +61,7 @@ const QString Draco::powerApp()
 
 const QString Draco::desktopApp()
 {
-    return QString("%1").arg(DESKTOP_SERVICE_NAME);
+    return DESKTOP_SERVICE_NAME;
 }
 
 const QString Draco::launcherApp()
