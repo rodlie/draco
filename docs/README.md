@@ -86,8 +86,8 @@ And right you are, this is a fork of the [Lumina Desktop Enviroment](https://git
   * **``hicolor-icon-theme``**
   * **``adwaita-icon-theme``** *(=< 3.28.0)*
   * **``openbox``**
-  * **``UPower``** *(>= 0.9.23)*
-  * **``ConsoleKit``**/**``logind``** (or compatible ``freedesktop`` service)
+  * **``UPower``** *(>= 0.9.23 or compatible service)*
+  * **``ConsoleKit``**/**``logind``** *(or compatible service)*
 
 ## Build
 ## License
