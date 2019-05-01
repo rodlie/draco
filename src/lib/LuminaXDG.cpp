@@ -12,7 +12,7 @@
 //#include <QMediaPlayer>
 //#include <QSvgRenderer>
 
-#include "common.h"
+#include "draco.h"
 
 #include <QMimeDatabase>
 #include <QMimeType>

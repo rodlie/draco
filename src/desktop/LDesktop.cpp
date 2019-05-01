@@ -13,7 +13,7 @@
 #include "LuminaX11.h"
 #include "LWinInfo.h"
 #include <QScreen>
-#include "common.h"
+#include "draco.h"
 
 #include "qtcopydialog.h"
 #include "qtfilecopier.h"

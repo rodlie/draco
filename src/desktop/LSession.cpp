@@ -10,7 +10,7 @@
 #include "LuminaX11.h"
 #include "LUtils.h"
 #include "LDesktopUtils.h"
-#include "common.h" // common stuff
+#include "draco.h" // common stuff
 
 #include <QTime>
 #include <QScreen>

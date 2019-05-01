@@ -10,7 +10,7 @@
 
 #include "LSession.h"
 #include "LuminaXDG.h"
-#include "common.h"
+#include "draco.h"
 
 int main(int argc, char ** argv)
 {

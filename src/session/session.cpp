@@ -8,7 +8,7 @@
 #include "session.h"
 #include "LUtils.h"
 #include "LDesktopUtils.h"
-#include "common.h"
+#include "draco.h"
 
 #include <QObject>
 #include <QProcess>

@@ -11,7 +11,7 @@
 
 #include "panel-plugins/systemtray/LSysTray.h"
 
-#include "common.h"
+#include "draco.h"
 
 static bool hascompositer = !LUtils::getCmdOutput("ps -x").filter("compton").filter("--backend").isEmpty(); //LUtils::isValidBinary("xcompmgr"); //NOT WORKING YET - xcompmgr issue with special window flags?
 

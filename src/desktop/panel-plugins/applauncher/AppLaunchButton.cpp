@@ -12,7 +12,7 @@
 #include <QInputDialog>
 #include <LFileInfo.h>
 
-#include "common.h"
+#include "draco.h"
 
 AppLaunchButtonPlugin::AppLaunchButtonPlugin(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, id, horizontal){
   button = new QToolButton(this);

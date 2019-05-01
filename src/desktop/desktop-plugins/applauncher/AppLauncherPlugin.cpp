@@ -4,7 +4,7 @@
 #include <QClipboard>
 
 #include <LIconCache.h>
-#include "common.h"
+#include "draco.h"
 
 #define OUTMARGIN 10 //special margin for fonts due to the outlining effect from the OutlineToolbutton
 extern LIconCache *ICONS;

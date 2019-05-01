@@ -14,7 +14,7 @@
 #include <QDBusInterface>
 #include <unistd.h>
 
-#include "common.h"
+#include "draco.h"
 #include "session.h"
 #include "LUtils.h"
 #include "LDesktopUtils.h"
@@ -43,7 +43,7 @@ int main(int argc, char ** argv)
         return 1;
     }*/
     if (!LUtils::isValidBinary(Draco::launcherApp().toUtf8())) {
-        qWarning("Application launcher not found");
+        qWarning("Application launcher not found!");
         return 1;
     }
     if(!LUtils::isValidBinary(Draco::windowManager().toUtf8())){
@@ -53,7 +53,7 @@ int main(int argc, char ** argv)
 
     // check for dbus
     if (!QDBusConnection::sessionBus().isConnected()) {
-        qWarning("Cannot connect to the D-Bus session bus.");
+        qWarning("Cannot connect to the D-Bus session bus!");
         return 1;
     }
 
@@ -63,7 +63,7 @@ int main(int argc, char ** argv)
                            Draco::desktopSessionName(),
                            QDBusConnection::sessionBus());
     if (session.isValid()) {
-        qWarning("A desktop session is already running");
+        qWarning("A desktop session is already running!");
         return 1;
     }
 

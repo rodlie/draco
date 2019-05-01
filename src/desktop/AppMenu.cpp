@@ -8,7 +8,7 @@
 #include "AppMenu.h"
 #include "LSession.h"
 #include "LIconCache.h"
-#include "common.h"
+#include "draco.h"
 
 extern LIconCache *ICONS;
 

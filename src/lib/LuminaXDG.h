@@ -31,6 +31,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QMutex>
+#include <QUrl>
 
 // ======================
 // FreeDesktop Desktop Actions Framework (data structure)

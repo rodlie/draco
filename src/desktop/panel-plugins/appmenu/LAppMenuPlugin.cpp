@@ -8,7 +8,7 @@
 #include "LSession.h"
 
 #include <LuminaXDG.h>
-#include "common.h"
+#include "draco.h"
 
 LAppMenuPlugin::LAppMenuPlugin(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, id, horizontal){
   button = new QToolButton(this);

@@ -10,7 +10,7 @@
 
 #include <LuminaXDG.h>
 #include <QProcess>
-#include "common.h"
+#include "draco.h"
 
 extern XDGDesktopList* APPSLIST;
 
