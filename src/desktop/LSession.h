@@ -23,7 +23,7 @@
 #include <QUrl>
 #include <QClipboard>
 
-#include "powerkit.h"
+//#include "powerkit.h"
 #include "AppMenu.h"
 //#include "SettingsMenu.h"
 #include "SystemWindow.h"
@@ -136,7 +136,7 @@ private:
 
     bool startupApps;
 
-    PowerKit *pm;
+    //PowerKit *pm;
 
 public slots:
     void StartLogout();

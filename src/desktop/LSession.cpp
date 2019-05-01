@@ -43,7 +43,7 @@ LSession::LSession(int &argc, char ** argv) :
   , TrayStopping(false)
   , lastActiveWin(0)
   , startupApps(true)
-  , pm(Q_NULLPTR)
+  //, pm(Q_NULLPTR)
 {
     // Get the currently-set theme
     QString cTheme = QIcon::themeName();
@@ -128,7 +128,7 @@ LSession::LSession(int &argc, char ** argv) :
               SLOT(handleClipboard(QClipboard::Mode)));
 
         // PM
-        pm = new PowerKit(this);
+        //pm = new PowerKit(this);
 
     //} // end check for primary process
 }
@@ -354,21 +354,21 @@ void LSession::StartLogout()
 void LSession::StartShutdown()
 {
     CleanupSession();
-    pm->PowerOff();
+    //pm->PowerOff();
     QCoreApplication::exit(0);
 }
 
 void LSession::StartSuspend(bool hibernate)
 {
     lockScreen();
-    if (hibernate) { pm->Hibernate(); }
-    else { pm->Suspend(); }
+    //if (hibernate) { pm->Hibernate(); }
+    //else { pm->Suspend(); }
 }
 
 void LSession::StartReboot()
 {
     CleanupSession();
-    pm->Restart();
+    //pm->Restart();
     QCoreApplication::exit(0);
 }
 
@@ -387,22 +387,22 @@ void LSession::reloadIconTheme()
 
 bool LSession::canShutdown()
 {
-    return pm->CanPowerOff();
+    return false; //pm->CanPowerOff();
 }
 
 bool LSession::canReboot()
 {
-    return pm->CanRestart();
+    return false; //pm->CanRestart();
 }
 
 bool LSession::canSuspend()
 {
-    return  pm->CanSuspend();
+    return false; //pm->CanSuspend();
 }
 
 bool LSession::canHibernate()
 {
-    return pm->CanHibernate();
+    return false; //pm->CanHibernate();
 }
 
 void LSession::watcherChange(QString changed)
