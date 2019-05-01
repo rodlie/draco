@@ -24,13 +24,12 @@ class SystemWindow : public QDialog
     Ui::SystemWindow *ui;
 
     //void closeAllWindows();
-    bool promptAboutUpdates(bool &skip); // main bool return: continue/cancel, skip: skip updates or not
 
     private slots:
     void sysLogout();
 
     void sysRestart();
-    void sysUpdate();
+    //void sysUpdate();
     void sysShutdown();
 
     void sysSuspend();
@@ -42,6 +41,9 @@ class SystemWindow : public QDialog
     }
 
     void sysLock();
+
+    bool msgDialog(QString const &title,
+                   QString const &text);
 };
 
 #endif

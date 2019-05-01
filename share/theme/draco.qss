@@ -37,7 +37,7 @@ LDPlugin#desktopview QListWidget::item:hover
 QWidget#LuminaPanelColor
 {
     background: qradialgradient(spread:reflect, cx:0.113757, cy:0.875, radius:0.7, fx:0.045, fy:0.954545, stop:0 rgba(2, 2, 2, 60), stop:1 rgba(0, 0, 0, 110));
-    border-radius: 3px;
+    /*border-radius: 3px;*/
 }
 
 /* Special taskmanager window buttons: based on window state */

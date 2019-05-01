@@ -54,7 +54,7 @@ LSession::LSession(int &argc, char ** argv) :
 
     // setup primary
     //if (isPrimaryProcess()) {
-        qDebug() << "IS PRIMARY";
+       // qDebug() << "IS PRIMARY";
         connect(this,
                 SIGNAL(InputsAvailable(QStringList)),
                 this,
@@ -360,6 +360,7 @@ void LSession::StartShutdown()
 
 void LSession::StartSuspend(bool hibernate)
 {
+    lockScreen();
     if (hibernate) { pm->Hibernate(); }
     else { pm->Suspend(); }
 }
@@ -369,6 +370,11 @@ void LSession::StartReboot()
     CleanupSession();
     pm->Restart();
     QCoreApplication::exit(0);
+}
+
+void LSession::lockScreen()
+{
+    LUtils::runCmd("xscreensaver-command -lock");
 }
 
 void LSession::reloadIconTheme()

@@ -2,7 +2,6 @@
 #include "ui_SystemWindow.h"
 
 #include "LSession.h"
-//#include <LuminaOS.h>
 #include <QPoint>
 #include <QCursor>
 #include <QDebug>
@@ -32,7 +31,6 @@ SystemWindow::SystemWindow() : QDialog(), ui(new Ui::SystemWindow)
     connect(ui->push_cancel, SIGNAL(clicked()), this, SLOT(sysCancel()) );
     connect(ui->push_lock, SIGNAL(clicked()), this, SLOT(sysLock()) );
     connect(ui->tool_hibernate, SIGNAL(clicked()), this, SLOT(sysHibernate()));
-    //connect(ui->tool_restart_updates, SIGNAL(clicked()), this, SLOT(sysUpdate()) );
 
     updateWindow();
     ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
@@ -46,42 +44,22 @@ SystemWindow::~SystemWindow()
 
 void SystemWindow::updateWindow()
 {
-    // Disable the shutdown/restart buttons if necessary
-    ui->retranslateUi(this);
+    //ui->retranslateUi(this);
 
-    //ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
     ui->tool_suspend->setEnabled(LSession::handle()->canSuspend());
+    ui->tool_hibernate->setEnabled(LSession::handle()->canHibernate());
     ui->tool_restart->setEnabled(LSession::handle()->canReboot());
     ui->tool_shutdown->setEnabled(LSession::handle()->canShutdown());
 
-    //ui->frame_update->setVisible( !LOS::systemPendingUpdates().isEmpty() );
     // Center this window on the current screen
-    QPoint center = QApplication::desktop()->screenGeometry(QCursor::pos()).center(); //get the center of the current screen
+    QPoint center = QApplication::desktop()->screenGeometry(QCursor::pos()).center(); // get the center of the current screen
     this->move(center.x() - this->width()/2, center.y() - this->height()/2);
-}
-
-bool SystemWindow::promptAboutUpdates(bool &skip)
-{
-  /*QString pending = LOS::systemPendingUpdates();
-  if(pending.isEmpty()){ skip = false; } //continue without skip
-  else{
-    QMessageBox dlg(QMessageBox::Question, tr("Apply Updates?"), tr("You have system updates waiting to be applied! Do you wish to install them now?"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
-      dlg.setButtonText(QMessageBox::Yes, tr("Yes"));
-      dlg.setButtonText(QMessageBox::No, tr("No"));
-      dlg.setButtonText(QMessageBox::Cancel, tr("Cancel"));
-      dlg.setDetailedText(pending);
-      dlg.setDefaultButton(QMessageBox::Yes);
-      dlg.show();
-    int ret = dlg.exec();
-    if(ret == QMessageBox::Cancel){ return false; } //do not continue
-    else{ skip = (ret==QMessageBox::No); }
-  }
-  return true;*/
-    return false;
 }
 
 void SystemWindow::sysLogout()
 {
+    if (!msgDialog(tr("Logout?"),
+                   tr("Are you sure you want to logout?"))) { return; }
     this->close();
     LSession::processEvents();
     QTimer::singleShot(0, LSession::handle(), SLOT(StartLogout()) );
@@ -89,46 +67,37 @@ void SystemWindow::sysLogout()
 
 void SystemWindow::sysRestart()
 {
-  //bool skip = false;
-  //if(!promptAboutUpdates(skip)){ this->close(); return; } //cancelled
-  //this->close();
-  //LSession::processEvents();
-    LSession::handle()->StartReboot();
-}
-
-void SystemWindow::sysUpdate()
-{
-  //bool skip = false;
-  //if(!promptAboutUpdates(skip)){ this->close(); return; } //cancelled
-  //this->close();
-  //LSession::processEvents();
+    if (!msgDialog(tr("Restart computer?"),
+                   tr("Are you sure you want to restart the computer?"))) { return; }
+    this->close();
+    LSession::processEvents();
     LSession::handle()->StartReboot();
 }
 
 void SystemWindow::sysShutdown()
 {
-  //bool skip = false;
-  //if(!promptAboutUpdates(skip)){ this->close(); return; } //cancelled
-  //this->close();
-  //LSession::processEvents();
+    if (!msgDialog(tr("Shutdown computer?"),
+                   tr("Are you sure you want to shutdown the computer?"))) { return; }
+    this->close();
+    LSession::processEvents();
     LSession::handle()->StartShutdown();
 }
 
 void SystemWindow::sysSuspend()
 {
+    if (!msgDialog(tr("Suspend computer?"),
+                   tr("Are you sure you want to suspend the computer?"))) { return; }
     this->hide();
     LSession::processEvents();
-    //Make sure to lock the system first (otherwise anybody can access it again)
-    LUtils::runCmd("xscreensaver-command -lock");
     LSession::handle()->StartSuspend();
 }
 
 void SystemWindow::sysHibernate()
 {
+    if (!msgDialog(tr("Hibernate computer?"),
+                   tr("Are you sure you want to hibernate the computer?"))) { return; }
     this->hide();
     LSession::processEvents();
-    //Make sure to lock the system first (otherwise anybody can access it again)
-    LUtils::runCmd("xscreensaver-command -lock");
     LSession::handle()->StartSuspend(true);
 }
 
@@ -136,6 +105,18 @@ void SystemWindow::sysLock()
 {
     this->hide();
     LSession::processEvents();
-    qDebug() << "Locking the desktop...";
-    QProcess::startDetached("xscreensaver-command -lock");
+    LSession::handle()->lockScreen();
+}
+
+bool SystemWindow::msgDialog(const QString &title,
+                             const QString &text)
+{
+    if (title.isEmpty() || text.isEmpty()) { return false; }
+    int res = QMessageBox::warning(this,
+                                   title,
+                                   text,
+                                   QMessageBox::Yes|QMessageBox::No,
+                                   QMessageBox::Yes);
+    if (res == QMessageBox::Yes) { return true; }
+    return false;
 }

@@ -143,6 +143,7 @@ public slots:
     void StartShutdown();
     void StartSuspend(bool hibernate = false);
     void StartReboot();
+    void lockScreen();
     void reloadIconTheme();
 
     bool canShutdown();

@@ -63,7 +63,7 @@ int main(int argc, char ** argv)
                            Draco::desktopSessionName(),
                            QDBusConnection::sessionBus());
     if (session.isValid()) {
-        qWarning() << QObject::tr("A desktop session is already running");
+        qWarning("A desktop session is already running");
         return 1;
     }
 
