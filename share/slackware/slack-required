@@ -15,12 +15,12 @@ libX11
 libXdamage
 libXfixes
 libXrandr
-libxcb
 mesa
 qt5
 qt5ct
 xcb
 libxcb
+libxcb-util
 libxcb-xinput
 libxcb-randr
 libxcb-ewmh
