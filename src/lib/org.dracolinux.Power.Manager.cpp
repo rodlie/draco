@@ -6,7 +6,7 @@
 # See the LICENSE file for full details
 */
 
-#include "org.dracolinux.Power.h"
+#include "org.dracolinux.Power.Manager.h"
 #include "power_def.h"
 //#include "common.h"
 

@@ -109,11 +109,14 @@ add_library(
     src/lib/draco.cpp
     src/lib/power_def.h
     src/lib/org.dracolinux.Disks.cpp
-    src/lib/org.dracolinux.Power.cpp
     src/lib/org.dracolinux.Power.Client.cpp
     src/lib/org.dracolinux.Power.Device.cpp
     src/lib/org.dracolinux.Power.HotPlugX11.cpp
+    src/lib/org.dracolinux.Power.Manager.cpp
     src/lib/org.dracolinux.Power.ScreenX11.cpp
+    src/lib/org.dracolinux.Power.Settings.cpp
+    src/lib/org.dracolinux.Power.SettingsDialog.cpp
+    #src/lib/org.dracolinux.Power.Tray.cpp
     src/lib/org.dracolinux.Powerd.Manager.Backlight.cpp
     src/lib/org.dracolinux.Powerd.Manager.CPU.cpp
     src/lib/org.dracolinux.Powerd.Manager.RTC.cpp

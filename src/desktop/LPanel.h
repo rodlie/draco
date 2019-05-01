@@ -1,3 +1,13 @@
+/*
+#
+# Draco Desktop Environment <https://dracolinux.org>
+# Copyright (c) 2019, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
+#
+# Available under the 3-clause BSD license
+# See the LICENSE file for full details
+#
+*/
+
 //===========================================
 //  Lumina-DE source code
 //  Copyright (c) 2012-2015, Ken Moore
