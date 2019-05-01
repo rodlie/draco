@@ -5,15 +5,15 @@
 # You must make exactly 11 lines for the formatting to be correct.  It's also
 # customary to leave one space after the ':' except on otherwise blank lines.
 
-             |-----handy-ruler------------------------------------------------------|
-draco-desktop: draco-desktop (simple desktop environment)
-draco-desktop:
-draco-desktop: A simple and modern desktop environment designed for Slackware Linux.
-draco-desktop:
-draco-desktop:
-draco-desktop:
-draco-desktop:
-draco-desktop: Draco Desktop Environment is maintained by Ole-André Rodlie.
-draco-desktop:
-draco-desktop: Homepage: https://github.com/rodlie/draco-desktop
-draco-desktop:
+     |-----handy-ruler------------------------------------------------------|
+draco: draco (simple desktop environment)
+draco:
+draco: A simple and modern desktop environment designed for Slackware Linux.
+draco:
+draco:
+draco:
+draco:
+draco: Draco Desktop Environment is maintained by Ole-André Rodlie.
+draco:
+draco: Homepage: https://dracolinux.org
+draco:
