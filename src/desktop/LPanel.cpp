@@ -262,7 +262,7 @@ void LPanel::UpdatePanel(bool geomonly)
     // Then go through the plugins and create them as necessary
     QStringList plugins = settings->value(PPREFIX+"pluginlist", QStringList()).toStringList();
     if (defaultpanel && plugins.isEmpty()) {
-        plugins << "appmenu" << "desktopswitcher" << "taskmanager"  << "systemtray" << "clock" << "homebutton";
+        plugins << "appmenu" << "taskmanager"  << "systemtray" << "clock" << "homebutton";
     }
     qDebug() << " - Initialize Plugins: " << plugins;
     for (int i=0; i<plugins.length(); i++) {
@@ -390,13 +390,13 @@ void LPanel::setupFallbackPanel(const QString &panel)
     // add default settings for panel
     qDebug() << "setting default settings for panel" << panel;
     QStringList plugins;
-    plugins << "appmenu" << "taskmanager"  << "systemtray" << "clock";
+    plugins << "appmenu" << "taskmanager"  << "systemtray" << "clock" << "homebutton";
     settings->setValue(QString("%1hidepanel").arg(panel), false);
     settings->setValue(QString("%1location").arg(panel), QString("bottom"));
     settings->setValue(QString("%1height").arg(panel), 30);
     settings->setValue(QString("%1lengthPercent").arg(panel), 100);
-    //settings->setValue(QString("%1customColor").arg(panel), true);
-    //settings->setValue(QString("%1color").arg(panel), QString("rgba(239,235,231,255)"));
+    settings->setValue(QString("%1customColor").arg(panel), true);
+    settings->setValue(QString("%1color").arg(panel), QString("rgba(0,0,0,160)"));
     settings->setValue(QString("%1pluginlist").arg(panel), plugins);
     settings->sync();
 }
