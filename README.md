@@ -1,8 +1,6 @@
 # Simple Desktop Environment
 
-![screenshot](draco-screenshot.gif)
-
-### **Currently not ready for usage, (first) version ``0.9.0`` will be released during May of 2019.**
+### **Currently not ready for usage, (first) version ``0.9.0`` will be released by the end of May 2019.**
 
 ## Features
 
