@@ -61,7 +61,7 @@ find_package(Qt5Core REQUIRED)
 find_package(Qt5DBus REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Network REQUIRED)
+#find_package(Qt5Network REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5X11Extras REQUIRED)
 
@@ -193,7 +193,7 @@ target_link_libraries(
     Qt5::Gui
     Qt5::Widgets
     Qt5::Concurrent
-    Qt5::Network
+#    Qt5::Network
     Qt5::X11Extras
 )
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
