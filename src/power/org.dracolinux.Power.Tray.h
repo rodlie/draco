@@ -48,7 +48,7 @@
 
 #include <X11/extensions/scrnsaver.h>
 #undef CursorShape
-
+#undef Bool
 #undef None
 #undef KeyPress
 #undef KeyRelease

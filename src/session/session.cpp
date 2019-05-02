@@ -133,4 +133,7 @@ void LSession::start()
 
     // Desktop Next
     startProcess("runtime", LUtils::isValidBinaryWithPath(Draco::desktopApp()));
+
+    // Power last
+    startProcess("power", LUtils::isValidBinaryWithPath(Draco::powerApp()));
 }

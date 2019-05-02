@@ -11,12 +11,6 @@
 #include "org.dracolinux.Powerd.Manager.Backlight.h"
 #include "power_def.h"
 
-/*#include "powerkit_systray.h"
-#include "powerkit_def.h"
-#include "powerkit_theme.h"
-#include "powerkit_settings.h"
-#include "powerkit_backlight.h"*/
-
 #include <QMessageBox>
 #include <QApplication>
 #include <QHBoxLayout>
@@ -74,7 +68,6 @@ SysTray::SysTray(QObject *parent)
     , actHibernate(nullptr)
     , labelBatteryStatus(nullptr)
     , labelBatteryIcon(nullptr)
-    //, labelBatteryLeft(0)
     , menuFrame(nullptr)
     , menuHeader(nullptr)
     , backlightSlider(nullptr)

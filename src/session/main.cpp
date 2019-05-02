@@ -44,11 +44,11 @@ int main(int argc, char ** argv)
         qWarning("Desktop manager not found!");
         return 1;
     }
-    /*if (!LUtils::isValidBinary("powerkit")) {
+    if (!LUtils::isValidBinary(Draco::powerApp().toUtf8())) {
         qWarning() << "Power manager not found!";
         return 1;
     }
-    if (!LUtils::isValidBinary("qtfm-tray")) {
+    /*if (!LUtils::isValidBinary("qtfm-tray")) {
         qWarning() << "Storage manager not found!";
         return 1;
     }

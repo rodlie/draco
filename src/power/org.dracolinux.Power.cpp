@@ -7,27 +7,18 @@
 */
 
 #include <QApplication>
-#include "powerkit_systray.h"
-#include "powerkit_dialog.h"
-#include "powerkit.h"
+#include "org.dracolinux.Power.Tray.h"
+//#include "org.dracolinux.Power.SettingsDialog.h"
+#include "org.dracolinux.Power.Manager.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QCoreApplication::setApplicationName("freedesktop");
     QCoreApplication::setOrganizationDomain("org");
-#ifdef POWERKIT_VERSION
-    QString version = POWERKIT_VERSION;
-#ifdef POWERKIT_VERSION_EXTRA
-    if (!QString(POWERKIT_VERSION_EXTRA).isEmpty()) { version.append(POWERKIT_VERSION_EXTRA); }
-#endif
-#else
-    QString version = "devel";
-#endif
-    QCoreApplication::setApplicationVersion(version);
 
     // check args
-    bool startConfig = false;
+    /*bool startConfig = false;
     for (int i=1; i<argc; i++) {if (QString::fromLocal8Bit(argv[i]) == "--config") {
             startConfig = true;
         }
@@ -36,19 +27,19 @@ int main(int argc, char *argv[])
         Dialog dialog;
         dialog.show();
         return a.exec();
-    }
+    }*/
 
-    // check if a powerkit session is already running
+    // check if a power session is already running
     QDBusInterface session(POWERKIT_SERVICE,
                            POWERKIT_PATH,
                            POWERKIT_SERVICE,
                            QDBusConnection::sessionBus());
     if (session.isValid()) {
-        qWarning() << QObject::tr("A powerkit session is already running");
+        qWarning("A power session is already running!");
         return 1;
     }
 
-    // start powerkit systray
+    // start app
     SysTray tray(a.parent());
     return a.exec();
 }

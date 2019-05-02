@@ -49,8 +49,10 @@ add_definitions(-DPOWERD_SERVICE_NAME="${POWERD_SERVICE_NAME}")
 add_definitions(-DSTORAGE_SERVICE_NAME="${STORAGE_SERVICE_NAME}")
 add_definitions(-DDAEMON_APP_NAME="${PUBLISHER}.Powerd")
 
-if(CMAKE_BUILD_TYPE MATCHES RELEASE)
+if(CMAKE_BUILD_TYPE MATCHES "^(release|Release|RELEASE)$")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
+else()
+    message("DRACO DEBUG BUILD")
 endif()
 
 # qt
@@ -293,6 +295,36 @@ target_link_libraries(
 install(
     TARGETS
     ${POWERD_SERVICE_NAME}
+    DESTINATION
+    ${CMAKE_INSTALL_LIBEXECDIR}
+)
+
+# org.dracolinux.Power
+add_executable(
+    ${POWER_SERVICE_NAME}
+    src/power/${POWER_SERVICE_NAME}.cpp
+    src/power/${POWER_SERVICE_NAME}.Tray.cpp
+)
+target_include_directories(
+    ${POWER_SERVICE_NAME}
+    PRIVATE
+    src/lib
+    src/power
+    ${XSS_INCLUDE}
+)
+target_link_libraries(
+    ${POWER_SERVICE_NAME}
+    Qt5::Core
+    Qt5::DBus
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::X11Extras
+    ${XSS_LIB}
+    ${LIB_NAME}
+)
+install(
+    TARGETS
+    ${POWER_SERVICE_NAME}
     DESTINATION
     ${CMAKE_INSTALL_LIBEXECDIR}
 )

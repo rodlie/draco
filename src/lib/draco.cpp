@@ -56,7 +56,7 @@ const QString Draco::storageApp()
 
 const QString Draco::powerApp()
 {
-    return QString("%1-power-manager").arg(DESKTOP_APP);
+    return POWER_SERVICE_NAME;
 }
 
 const QString Draco::desktopApp()
