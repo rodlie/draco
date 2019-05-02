@@ -26,7 +26,7 @@
 #include <QScreen>
 #include <QtConcurrent>
 #include <QMimeData>
-#include <QHotkey>
+#include "qhotkey.h"
 
 #include <unistd.h> //for usleep() usage
 

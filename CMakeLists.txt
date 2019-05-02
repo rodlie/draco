@@ -128,9 +128,9 @@ add_library(
     src/lib/org.freedesktop.UDisks2.cpp
 
     # QHotkey
-    src/lib/hotkey/QHotkey/qhotkey.cpp
-    src/lib/hotkey/QHotkey/qhotkey_x11.cpp
-    src/lib/hotkey/QHotkey/qhotkey_p.h
+    src/lib/hotkey/qhotkey.cpp
+    src/lib/hotkey/qhotkey_x11.cpp
+    src/lib/hotkey/qhotkey_p.h
 
     # qtcopydialog
     src/lib/qtcopydialog/qtcopydialog.cpp
@@ -160,7 +160,7 @@ target_include_directories(
     src/lib
     src/lib/lumina
     src/lib/qtcopydialog
-    src/lib/hotkey/QHotkey
+    src/lib/hotkey
 )
 if(${CMAKE_VERSION} VERSION_LESS "3.14.3")
     set(XSS_INCLUDE ${X11_Xscreensaver_INCLUDE_PATH})
@@ -256,7 +256,7 @@ target_include_directories(
     src/desktop
     src/lib
     src/lib/lumina
-    src/lib/hotkey/QHotkey
+    src/lib/hotkey
     src/lib/qtcopydialog
 )
 target_link_libraries(
