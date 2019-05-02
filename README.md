@@ -67,6 +67,7 @@ And right you are, this is a fork of the [Lumina Desktop Enviroment](https://git
     * ``libXss``
     * ``libXdamage``
     * ``libXrandr``
+    * ``libXfixes``
     * ``xrandr``
     * ``xinit``
     * ``xcb``
@@ -78,8 +79,7 @@ And right you are, this is a fork of the [Lumina Desktop Enviroment](https://git
       * ``xcb-composite``
       * ``xcb-damage``
       * ``xcb-util``
-      * ``xcb-atom``
-
+      * ``xcb-shm``
   * **``xscreensaver``**
   * **``qt5ct``**
   * **``xdg-utils``**
