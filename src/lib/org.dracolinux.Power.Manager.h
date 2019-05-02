@@ -20,9 +20,9 @@
 
 #include "org.dracolinux.Power.Device.h"
 
-#define POWERKIT_SERVICE "org.freedesktop.PowerKit"
-#define POWERKIT_PATH "/PowerKit"
-#define POWERKIT_FULL_PATH "/org/freedesktop/PowerKit"
+//#define POWERKIT_SERVICE "org.freedesktop.PowerKit"
+//#define POWERKIT_PATH "/PowerKit"
+//#define POWERKIT_FULL_PATH "/org/freedesktop/PowerKit"
 
 #define CONSOLEKIT_SERVICE "org.freedesktop.ConsoleKit"
 #define CONSOLEKIT_PATH "/org/freedesktop/ConsoleKit/Manager"
@@ -75,7 +75,7 @@
 
 #define TIMEOUT_CHECK 60000
 
-class PowerKit : public QObject
+class Power : public QObject
 {
     Q_OBJECT
 
@@ -107,8 +107,8 @@ public:
         PKHibernateAllowed
     };
 
-    explicit PowerKit(QObject *parent = 0);
-    ~PowerKit();
+    explicit Power(QObject *parent = 0);
+    ~Power();
     QMap<QString, Device*> getDevices();
 
 private:

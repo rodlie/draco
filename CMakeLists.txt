@@ -48,6 +48,7 @@ add_definitions(-DPOWER_SERVICE_NAME="${POWER_SERVICE_NAME}")
 add_definitions(-DPOWERD_SERVICE_NAME="${POWERD_SERVICE_NAME}")
 add_definitions(-DSTORAGE_SERVICE_NAME="${STORAGE_SERVICE_NAME}")
 add_definitions(-DDAEMON_APP_NAME="${PUBLISHER}.Powerd")
+add_definitions(-DPUBLISHER="${PUBLISHER}")
 
 if(CMAKE_BUILD_TYPE MATCHES "^(release|Release|RELEASE)$")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
@@ -118,7 +119,6 @@ add_library(
     src/lib/org.dracolinux.Power.ScreenX11.cpp
     src/lib/org.dracolinux.Power.Settings.cpp
     src/lib/org.dracolinux.Power.SettingsDialog.cpp
-    #src/lib/org.dracolinux.Power.Tray.cpp
     src/lib/org.dracolinux.Powerd.Manager.Backlight.cpp
     src/lib/org.dracolinux.Powerd.Manager.CPU.cpp
     src/lib/org.dracolinux.Powerd.Manager.RTC.cpp

@@ -35,9 +35,12 @@ public:
     static const QString desktopSessionName();
     static const QString desktopSessionPath();
     static const QString desktopSessionFullPath();
-    static const QString daemonSessionName();
-    static const QString daemonSessionPath();
-    static const QString daemonSessionFullPath();
+    static const QString powerdSessionName();
+    static const QString powerdSessionPath();
+    static const QString powerdSessionFullPath();
+    static const QString powerSessionName();
+    static const QString powerSessionPath();
+    static const QString powerSessionFullPath();
     static const QString xconfig();
     static const QString storageApp();
     static const QString powerApp();

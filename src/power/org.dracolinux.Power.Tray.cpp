@@ -1,15 +1,18 @@
 /*
-# PowerKit <https://github.com/rodlie/powerkit>
-# Copyright (c) 2018, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
+#
+# Draco Desktop Environment <https://dracolinux.org>
+# Copyright (c) 2019, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
 #
 # Available under the 3-clause BSD license
 # See the LICENSE file for full details
+#
 */
 
 #include "org.dracolinux.Power.Tray.h"
 #include "org.dracolinux.Power.Settings.h"
 #include "org.dracolinux.Powerd.Manager.Backlight.h"
 #include "power_def.h"
+#include "draco.h"
 
 #include <QMessageBox>
 #include <QApplication>
@@ -89,7 +92,7 @@ SysTray::SysTray(QObject *parent)
             SLOT(handleTrayWheel(TrayIcon::WheelAction)));
 
     // setup manager
-    man = new PowerKit(this);
+    man = new Power(this);
     connect(man,
             SIGNAL(UpdatedDevices()),
             this,
@@ -226,7 +229,7 @@ SysTray::SysTray(QObject *parent)
                        SLOT(setInternalMonitor()));
 
     // menu
-    powerMenu  = new QMenu(NULL);
+    powerMenu  = new QMenu(nullptr);
     tray->setContextMenu(powerMenu);
     /*QTimer::singleShot(1000,
                        this,
@@ -627,21 +630,21 @@ void SysTray::registerService()
         }
         qDebug() << "Enabled org.freedesktop.ScreenSaver";
     }
-    if (!QDBusConnection::sessionBus().registerService(POWERKIT_SERVICE)) {
-        qWarning() << QDBusConnection::sessionBus().lastError().message();
-        return;
-    }
-    if (!QDBusConnection::sessionBus().registerObject(POWERKIT_PATH, man,
+    if (!QDBusConnection::sessionBus().registerObject(Draco::powerSessionPath(),
+                                                      Draco::powerSessionName(),
+                                                      man,
                                                       QDBusConnection::ExportAllContents)) {
         qWarning() << QDBusConnection::sessionBus().lastError().message();
         return;
     }
-    if (!QDBusConnection::sessionBus().registerObject(POWERKIT_FULL_PATH, man,
+    if (!QDBusConnection::sessionBus().registerObject(Draco::powerSessionFullPath(),
+                                                      Draco::powerSessionName(),
+                                                      man,
                                                       QDBusConnection::ExportAllContents)) {
         qWarning() << QDBusConnection::sessionBus().lastError().message();
         return;
     }
-    qDebug() << "Enabled org.freedesktop.PowerKit";
+    qDebug() << "Registered power services";
     hasService = true;
 }
 
@@ -686,6 +689,7 @@ void SysTray::handleVeryLow(double left)
 // handle critical battery
 void SysTray::handleCritical(double left)
 {
+    qDebug() << "HANDLE CRITICAL BATTERY" << left;
     if (left<=0 ||
         left>(double)critBatteryValue ||
         !man->OnBattery()) { return; }
@@ -1063,7 +1067,7 @@ void SysTray::populateMenu()
 {
     qDebug() << "populate menu";
 
-    menuFrame = new QFrame(NULL);
+    menuFrame = new QFrame(nullptr);
 
     menuFrame->setMaximumWidth(200);
     //menuFrame->setMaximumHeight(500);

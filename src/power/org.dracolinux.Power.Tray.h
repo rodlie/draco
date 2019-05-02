@@ -1,9 +1,11 @@
 /*
-# PowerKit <https://github.com/rodlie/powerkit>
-# Copyright (c) 2018, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
+#
+# Draco Desktop Environment <https://dracolinux.org>
+# Copyright (c) 2019, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
 #
 # Available under the 3-clause BSD license
 # See the LICENSE file for full details
+#
 */
 
 #ifndef SYSTRAY_H
@@ -34,17 +36,10 @@
 #include <QProgressBar>
 #include <QTabWidget>
 
-//#include "common.h"
-
 #include "org.freedesktop.PowerManagement.h"
 #include "org.freedesktop.ScreenSaver.h"
 #include "org.dracolinux.Power.ScreenX11.h"
 #include "org.dracolinux.Power.Manager.h"
-
-//#include "powerkit_freedesktop_pm.h"
-//#include "powerkit_freedesktop_ss.h"
-//#include "powerkit_x11_screens.h"
-//#include "powerkit.h"
 
 #include <X11/extensions/scrnsaver.h>
 #undef CursorShape
@@ -73,9 +68,9 @@ public:
         WheelUp,
         WheelDown
     };
-    TrayIcon(QObject *parent = 0)
+    TrayIcon(QObject *parent = nullptr)
         : QSystemTrayIcon(parent), wheel_delta(0) {}
-    TrayIcon(const QIcon &icon, QObject *parent = 0)
+    TrayIcon(const QIcon &icon, QObject *parent = nullptr)
         : QSystemTrayIcon(icon, parent), wheel_delta(0) {}
     bool event(QEvent *event);
 signals:
@@ -89,12 +84,12 @@ class SysTray : public QObject
     Q_OBJECT
 
 public:
-    explicit SysTray(QObject *parent = NULL);
+    explicit SysTray(QObject *parent = nullptr);
     ~SysTray();
 
 private:
     TrayIcon *tray;
-    PowerKit *man;
+    Power *man;
     PowerManagement *pm;
     ScreenSaver *ss;
     bool wasLowBattery;
@@ -148,7 +143,6 @@ private:
     QAction *actHibernate;
     QLabel *labelBatteryStatus;
     QLabel *labelBatteryIcon;
-    //QLabel *labelBatteryLeft;
     QFrame *menuFrame;
     QWidgetAction *menuHeader;
     QSlider *backlightSlider;

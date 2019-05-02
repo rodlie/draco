@@ -26,22 +26,37 @@ const QString Draco::desktopSessionPath()
 
 const QString Draco::desktopSessionFullPath()
 {
-    return QString(DESKTOP_SERVICE_NAME).replace(".", "/");
+    return QString("/%1").arg(DESKTOP_SERVICE_NAME).replace(".", "/");
 }
 
-const QString Draco::daemonSessionName()
+const QString Draco::powerdSessionName()
 {
     return POWERD_SERVICE_NAME;
 }
 
-const QString Draco::daemonSessionPath()
+const QString Draco::powerdSessionPath()
 {
     return QString("/Powerd");
 }
 
-const QString Draco::daemonSessionFullPath()
+const QString Draco::powerdSessionFullPath()
 {
-    return QString(POWERD_SERVICE_NAME).replace(".", "/");
+    return QString("/%1").arg(POWERD_SERVICE_NAME).replace(".", "/");
+}
+
+const QString Draco::powerSessionName()
+{
+    return POWER_SERVICE_NAME;
+}
+
+const QString Draco::powerSessionPath()
+{
+    return QString("/Power");
+}
+
+const QString Draco::powerSessionFullPath()
+{
+    return QString("/%1").arg(POWER_SERVICE_NAME).replace(".", "/");
 }
 
 const QString Draco::xconfig()

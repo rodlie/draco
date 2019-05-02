@@ -1,15 +1,17 @@
 /*
-# PowerKit <https://github.com/rodlie/powerkit>
-# Copyright (c) 2018, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
+#
+# Draco Desktop Environment <https://dracolinux.org>
+# Copyright (c) 2019, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
 #
 # Available under the 3-clause BSD license
 # See the LICENSE file for full details
+#
 */
 
-#include <QApplication>
+#include "draco.h"
 #include "org.dracolinux.Power.Tray.h"
-//#include "org.dracolinux.Power.SettingsDialog.h"
-#include "org.dracolinux.Power.Manager.h"
+
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
@@ -17,29 +19,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("freedesktop");
     QCoreApplication::setOrganizationDomain("org");
 
-    // check args
-    /*bool startConfig = false;
-    for (int i=1; i<argc; i++) {if (QString::fromLocal8Bit(argv[i]) == "--config") {
-            startConfig = true;
-        }
-    }
-     if (startConfig) { // show config dialog
-        Dialog dialog;
-        dialog.show();
-        return a.exec();
-    }*/
-
-    // check if a power session is already running
-    QDBusInterface session(POWERKIT_SERVICE,
-                           POWERKIT_PATH,
-                           POWERKIT_SERVICE,
-                           QDBusConnection::sessionBus());
-    if (session.isValid()) {
-        qWarning("A power session is already running!");
+    if (!QDBusConnection::sessionBus().registerService(Draco::powerSessionName())) {
+        qWarning() << "Failed to register service" << Draco::powerSessionName();
         return 1;
     }
 
-    // start app
     SysTray tray(a.parent());
     return a.exec();
 }

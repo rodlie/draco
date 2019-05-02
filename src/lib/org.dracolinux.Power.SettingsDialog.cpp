@@ -14,6 +14,7 @@
 
 //#include "powerkit_dialog.h"
 #include "power_def.h"
+#include "draco.h"
 //#include "powerkit_theme.h"
 //#include "powerkit_settings.h"
 //#include "powerkit_backlight.h"
@@ -63,9 +64,9 @@ Dialog::Dialog(QWidget *parent)
 
     // setup dbus
     QDBusConnection session = QDBusConnection::sessionBus();
-    dbus = new QDBusInterface(POWERKIT_SERVICE,
-                              POWERKIT_PATH,
-                              POWERKIT_SERVICE,
+    dbus = new QDBusInterface(Draco::powerSessionName(),
+                              Draco::powerSessionPath(),
+                              Draco::powerSessionName(),
                               session, this);
     if (!dbus->isValid()) {
         QMessageBox::warning(this,

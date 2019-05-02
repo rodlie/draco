@@ -26,24 +26,28 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    if (!QDBusConnection::systemBus().registerService(Draco::daemonSessionName())) {
-        qWarning() << QDBusConnection::systemBus().lastError().message();
+    if (!QDBusConnection::systemBus().registerService(Draco::powerdSessionName())) {
+        qWarning() << "Failed to register service" << QDBusConnection::systemBus().lastError().message();
         return 1;
     }
+    qDebug() << "Registered service" << Draco::powerdSessionName();
 
     Manager man;
-    if (!QDBusConnection::systemBus().registerObject(Draco::daemonSessionPath(),
+    if (!QDBusConnection::systemBus().registerObject(Draco::powerdSessionPath(),
                                                      &man,
                                                      QDBusConnection::ExportAllContents)) {
-        qWarning() << QDBusConnection::systemBus().lastError().message();
+        qWarning() << "Failed to register path" << Draco::powerdSessionPath() << QDBusConnection::systemBus().lastError().message();
         return 1;
     }
-    if (!QDBusConnection::systemBus().registerObject(Draco::daemonSessionFullPath(),
+    qDebug() << "Registered service path" << Draco::powerdSessionPath();
+
+    if (!QDBusConnection::systemBus().registerObject(Draco::powerdSessionFullPath(),
                                                      &man,
                                                      QDBusConnection::ExportAllContents)) {
-        qWarning() << QDBusConnection::systemBus().lastError().message();
+        qWarning() << "Failed to register full path" << Draco::powerdSessionFullPath() << QDBusConnection::systemBus().lastError();
         return 1;
     }
+    qDebug() << "Registered service full path" << Draco::powerdSessionFullPath();
 
     return a.exec();
 }
