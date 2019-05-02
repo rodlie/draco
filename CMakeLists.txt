@@ -279,7 +279,7 @@ install(
 # org.dracolinux.Powerd
 add_executable(
     ${POWERD_SERVICE_NAME}
-    src/daemon/${POWERD_SERVICE_NAME}.cpp
+    src/power/${POWERD_SERVICE_NAME}.cpp
 )
 target_include_directories(
     ${POWERD_SERVICE_NAME}
