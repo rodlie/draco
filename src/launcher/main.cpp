@@ -11,9 +11,10 @@
 #include <iostream>
 #include "LuminaXDG.h"
 #include "XDGMime.h"
+#include "AppDialog.h"
 #include "draco.h"
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QFile>
 #include <QFileInfo>
 #include <QProcess>
@@ -22,7 +23,7 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
 
     LXDG::setEnvironmentVars();
     setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
@@ -40,6 +41,13 @@ int main(int argc, char *argv[])
         if (fileName.isEmpty()) {
             std::cout << "invalid input" << std::endl;
             return  1;
+        }
+        if (fileName=="--dialog") {
+            AppDialog dlg(nullptr, "");
+            dlg.exec();
+            if (!dlg.appselected.isEmpty()) {
+                fileName = dlg.appselected;
+            } else { return 0; }
         }
     }
 

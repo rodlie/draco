@@ -364,6 +364,8 @@ install(
 add_executable(
     ${XDG_OPEN}
     src/launcher/main.cpp
+    src/lib/lumina/AppDialog.h
+    src/lib/lumina/AppDialog.ui
 )
 target_include_directories(
     ${XDG_OPEN}
@@ -374,8 +376,8 @@ target_include_directories(
 target_link_libraries(
     ${XDG_OPEN}
     Qt5::Core
-#    Qt5::Gui
-#    Qt5::Widgets
+    Qt5::Gui
+    Qt5::Widgets
     ${LIB_NAME}
 )
 install(

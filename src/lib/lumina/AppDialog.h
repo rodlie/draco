@@ -24,6 +24,7 @@ class AppDialog : public QDialog{
 	Q_OBJECT
 private:
 	Ui::AppDialog *ui;
+    XDGDesktopList *sysApps;
 
 public:
 	AppDialog(QWidget *parent = 0, QString defaultPath = "") : QDialog(parent), ui(new Ui::AppDialog){
@@ -31,7 +32,11 @@ public:
 	  appreset = false;
 	  ui->listApps->clear();
     QListWidgetItem *defaultItem = 0;
-          QList<XDGDesktop*> APPS = LXDG::sortDesktopNames(APPSLIST->apps(false,false)); //Don't show all/hidden
+
+    sysApps = new XDGDesktopList(this, false);
+    sysApps->updateList();
+          QList<XDGDesktop*> APPS = LXDG::sortDesktopNames(/*APPSLIST->apps(false,false)*/sysApps->apps(false,false)); //Don't show all/hidden
+          qDebug() << APPS.length();
 	  for(int i=0; i<APPS.length(); i++){
 	    QListWidgetItem *app = new QListWidgetItem(LXDG::findIcon(APPS[i]->icon,"application-x-executable"), APPS[i]->name);
 	    app->setData(Qt::UserRole, APPS[i]->filePath);
