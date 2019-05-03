@@ -24,6 +24,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
+    LXDG::setEnvironmentVars();
+    setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
+    setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
+
     // verify our xdg-open shadow file
     Draco::xdgOpenCheck();
 
