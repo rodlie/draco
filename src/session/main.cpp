@@ -51,11 +51,11 @@ int main(int argc, char ** argv)
     /*if (!LUtils::isValidBinary("qtfm-tray")) {
         qWarning() << "Storage manager not found!";
         return 1;
-    }
+    }*/
     if (!LUtils::isValidBinary(Draco::launcherApp().toUtf8())) {
         qWarning("Application launcher not found!");
         return 1;
-    }*/
+    }
     if(!LUtils::isValidBinary(Draco::windowManager().toUtf8())){
         qWarning("Window manager not found!");
         return 1;
