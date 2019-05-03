@@ -38,7 +38,7 @@ And right you are, this is a fork of the [Lumina Desktop Enviroment](https://git
 Build and runtime requirements.
   * **``cmake``** *(>= 3.0)*
   * **``pkg-config``**
-  * **``Qt``** *(5.2+, latest LTS recommended)*
+  * **``Qt``** *(5.5+, latest LTS recommended)*
     * ``QtCore``
     * ``QtDBus``
     * ``QtGui``
@@ -103,7 +103,7 @@ sudo make install
 ```
 
 ### Build on Arch Linux
-### Build on Ubuntu
+### Build on Ubuntu (Xenial+)
 
 Dependencies:
 
