@@ -53,7 +53,7 @@ add_definitions(-DPUBLISHER="${PUBLISHER}")
 if(CMAKE_BUILD_TYPE MATCHES "^(release|Release|RELEASE)$")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
 else()
-    message("DRACO DEBUG BUILD")
+    message("-- DRACO DEBUG BUILD")
 endif()
 
 # qt
@@ -91,24 +91,8 @@ else()
 endif()
 
 # libDraco
-add_library(
-    ${LIB_NAME}
-    SHARED
-
-    # Lumina
-    src/lib/lumina/DesktopSettings.cpp
-    src/lib/lumina/LDesktopUtils.cpp
-    src/lib/lumina/LIconCache.cpp
-    src/lib/lumina/LInputDevice.cpp
-    src/lib/lumina/LUtils.cpp
-    src/lib/lumina/LuminaRandR-X11.cpp
-    src/lib/lumina/LuminaX11.cpp
-    src/lib/lumina/LuminaXDG.cpp
-    src/lib/lumina/LFileInfo.cpp
-    src/lib/lumina/ResizeMenu.cpp
-    src/lib/lumina/XDGMime.cpp
-
-    # Draco
+set(
+    LIB_SOURCES
     src/lib/draco.cpp
     src/lib/power_def.h
     src/lib/org.dracolinux.Disks.cpp
@@ -126,20 +110,29 @@ add_library(
     src/lib/org.freedesktop.PowerManagement.cpp
     src/lib/org.freedesktop.ScreenSaver.cpp
     src/lib/org.freedesktop.UDisks2.cpp
-
-    # QHotkey
     src/lib/hotkey/qhotkey.cpp
     src/lib/hotkey/qhotkey_x11.cpp
     src/lib/hotkey/qhotkey_p.h
-
-    # qtcopydialog
-    src/lib/qtcopydialog/qtcopydialog.cpp
-    src/lib/qtcopydialog/qtfilecopier.cpp
-    src/lib/qtcopydialog/qtcopydialog.ui
-    src/lib/qtcopydialog/qtoverwritedialog.ui
-    src/lib/qtcopydialog/qtotherdialog.ui
-
-    # res
+    src/lib/lumina/DesktopSettings.cpp
+    src/lib/lumina/LDesktopUtils.cpp
+    src/lib/lumina/LIconCache.cpp
+    src/lib/lumina/LUtils.cpp
+    src/lib/lumina/LuminaRandR-X11.cpp
+    src/lib/lumina/LuminaX11.cpp
+    src/lib/lumina/LuminaXDG.cpp
+    src/lib/lumina/LFileInfo.cpp
+    src/lib/lumina/ResizeMenu.cpp
+    src/lib/lumina/XDGMime.cpp
+    )
+#if(USE_XINPUT)
+#    set(LIB_SOURCES "${LIB_SOURCES};src/lib/lumina/LInputDevice.cpp")
+#else()
+#    add_definitions(-DNO_XINPUT)
+#endif()
+add_library(
+    ${LIB_NAME}
+    SHARED
+    ${LIB_SOURCES}
     share/share.qrc
 )
 set_target_properties(
@@ -193,7 +186,6 @@ target_link_libraries(
     Qt5::Gui
     Qt5::Widgets
     Qt5::Concurrent
-#    Qt5::Network
     Qt5::X11Extras
 )
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -247,7 +239,14 @@ add_executable(
     src/desktop/panel-plugins/line/LLine.h
 
     src/desktop/SystemWindow.cpp
+    src/lib/qtcopydialog/qtcopydialog.cpp
+    src/lib/qtcopydialog/qtfilecopier.cpp
+
     src/desktop/SystemWindow.ui
+    src/lib/qtcopydialog/qtcopydialog.ui
+    src/lib/qtcopydialog/qtoverwritedialog.ui
+    src/lib/qtcopydialog/qtotherdialog.ui
+
     src/desktop/desktop.qrc
 )
 target_include_directories(

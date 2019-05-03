@@ -29,20 +29,6 @@
 ## Usage
 ## FAQ
 
-### How does an application inhibit the screen saver?
-
-The preferred way to inhibit the screen saver from an application is to use the [org.freedesktop.ScreenSaver](https://people.freedesktop.org/~hadess/idle-inhibition-spec/re01.html) specification. Any application that uses [org.freedesktop.ScreenSaver](https://people.freedesktop.org/~hadess/idle-inhibition-spec/re01.html) will work with Draco.
-
-*Note that Draco also includes ``SimulateUserActivity`` for backwards compatibility*.
-
-Popular applications that uses this feature is Mozilla Firefox, Google Chrome, VideoLAN VLC and many more.
-
-### How does an application inhibit suspend actions?
-
-The preferred way to inhibit suspend actions from an application is to use the [org.freedesktop.PowerManagement](https://www.freedesktop.org/wiki/Specifications/power-management-spec/) specification. Any application that uses [org.freedesktop.PowerManagement](https://www.freedesktop.org/wiki/Specifications/power-management-spec/) will work with Draco.
-
-Common use cases are audio playback, downloading and more.
-
 ### Hey, this looks very similar to Lumina!?
 
 And right you are, this is a fork of the [Lumina Desktop Enviroment](https://github.com/lumina-desktop/lumina). Why? Well, difference of opinion is probably the best answer. We have different focus and goals.
@@ -68,7 +54,6 @@ Build and runtime requirements.
     * ``xrandr``
     * ``xinit``
     * ``xcb``
-      * ``xcb-xinput``
       * ``xcb-randr``
       * ``xcb-ewmh``
       * ``xcb-icccm``
@@ -96,19 +81,44 @@ Optional recommended applications.
 
 ## Build
 
-### Build on Slackware Linux (14.2/current)
+### Build on Slackware Linux
+
+Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (packages may be available [here](http://www.slackware.com/~alien/slackbuilds/)):
+ * qt5
+ * qt5ct
+ * openbox
+ * pnmixer (optional)
+ * qtfm (optional)
+ * qterminal (optional)
+
+ The rest should be available in a standard installation.
+
+A [draco.SlackBuild](share/slackware/draco.SlackBuild) is available from our repository, or build it manually:
+
+```
+mkdir build && cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib64 -DCMAKE_INSTALL_MANDIR=/usr/man -DCMAKE_INSTALL_DOCDIR=/usr/doc -DCMAKE_BUILD_TYPE=Release ..
+make
+sudo make install
+```
+
 ### Build on Arch Linux
-### Build on Ubuntu (Bionic)
+### Build on Ubuntu
 
-This information is based on a clean minimal install of Ubuntu Desktop 18.04 LTS.
-
-```
-sudo apt install build-essential cmake pkg-config openbox adwaita-icon-theme-full xscreensaver xdg-utils qt5ct qtbase5-dev libqt5x11extras5-dev libx11-dev libxss-dev libxdamage-dev libxrandr-dev libxfixes-dev libxcb1-dev libx11-xcb-dev libxcb-xinput-dev libxcb-randr0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-util0-dev libxcb-shm0-dev
-```
+Dependencies:
 
 ```
-git clone https://github.com/rodlie/draco
-cd draco
+sudo apt install build-essential cmake pkg-config openbox adwaita-icon-theme-full xscreensaver xdg-utils qt5ct qtbase5-dev libqt5x11extras5-dev libx11-dev libxss-dev libxdamage-dev libxrandr-dev libxfixes-dev libxcb1-dev libx11-xcb-dev libxcb-randr0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-util0-dev libxcb-shm0-dev
+```
+Optional:
+
+```
+sudo apt-get install qterminal pnmixer
+```
+
+Build and install:
+
+```
 mkdir build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBEXECDIR=bin -DCMAKE_BUILD_TYPE=Release ..
 make

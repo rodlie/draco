@@ -1,0 +1,29 @@
+language: cpp
+sudo: required
+compiler:
+  - clang
+  - g++
+matrix:
+  include:
+    - dist: trusty
+    - dist: xenial
+
+before_install:
+  - sudo apt-get update
+
+install:
+  - sudo apt-get install build-essential cmake pkg-config openbox adwaita-icon-theme-full xscreensaver xdg-utils qt5ct qtbase5-dev libqt5x11extras5-dev libx11-dev libxss-dev libxdamage-dev libxrandr-dev libxfixes-dev libxcb1-dev libx11-xcb-dev libxcb-randr0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-util0-dev libxcb-shm0-dev
+
+script:
+  - export CWD=`pwd`
+  - mkdir $CWD/build-release
+  - cd $CWD/build-release
+  - cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib64 -DCMAKE_INSTALL_LIBEXECDIR=bin -DCMAKE_BUILD_TYPE=Release ..
+  - make
+  - make DESTDIR=`pwd`/pkg install
+  - tree pkg
+  - mkdir $CWD/build-debug
+  - cd $CWD/build-debug
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  - make
+

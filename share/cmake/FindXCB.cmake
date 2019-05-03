@@ -4,19 +4,25 @@
 
 find_package(PkgConfig)
 
+#option(USE_XINPUT "Use xcb-xinput" OFF)
 if(NOT XCB_FIND_COMPONENTS)
     set(XCB_FIND_COMPONENTS
         xcb
         xcb-util
-        xcb-xinput
-        xcb-randr 
+        xcb-randr
         xcb-ewmh
         xcb-icccm
         xcb-image
         xcb-composite
         xcb-damage
-        xcb-shm)
+        xcb-shm
+        )
+#    if(USE_XINPUT)
+#        message("-- Using XINPUT")
+#        set(XCB_FIND_COMPONENTS "${XCB_FIND_COMPONENTS};xcb-xinput")
+#    endif()
 endif()
+message("-- Find XCB Components: ${XCB_FIND_COMPONENTS}")
 
 include(FindPackageHandleStandardArgs)
 set(XCB_FOUND true)
