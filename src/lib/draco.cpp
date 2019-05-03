@@ -84,7 +84,7 @@ const QString Draco::desktopApp()
 
 const QString Draco::launcherApp()
 {
-    return XDG_OPEN;
+    return LUtils::isValidBinaryWithPath(XDG_OPEN);
 }
 
 const QString Draco::terminalApp()
