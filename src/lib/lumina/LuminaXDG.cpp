@@ -27,6 +27,7 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QUrl>
+#include <QHashIterator>
 
 static QStringList mimeglobs;
 static qint64 mimechecktime;
@@ -612,15 +613,17 @@ QList<XDGDesktop*> XDGDesktopList::apps(bool showAll, bool showHidden){
 }
 
 XDGDesktop* XDGDesktopList::findAppFile(QString filename){
-  //hashmutex.lock();
-  QStringList keys = files.keys().filter(filename);
+  //QStringList keys = files.keys().filter(filename);
   QString chk = filename.section("/",-1);
-  XDGDesktop *found = 0;
-  for(int i=0; i<keys.length(); i++){
+  XDGDesktop *found = nullptr;
+  /*for(int i=0; i<keys.length(); i++){
     if(keys[i] == filename || keys[i].endsWith("/"+chk)){ found = files[keys[i]]; }
+  }*/
+  QHashIterator<QString, XDGDesktop*> i(files);
+  while (i.hasNext()) {
+      i.next();
+      if (i.key() == filename || i.key().endsWith("/"+chk)) { found = files[i.key()]; }
   }
-  //hashmutex.unlock();
-  //No matches
   return found;
 }
 
