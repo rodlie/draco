@@ -6,14 +6,14 @@
 # customary to leave one space after the ':' except on otherwise blank lines.
 
      |-----handy-ruler------------------------------------------------------|
-draco: draco (simple desktop environment)
+draco: draco (Draco Desktop Environment)
 draco:
-draco: A simple and modern desktop environment designed for Slackware Linux.
+draco: Draco is a simple and lightweight desktop environment. While small
+draco: still features XDG integration, freedesktop services and integration,
+draco: power and storage management, desktop, panels, multi-monitor support
+draco: and much more. Draco does not include any user applications.
 draco:
+draco: Draco is developed for and on Slackware by Ole-André Rodlie.
 draco:
-draco:
-draco:
-draco: Draco Desktop Environment is maintained by Ole-André Rodlie.
-draco:
-draco: Homepage: https://dracolinux.org
+draco: Homepage: https://github.com/rodlie/draco
 draco:

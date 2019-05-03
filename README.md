@@ -1,6 +1,8 @@
-# Draco Desktop Environment
+# Simple Desktop Environment
 
 **NOT ready for usage, (first) version (``0.9.0``) will be released by the end of May 2019.**
+
+Draco is a simple and lightweight desktop environment. While small still features XDG integration, freedesktop services and integration, power and storage management, desktop, panels, multi-monitor support and much more. Draco does not include any user applications. Draco is developed for and on Slackware Linux.
 
 ## Features
 
@@ -23,15 +25,15 @@
   * Enables applications to inhibit display and suspend
   * Display backlight support
   * Display hotplug support
-  * RTC support (WIP)
-  * CPU support (WIP)
+  * RTC support **(WIP)**
+  * CPU support **(WIP)**
 
 ## Usage
 ## FAQ
 
-### Hey, this looks very similar to Lumina!?
+## History
 
-And right you are, this is a fork of the [Lumina Desktop Enviroment](https://github.com/lumina-desktop/lumina). Why? Well, difference of opinion is probably the best answer. We have different focus and goals.
+Draco was an alternative GNU/Linux distribution developed between 2005 and 2015. Since then the OS has been dropped in favor of (upstream, and) creating a desktop environment. The distribution started out as a fork of [Slackware](http://www.slackware.com), while the desktop started out as a fork of [Lumina](https://github.com/lumina-desktop/lumina) aimed at Slackware. *What goes around comes around ...*
 
 ## Requirements
 
@@ -93,7 +95,7 @@ Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (p
 
  The rest should be available in a standard installation.
 
-A [draco.SlackBuild](share/slackware/draco.SlackBuild) is available from our repository, or build it manually:
+A [draco.SlackBuild](share/slackware/draco.SlackBuild) is available, or build it manually:
 
 ```
 mkdir build && cd build
