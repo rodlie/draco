@@ -11,6 +11,7 @@
 #include <iostream>
 #include "LuminaXDG.h"
 #include "XDGMime.h"
+#include "draco.h"
 
 #include <QCoreApplication>
 #include <QFile>
@@ -22,6 +23,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
+
+
+
+    Draco::xdgOpenCheck();
 
     if (argc<=1) {
         std::cout << DESKTOP_APP_NAME << " XDG Open v" << DESKTOP_APP_VERSION << std::endl;

@@ -183,19 +183,26 @@ QStringList Draco::applicationLocations(const QString &appPath)
 
 bool Draco::xdgOpenCheck()
 {
-    // "replace" xdg-open with draco-launcher
+    // "replace" xdg-open with our own (since xdg-open does not support us yet)
     QString shadowPath =  QString("%1/bin").arg(configDir());
     QString shadowXDG = QString("%1/xdg-open").arg(shadowPath);
     if (!QFile::exists(shadowPath)) {
-        qDebug() << "create shadow bin dir" << shadowPath;
         QDir shadowDir(shadowPath);
-        shadowDir.mkpath(shadowPath);
+        if (!shadowDir.mkpath(shadowPath)) {
+            qWarning() << "Failed to create directory" << shadowPath;
+            return false;
+        }
     }
-    if (!QFile::exists(shadowXDG)) {
-        qDebug() << "create shadow xdg-open" << shadowXDG;
-        QFile symlink(QString("%1/%2").arg(qApp->applicationDirPath()).arg(launcherApp()));
-        if (!symlink.link(shadowXDG)) {
-            qDebug() << "FAILED TO CREATE XDG-OPEN SYMLINK!";
+    QFileInfo info(shadowXDG);
+    if (!info.isReadable()) {
+        if (QFile::exists(shadowXDG) || info.isSymLink()) {
+            if (!QFile::remove(shadowXDG)) {
+                qDebug() << "Failed to remove existing symlink" << shadowXDG;
+                return false;
+            }
+        }
+        if (!QFile::link(launcherApp(), shadowXDG)) {
+            qDebug() << "Failed to create symlink" << launcherApp() << shadowXDG;
             return false;
         }
     }
