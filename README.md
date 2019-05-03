@@ -2,7 +2,9 @@
 
 **NOT ready for usage, (first) version (``0.9.0``) will be released by the end of May 2019.**
 
-Draco is a simple and lightweight desktop environment. While small still features XDG integration, freedesktop services and integration, power and storage management, desktop, panels, multi-monitor support and much more. Draco does not include any user applications. Draco is developed for and on Slackware Linux.
+Draco is a simple and lightweight desktop environment. While small still features XDG integration, freedesktop services and integration, power and storage management, desktop, panels, multi-monitor support and much more. Draco does not include any user applications.
+
+Draco is developed for and on [Slackware Linux](http://www.slackware.com).
 
 ## Features
 
@@ -28,12 +30,9 @@ Draco is a simple and lightweight desktop environment. While small still feature
   * RTC support **(WIP)**
   * CPU support **(WIP)**
 
-## Usage
-## FAQ
-
 ## History
 
-Draco was an alternative GNU/Linux distribution developed between 2005 and 2015. Since then the OS has been dropped in favor of (upstream, and) creating a desktop environment. The distribution started out as a fork of [Slackware](http://www.slackware.com), while the desktop started out as a fork of [Lumina](https://github.com/lumina-desktop/lumina) aimed at Slackware. *What goes around comes around ...*
+Draco was an alternative GNU/Linux distribution developed between 2005 and 2015. Since then the OS has been dropped in favor of (upstream, and) creating a desktop environment. The distribution started out as a fork of Slackware Linux, while the desktop started out as a fork of [Lumina](https://github.com/lumina-desktop/lumina) aimed at Slackware Linux. *What goes around comes around ...*
 
 ## Requirements
 
@@ -83,7 +82,7 @@ Optional recommended applications.
 
 ## Build
 
-### Build on Slackware Linux (14.2+)
+### Slackware Linux (14.2+)
 
 Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (packages may be available [here](http://www.slackware.com/~alien/slackbuilds/)):
  * qt5
@@ -95,7 +94,13 @@ Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (p
 
  The rest should be available in a standard installation.
 
-A [draco.SlackBuild](share/slackware/draco.SlackBuild) is available, or build it manually:
+A [draco.SlackBuild](share/slackware/draco.SlackBuild) is available (will build latest from git):
+```
+git clone https://github.com/rodlie/draco
+cd draco/share/slackware
+sudo sh draco.SlackBuild
+```
+or build it manually:
 
 ```
 mkdir build && cd build
@@ -104,7 +109,9 @@ make
 sudo make install
 ```
 
-### Build on Ubuntu (Xenial+)
+### Ubuntu (Xenial+)
+
+Minimal testing is done on Ubuntu, some features may not work.
 
 Dependencies:
 
