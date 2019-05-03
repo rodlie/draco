@@ -80,10 +80,10 @@ bool QHotkey::setShortcut(const QKeySequence &shortcut, bool autoRegister)
 {
 	if(shortcut.isEmpty()) {
 		return resetShortcut();
-	} else if(shortcut.count() > 1) {
+    } /*else if(shortcut.count() > 1) {
         qWarning(logQHotkey, "Keysequences with multiple shortcuts are not allowed! "
 							  "Only the first shortcut will be used!");
-	}
+    }*/
 
 	return setShortcut(Qt::Key(shortcut[0] & ~Qt::KeyboardModifierMask),
 			Qt::KeyboardModifiers(shortcut[0] & Qt::KeyboardModifierMask),
@@ -116,7 +116,7 @@ bool QHotkey::setShortcut(Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool
 		else
 			return true;
 	} else {
-        qWarning(logQHotkey) << "Unable to map shortcut to native keys. Key:" << keyCode << "Modifiers:" << modifiers;
+        //qWarning(logQHotkey) << "Unable to map shortcut to native keys. Key:" << keyCode << "Modifiers:" << modifiers;
 		_keyCode = Qt::Key_unknown;
 		_modifiers = Qt::NoModifier;
 		_nativeShortcut = NativeShortcut();
@@ -189,8 +189,8 @@ QHotkeyPrivate::QHotkeyPrivate() :
 
 QHotkeyPrivate::~QHotkeyPrivate()
 {
-	if(!shortcuts.isEmpty())
-        qWarning(logQHotkey) << "QHotkeyPrivate destroyed with registered shortcuts!";
+    //if(!shortcuts.isEmpty())
+        //qWarning(logQHotkey) << "QHotkeyPrivate destroyed with registered shortcuts!";
 	if(qApp && qApp->eventDispatcher())
 		qApp->eventDispatcher()->removeNativeEventFilter(this);
 }
