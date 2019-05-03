@@ -81,7 +81,7 @@ Optional recommended applications.
 
 ## Build
 
-### Build on Slackware Linux
+### Build on Slackware Linux (14.2+)
 
 Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (packages may be available [here](http://www.slackware.com/~alien/slackbuilds/)):
  * qt5
@@ -102,7 +102,6 @@ make
 sudo make install
 ```
 
-### Build on Arch Linux
 ### Build on Ubuntu (Xenial+)
 
 Dependencies:
