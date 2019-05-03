@@ -181,15 +181,11 @@ QString XDGMime::findMimeComment(QString mime){
 QString XDGMime::findDefaultAppForMime(QString mime){
   //First get the priority-ordered list of default file locations
   QStringList dirs;
-  dirs << QString(getenv("XDG_CONFIG_HOME"))+"/lumina-mimeapps.list" \
-	 << QString(getenv("XDG_CONFIG_HOME"))+"/mimeapps.list";
+  dirs << QString(getenv("XDG_CONFIG_HOME"))+"/mimeapps.list";
   QStringList tmp = QString(getenv("XDG_CONFIG_DIRS")).split(":");
-	for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/lumina-mimeapps.list"; }
 	for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/mimeapps.list"; }
-  dirs << QString(getenv("XDG_DATA_HOME"))+"/applications/lumina-mimeapps.list" \
-	 << QString(getenv("XDG_DATA_HOME"))+"/applications/mimeapps.list";
+  dirs << QString(getenv("XDG_DATA_HOME"))+"/applications/mimeapps.list";
   tmp = QString(getenv("XDG_DATA_DIRS")).split(":");
-	for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/applications/lumina-mimeapps.list"; }
 	for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/applications/mimeapps.list"; }
 
   //Now go through all the files in order of priority until a default is found
@@ -219,12 +215,12 @@ QString XDGMime::findDefaultAppForMime(QString mime){
     }
     // Now check for any white-listed files in this work dir
     // find the full path to the file (should run even if nothing in this file)
-    //qDebug() << "WhiteList:" << white;
+    qDebug() << "WhiteList:" << white;
     for(int w=0; w<white.length(); w++){
       if(white[w].isEmpty()){ continue; }
       //First check for absolute paths to *.desktop file
       if( white[w].startsWith("/") ){
-	 if( QFile::exists(white[w]) ){ cdefault=white[w]; break; }
+     if( QFile::exists(white[w]) ){ cdefault=white[w]; break; }
 	 else{ white.removeAt(w); w--; } //invalid file path - remove it from the list
       }
       //Now check for relative paths to  file (in current priority-ordered work dir)
@@ -232,7 +228,10 @@ QString XDGMime::findDefaultAppForMime(QString mime){
       //Now go through the XDG DATA dirs and see if the file is in there
       else{
         white[w] = LUtils::AppToAbsolute(white[w]);
-        if(QFile::exists(white[w])){ cdefault = white[w]; }
+        if (QFile::exists(white[w])) {
+            cdefault = white[w];
+            break;
+        }
       }
     }
     /* WRITTEN BUT UNUSED CODE FOR MIMETYPE ASSOCIATIONS
