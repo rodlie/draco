@@ -18,124 +18,91 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QDebug>
+#include <QUrl>
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-
-
-
+    // verify our xdg-open shadow file
     Draco::xdgOpenCheck();
 
-    if (argc<=1) {
-        std::cout << DESKTOP_APP_NAME << " XDG Open v" << DESKTOP_APP_VERSION << std::endl;
+    QString fileName;
+    if (argc<=1) { // do nothing
+        std::cout << DESKTOP_APP_NAME << " xdg-open version " << DESKTOP_APP_VERSION << std::endl;
         return 0;
+    } else if (argc>1) { // get "filename"
+        fileName = argv[1];
+        if (fileName.isEmpty()) {
+            std::cout << "invalid input" << std::endl;
+            return  1;
+        }
     }
 
+    bool isLocalFile = false;
+    bool openFile = false;
+    bool openInBrowser = false;
+    bool isDesktop = false;
+    QString cmd, desktopFile;
 
+    if (QFile::exists(fileName)) { // local
+        isLocalFile = true;
+        if (fileName.endsWith(QString(".desktop")) &&
+            fileName.startsWith("/")) { isDesktop = true; }
+        else { openFile = true; }
+    } else { // remote
+        QUrl url(fileName);
+        if (url.isValid() &&
+            (url.scheme()=="http" ||
+             url.scheme()=="https" ||
+             url.scheme()=="ftp")) { openInBrowser = true; }
+    }
 
-
-
-
-    if (argc>1) {
-        QString fileName = argv[1];
-        if (QFile::exists(fileName)) {
-            if (fileName.endsWith(QString(".desktop")) && fileName.startsWith("/")) { // open app
-                qDebug() << "OPEN APP" << fileName;
-                XDGDesktop desktop(fileName);
-                if (!desktop.getDesktopExec().isEmpty()) {
-                    QString exe = desktop.getDesktopExec();
-                    qDebug() << "EXE?" << exe;
-                    exe.replace("%u","");
-                    exe.replace("%U","");
-                    exe.replace("%f","");
-                    exe.replace("%F","");
-                    if (exe.contains("google-chrome") || exe.contains("chromium")) {
-                        setenv("DESKTOP_SESSION", "xfce", 1);
-                        setenv("XDG_CURRENT_DESKTOP", "xfce", 1);
-                        QProcess proc;
-                        proc.startDetached(exe);
-                        setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
-                        setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
-                    } else { QProcess::startDetached(exe); }
-                }
-            } else { // is file or folder
-                QString mime = XDGMime::findAppMimeForFile(fileName);
-                qDebug() << "IS FILE/FOLDER" << mime;
-                QFileInfo info(fileName);
-                if (info.isDir()) { // is folder
-                    qDebug() << "IS FOLDER" << fileName;
-                    QString dirApp = XDGMime::findDefaultAppForMime("application/x-directory");
-                    if (!dirApp.isEmpty()) {
-                        XDGDesktop desktop(dirApp);
-                        if (!desktop.getDesktopExec().isEmpty()) {
-                            QString exe = desktop.getDesktopExec();
-                            qDebug() << "OPEN FOLDER EXE" << exe;
-                            exe.replace("%u","");
-                            exe.replace("%U","");
-                            exe.replace("%f","");
-                            exe.replace("%F","");
-                            QProcess::startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName));
-                        }
-                    }
-                } else { // is file
-                    if ((mime.contains("executable") || mime.contains("script") || mime.isEmpty()) &&
-                        info.isExecutable())
-                    { // run file
-                        qDebug() << "RUN EXECUTABLE/SCRIPT" << fileName;
-                        QProcess::startDetached(fileName);
-                    } else { // open file
-                        qDebug() << "OPEN FILE" << fileName << mime;
-                        if (!mime.isEmpty()) {
-                            QString mimeApp = XDGMime::findDefaultAppForMime(mime);
-                            qDebug() << "OPEN FILE WITH" << mimeApp;
-                            XDGDesktop desktop(mimeApp);
-                            if (!desktop.getDesktopExec().isEmpty()) {
-                                QString exe = desktop.getDesktopExec();
-                                qDebug() << "OPEN FILE EXE" << exe;
-                                exe.replace("%u","");
-                                exe.replace("%U","");
-                                exe.replace("%f","");
-                                exe.replace("%F","");
-                                if (exe.contains("google-chrome") || exe.contains("chromium")) {
-                                    setenv("DESKTOP_SESSION", "xfce", 1);
-                                    setenv("XDG_CURRENT_DESKTOP", "xfce", 1);
-                                    QProcess proc;
-                                    proc.startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName));
-                                    setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
-                                    setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
-                                } else { QProcess::startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName)); }
-                            }
-                        }
-                    }
-                }
-            }
-        } else if (fileName.startsWith("http") ||
-                   fileName.startsWith("ftp"))
-        { // open url in browser
-            qDebug() << "OPEN IN BROWSER" << fileName;
-            QString app = XDGMime::findDefaultAppForMime("application/x-extension-html");
-            if (!app.isEmpty()) {
-                XDGDesktop desktop(app);
-                if (!desktop.getDesktopExec().isEmpty()) {
-                    QString exe = desktop.getDesktopExec();
-                    qDebug() << "BROWSER EXE" << exe;
-                    exe.replace("%u","");
-                    exe.replace("%U","");
-                    exe.replace("%f","");
-                    exe.replace("%F","");
-                    if (exe.contains("google-chrome") || exe.contains("chromium")) {
-                        setenv("DESKTOP_SESSION", "xfce", 1);
-                        setenv("XDG_CURRENT_DESKTOP", "xfce", 1);
-                        QProcess proc;
-                        proc.startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName));
-                        setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
-                        setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
-                    } else { QProcess::startDetached(QString("%1 \"%2\"").arg(exe).arg(fileName)); }
-                }
-            }
+    if (isLocalFile && !isDesktop) { // handle local file
+        QFileInfo localInfo(fileName);
+        if (localInfo.isDir()) { // is directory, get default file manager
+            desktopFile = XDGMime::findDefaultAppForMime("application/x-directory");
+        } else { // is file, try to get default application for mime type
+            desktopFile = XDGMime::findDefaultAppForMime(XDGMime::findAppMimeForFile(fileName));
         }
+    } else if (openInBrowser) { // handle remote url
+        QUrl url(fileName);
+        QString scheme;
+        if (url.scheme()=="http") {
+            scheme = "x-scheme-handler/http";
+        } else if (url.scheme()=="https") {
+            scheme = "x-scheme-handler/https";
+        } else if (url.scheme()=="ftp") {
+            scheme = "x-scheme-handler/ftp";
+        }
+        desktopFile = XDGMime::findDefaultAppForMime(scheme);
+    }
+
+    if (isDesktop) { desktopFile = fileName; } // is application
+
+    if (!desktopFile.isEmpty()) { // get cmd from .desktop
+        XDGDesktop desktop(desktopFile);
+        if (!desktop.getDesktopExec().isEmpty()) { cmd = desktop.getDesktopExec(); }
+    }
+
+    if (!cmd.isEmpty()) { // now run something
+        cmd.replace("%u","");
+        cmd.replace("%U","");
+        cmd.replace("%f","");
+        cmd.replace("%F","");
+        if (openFile || openInBrowser) { cmd = QString("%1 \"%2\"").arg(cmd).arg(fileName); } // add original filename
+        qDebug() << "what to do?" << cmd;
+        if (cmd.contains("google-chrome") || cmd.contains("chromium")) {
+            // trick chrome to think it's running on Xfce
+            // this is needed to enable power/screensaver/keyring compatibility in Draco
+            // this should of course be fixed upstream, but for now this works ...
+            setenv("DESKTOP_SESSION", "xfce", 1);
+            setenv("XDG_CURRENT_DESKTOP", "xfce", 1);
+            QProcess proc;
+            proc.startDetached(cmd);
+            setenv("DESKTOP_SESSION", DESKTOP_APP_NAME, 1);
+            setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
+        } else { QProcess::startDetached(cmd); }
     }
     return 0;
 }

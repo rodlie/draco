@@ -197,12 +197,12 @@ bool Draco::xdgOpenCheck()
     if (!info.isReadable()) {
         if (QFile::exists(shadowXDG) || info.isSymLink()) {
             if (!QFile::remove(shadowXDG)) {
-                qDebug() << "Failed to remove existing symlink" << shadowXDG;
+                qWarning() << "Failed to remove existing symlink" << shadowXDG;
                 return false;
             }
         }
         if (!QFile::link(launcherApp(), shadowXDG)) {
-            qDebug() << "Failed to create symlink" << launcherApp() << shadowXDG;
+            qWarning() << "Failed to create symlink" << launcherApp() << shadowXDG;
             return false;
         }
     }
