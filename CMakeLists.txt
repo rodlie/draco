@@ -20,6 +20,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/share/cmake")
 set(LIB_NAME Draco)
 set(PUBLISHER dracolinux)
 set(DOMAIN org.${PUBLISHER})
+set(XDG_OPEN ${DOMAIN}.XDG)
 set(POWER_SERVICE_NAME ${DOMAIN}.Power)
 set(POWERD_SERVICE_NAME ${DOMAIN}.Powerd)
 set(STORAGE_SERVICE_NAME ${DOMAIN}.Storage)
@@ -49,6 +50,7 @@ add_definitions(-DPOWERD_SERVICE_NAME="${POWERD_SERVICE_NAME}")
 add_definitions(-DSTORAGE_SERVICE_NAME="${STORAGE_SERVICE_NAME}")
 add_definitions(-DDAEMON_APP_NAME="${PUBLISHER}.Powerd")
 add_definitions(-DPUBLISHER="${PUBLISHER}")
+add_definitions(-DXDG_OPEN="${XDG_OPEN}")
 
 if(CMAKE_BUILD_TYPE MATCHES "^(release|Release|RELEASE)$")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
@@ -61,7 +63,6 @@ find_package(Qt5Core REQUIRED)
 find_package(Qt5DBus REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
-#find_package(Qt5Network REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5X11Extras REQUIRED)
 
@@ -328,27 +329,27 @@ install(
     ${CMAKE_INSTALL_LIBEXECDIR}
 )
 
-# start-draco-desktop
+# start-draco
 add_executable(
-    start-${PROJECT_NAME}-desktop
+    start-${PROJECT_NAME}
     src/session/main.cpp
     src/session/session.cpp
 )
 target_include_directories(
-    start-${PROJECT_NAME}-desktop
+    start-${PROJECT_NAME}
     PRIVATE
     src/lib
     src/lib/lumina
 )
 target_link_libraries(
-    start-${PROJECT_NAME}-desktop
+    start-${PROJECT_NAME}
     Qt5::Core
     Qt5::DBus
     ${LIB_NAME}
 )
 install(
     TARGETS
-    start-${PROJECT_NAME}-desktop
+    start-${PROJECT_NAME}
     DESTINATION
     ${CMAKE_INSTALL_BINDIR}
 )
@@ -359,15 +360,35 @@ install(
     ${CMAKE_INSTALL_DATAROOTDIR}/xsessions
 )
 
-# draco-xdg
-# dracod
-# draco-storage-manager
-# draco-power-manager
-# draco-settings-x11
-# draco-settings-xdg
-# draco-settings-desktop
-# draco-settings-panel
-# draco-settings-general
+# org.dracolinux.XDG
+add_executable(
+    ${XDG_OPEN}
+    src/launcher/main.cpp
+)
+target_include_directories(
+    ${XDG_OPEN}
+    PRIVATE
+    src/lib
+    src/lib/lumina
+)
+target_link_libraries(
+    ${XDG_OPEN}
+    Qt5::Core
+#    Qt5::Gui
+#    Qt5::Widgets
+    ${LIB_NAME}
+)
+install(
+    TARGETS
+    ${XDG_OPEN}
+    DESTINATION
+    ${CMAKE_INSTALL_LIBEXECDIR}
+)
+
+# org.dracolinux.Storage
+
+# org.dracolinux.Settings
+
 
 # docs
 install(

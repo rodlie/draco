@@ -9,6 +9,9 @@
 */
 
 #include "draco.h"
+//#include "XDGMime.h"
+#include "LuminaXDG.h"
+#include "LUtils.h"
 
 Draco::Draco() {}
 
@@ -81,12 +84,24 @@ const QString Draco::desktopApp()
 
 const QString Draco::launcherApp()
 {
-    return QString("%1-launcher").arg(DESKTOP_APP);
+    return XDG_OPEN;
 }
 
 const QString Draco::terminalApp()
 {
-    return "qterminal";
+    QString term = LXDG::findDefaultAppForMime("application/terminal");
+    if (term.endsWith(".desktop")) {
+        XDGDesktop DF(term);
+        if (DF.isValid()) { return DF.getDesktopExec(); }
+    }
+    if (LUtils::isValidBinary("qterminal")) { term = "qterminal"; }
+    else if (LUtils::isValidBinary("lxterminal")) { term = "lxterminal"; }
+    else if (LUtils::isValidBinary("konsole")) { term = "konsole"; }
+    else if (LUtils::isValidBinary("gnome-terminal")) { term = "gnome-terminal"; }
+    else if (LUtils::isValidBinary("xfce4-terminal")) { term = "xfce4-terminal"; }
+    else if (LUtils::isValidBinary("rxvt")) { term = "rxvt"; }
+    else if (LUtils::isValidBinary("xterm")) { term = "xterm"; }
+    return term;
 }
 
 const QString Draco::configDir()

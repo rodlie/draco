@@ -1,7 +1,7 @@
 [Desktop Entry]
-Exec=start-draco-desktop
-TryExec=start-draco-desktop
+Exec=start-draco
+TryExec=start-draco
 Icon=system-run
 Type=Application
 Name=Draco
-Comment=Simple Desktop Environment
+Comment=Draco Desktop Environment

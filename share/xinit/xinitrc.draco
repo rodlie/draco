@@ -22,8 +22,8 @@ fi
 
 # Start the window manager:
 if [ -z "$DESKTOP_SESSION" -a -x /usr/bin/ck-launch-session ]; then
-  exec dbus-launch --exit-with-session ck-launch-session start-draco-desktop
+  exec dbus-launch --exit-with-session ck-launch-session start-draco
 else
-  exec dbus-launch --exit-with-session start-draco-desktop
+  exec dbus-launch --exit-with-session start-draco
 fi
 
