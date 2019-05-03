@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     bool openFile = false;
     bool openInBrowser = false;
     bool isDesktop = false;
+    bool runFile = false;
     QString cmd, desktopFile;
 
     if (QFile::exists(fileName)) { // local
@@ -63,7 +64,12 @@ int main(int argc, char *argv[])
         if (localInfo.isDir()) { // is directory, get default file manager
             desktopFile = XDGMime::findDefaultAppForMime("application/x-directory");
         } else { // is file, try to get default application for mime type
-            desktopFile = XDGMime::findDefaultAppForMime(XDGMime::findAppMimeForFile(fileName));
+            QString mime = XDGMime::findAppMimeForFile(fileName);
+            if (mime.endsWith("appimage")) { // run appimage's directly
+                runFile = true;
+            } else {
+                desktopFile = XDGMime::findDefaultAppForMime(mime);
+            }
         }
     } else if (openInBrowser) { // handle remote url
         QUrl url(fileName);
@@ -80,17 +86,20 @@ int main(int argc, char *argv[])
 
     if (isDesktop) { desktopFile = fileName; } // is application
 
-    if (!desktopFile.isEmpty()) { // get cmd from .desktop
+    if (!desktopFile.isEmpty() && !runFile) { // get cmd from .desktop
         XDGDesktop desktop(desktopFile);
         if (!desktop.getDesktopExec().isEmpty()) { cmd = desktop.getDesktopExec(); }
     }
+
+    if (runFile) { cmd = fileName; } // run file directly
 
     if (!cmd.isEmpty()) { // now run something
         cmd.replace("%u","");
         cmd.replace("%U","");
         cmd.replace("%f","");
         cmd.replace("%F","");
-        if (openFile || openInBrowser) { cmd = QString("%1 \"%2\"").arg(cmd).arg(fileName); } // add original filename
+        if ((openFile || openInBrowser) &&
+            !runFile) { cmd = QString("%1 \"%2\"").arg(cmd).arg(fileName); } // add original filename
         qDebug() << "what to do?" << cmd;
         if (cmd.contains("google-chrome") || cmd.contains("chromium")) {
             // trick chrome to think it's running on Xfce
