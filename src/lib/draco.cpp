@@ -463,3 +463,13 @@ void Draco::writeSetting(QString conf, QString key, QVariant value)
     QSettings settings(conf, QSettings::IniFormat);
     settings.setValue(key, value);
 }
+
+bool Draco::isBlacklistedApplication(const QString &exec)
+{
+    QStringList blacklisted;
+    blacklisted << "qtfm-tray" << "powerkit" << "xfce4-power" << "xfce4-panel" << "thunar-settings";
+    blacklisted << "thunar-volman" << "xfdesktop" << "xfce4-appfinder" << "xfce4-settings";
+
+    if (blacklisted.contains(exec)) { return true; }
+    return false;
+}

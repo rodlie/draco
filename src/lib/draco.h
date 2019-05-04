@@ -77,6 +77,7 @@ public:
     static void writeSetting(QString conf,
                              QString key,
                              QVariant value);
+    static bool isBlacklistedApplication(const QString &exec);
 };
 
 #endif // DRACO_H

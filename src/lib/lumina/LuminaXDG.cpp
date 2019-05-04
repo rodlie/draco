@@ -177,6 +177,13 @@ void XDGDesktop::sync(){
       }
     }
   }
+
+    // Misc fixes
+    if (exec.contains("nm-applet")) {
+        name = QObject::tr("Network Manager");
+        isHidden = false;
+    }
+    if (Draco::isBlacklistedApplication(exec)) { type = XDGDesktop::BAD; }
 }
 
 
