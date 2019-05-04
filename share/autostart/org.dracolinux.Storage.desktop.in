@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Draco Storage Manager
+Comment=Draco Storage Manager
+Icon=drive-removable-media
+Exec=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBEXECDIR@/@STORAGE_SERVICE_NAME@
+Terminal=false
+Type=Application
+OnlyShowIn=Draco
+StartupNotify=false

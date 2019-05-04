@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Draco Power Manager
+Comment=Draco Power Manager
+Icon=ac-adapter
+Exec=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBEXECDIR@/@POWER_SERVICE_NAME@
+Terminal=false
+Type=Application
+OnlyShowIn=Draco
+StartupNotify=false

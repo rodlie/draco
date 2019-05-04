@@ -396,6 +396,16 @@ configure_file(
     ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.service
     @ONLY
 )
+configure_file(
+    share/autostart/${POWER_SERVICE_NAME}.desktop.in
+    ${CMAKE_BINARY_DIR}/${POWER_SERVICE_NAME}.desktop
+    @ONLY
+)
+configure_file(
+    share/autostart/${STORAGE_SERVICE_NAME}.desktop.in
+    ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
+    @ONLY
+)
 install(
     TARGETS
     ${LIB_NAME}
@@ -443,6 +453,13 @@ install(
     share/xsessions/${PROJECT_NAME}.desktop
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/xsessions
+)
+install(
+    FILES
+    ${CMAKE_BINARY_DIR}/${POWER_SERVICE_NAME}.desktop
+    ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
+    DESTINATION
+    ${DEFAULT_SYSCONFDIR}/xdg/autostart
 )
 install(
     FILES
