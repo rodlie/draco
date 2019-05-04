@@ -1,24 +1,20 @@
 /*
-# PowerKit <https://github.com/rodlie/powerkit>
-# Copyright (c) 2018, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
+#
+# Draco Desktop Environment <https://dracolinux.org>
+# Copyright (c) 2019, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
 #
 # Available under the 3-clause BSD license
 # See the LICENSE file for full details
+#
 */
-
 
 #include "org.dracolinux.Power.SettingsDialog.h"
 #include "org.dracolinux.Power.Settings.h"
 #include "org.dracolinux.Powerd.Manager.Backlight.h"
 #include "org.dracolinux.Power.Client.h"
 
-//#include "powerkit_dialog.h"
 #include "power_def.h"
 #include "draco.h"
-//#include "powerkit_theme.h"
-//#include "powerkit_settings.h"
-//#include "powerkit_backlight.h"
-//#include "powerkit_client.h"
 
 #include <QTimer>
 
@@ -59,7 +55,7 @@ Dialog::Dialog(QWidget *parent)
 {
     // setup dialog
     setAttribute(Qt::WA_QuitOnClose, true);
-    setWindowTitle(tr("Power Manager"));
+    setWindowTitle(tr("Power Settings"));
     setMinimumSize(QSize(390, 310));
 
     // setup dbus
@@ -70,8 +66,8 @@ Dialog::Dialog(QWidget *parent)
                               session, this);
     if (!dbus->isValid()) {
         QMessageBox::warning(this,
-                             tr("powerkit not running"),
-                             tr("powerkit is not running, please start powerkit before running settings."));
+                             tr("Power manager not running"),
+                             tr("Power manager is not running, please make sure it's running before using settings."));
         QTimer::singleShot(100, qApp, SLOT(quit()));
         return;
     }

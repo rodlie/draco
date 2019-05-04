@@ -1,9 +1,11 @@
 /*
-# PowerKit <https://github.com/rodlie/powerkit>
-# Copyright (c) 2018, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
+#
+# Draco Desktop Environment <https://dracolinux.org>
+# Copyright (c) 2019, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
 #
 # Available under the 3-clause BSD license
 # See the LICENSE file for full details
+#
 */
 
 #include "org.dracolinux.Power.Settings.h"
@@ -13,25 +15,24 @@
 #include <QDebug>
 
 #include "power_def.h"
-
-#define PK "powerkit"
+#include "draco.h"
 
 void PowerSettings::setValue(const QString &type, const QVariant &value)
 {
-    QSettings settings(PK, PK);
+    QSettings settings(Draco::powerSettingsFile(), QSettings::IniFormat);
     settings.setValue(type, value);
     settings.sync();
 }
 
 const QVariant PowerSettings::getValue(const QString &type)
 {
-    QSettings settings(PK, PK);
+    QSettings settings(Draco::powerSettingsFile(), QSettings::IniFormat);
     return settings.value(type);
 }
 
 bool PowerSettings::isValid(const QString &type)
 {
-    QSettings settings(PK, PK);
+    QSettings settings(Draco::powerSettingsFile(), QSettings::IniFormat);
     return settings.value(type).isValid();
 }
 
@@ -87,18 +88,10 @@ void PowerSettings::saveDefault()
 
 const QString PowerSettings::getConf()
 {
-    QString config = QString("%1/.config/powerkit/powerkit.conf")
-                     .arg(QDir::homePath());
-    if (!QFile::exists(config)) { saveDefault(); }
-    return config;
+    return Draco::powerSettingsFile();
 }
 
 const QString PowerSettings::getDir()
 {
-    QString config = QString("%1/.config/powerkit").arg(QDir::homePath());
-    if (!QFile::exists(config)) {
-        QDir dir(config);
-        dir.mkpath(config);
-    }
-    return config;
+    return Draco::configDir();
 }
