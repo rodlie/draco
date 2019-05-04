@@ -69,7 +69,7 @@ const QString Draco::xconfig()
 
 const QString Draco::storageApp()
 {
-    return QString("%1-storage-manager").arg(DESKTOP_APP);
+    return STORAGE_SERVICE_NAME;
 }
 
 const QString Draco::powerApp()
@@ -145,6 +145,30 @@ const QString Draco::envSettingsFile()
             .arg(DE_ENV_SETTINGS);
     if (!QFile::exists(file)) {
         qDebug() << "no user env settings!";
+        QFile mkfile(file);
+        if (mkfile.open(QIODevice::WriteOnly)) { mkfile.close(); }
+    }
+    return file;
+}
+
+const QString Draco::powerSettingsFile()
+{
+    QString file = QString("%1/power.conf")
+            .arg(configDir());
+    if (!QFile::exists(file)) {
+        qDebug() << "no user power settings!";
+        QFile mkfile(file);
+        if (mkfile.open(QIODevice::WriteOnly)) { mkfile.close(); }
+    }
+    return file;
+}
+
+const QString Draco::storageSettingsFile()
+{
+    QString file = QString("%1/storage.conf")
+            .arg(configDir());
+    if (!QFile::exists(file)) {
+        qDebug() << "no user storage settings!";
         QFile mkfile(file);
         if (mkfile.open(QIODevice::WriteOnly)) { mkfile.close(); }
     }
@@ -426,4 +450,16 @@ const QString Draco::filterIconName(const QString &name)
     else if (name == "transform-move") { result = "view-restore"; }
     if (result.isEmpty()) { return name; }
     return result;
+}
+
+QVariant Draco::readSetting(QString conf, QString key, QVariant fallback)
+{
+    QSettings settings(conf, QSettings::IniFormat);
+    return settings.value(key, fallback);
+}
+
+void Draco::writeSetting(QString conf, QString key, QVariant value)
+{
+    QSettings settings(conf, QSettings::IniFormat);
+    settings.setValue(key, value);
 }

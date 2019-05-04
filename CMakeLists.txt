@@ -329,6 +329,33 @@ install(
     ${CMAKE_INSTALL_LIBEXECDIR}
 )
 
+# org.dracolinux.Storage
+add_executable(
+    ${STORAGE_SERVICE_NAME}
+    src/storage/${STORAGE_SERVICE_NAME}.cpp
+    src/storage/${STORAGE_SERVICE_NAME}.Tray.cpp
+)
+target_include_directories(
+    ${STORAGE_SERVICE_NAME}
+    PRIVATE
+    src/lib
+    src/lib/lumina
+)
+target_link_libraries(
+    ${STORAGE_SERVICE_NAME}
+    Qt5::Core
+    Qt5::DBus
+    Qt5::Gui
+    Qt5::Widgets
+    ${LIB_NAME}
+)
+install(
+    TARGETS
+    ${STORAGE_SERVICE_NAME}
+    DESTINATION
+    ${CMAKE_INSTALL_LIBEXECDIR}
+)
+
 # start-draco
 add_executable(
     start-${PROJECT_NAME}
@@ -387,7 +414,6 @@ install(
     ${CMAKE_INSTALL_LIBEXECDIR}
 )
 
-# org.dracolinux.Storage
 
 # org.dracolinux.Settings
 

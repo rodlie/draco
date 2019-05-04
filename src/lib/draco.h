@@ -18,6 +18,7 @@
 #include <QDebug>
 #include <QDirIterator>
 #include <QApplication>
+#include <QVariant>
 
 #define DE_SESSION_SETTINGS "sessionsettings"
 #define DE_DESKTOP_SETTINGS "desktopsettings"
@@ -51,6 +52,8 @@ public:
     static const QString sessionSettingsFile();
     static const QString desktopSettingsFile();
     static const QString envSettingsFile();
+    static const QString powerSettingsFile();
+    static const QString storageSettingsFile();
     static QStringList iconLocations(const QString &appPath);
     static QStringList pixmapLocations(const QString &appPath);
     static QStringList applicationLocations(const QString &appPath);
@@ -68,6 +71,12 @@ public:
     static void checkConfigs();
     static const QString getProperMime(const QString &mime);
     static const QString filterIconName(const QString &name);
+    static QVariant readSetting(QString conf,
+                                QString key,
+                                QVariant fallback = QVariant());
+    static void writeSetting(QString conf,
+                             QString key,
+                             QVariant value);
 };
 
 #endif // DRACO_H

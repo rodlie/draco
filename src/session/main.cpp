@@ -48,10 +48,10 @@ int main(int argc, char ** argv)
         qWarning() << "Power manager not found!";
         return 1;
     }
-    /*if (!LUtils::isValidBinary("qtfm-tray")) {
+    if (!LUtils::isValidBinary(Draco::storageApp().toUtf8())) {
         qWarning() << "Storage manager not found!";
         return 1;
-    }*/
+    }
     if (!LUtils::isValidBinary(Draco::launcherApp().toUtf8())) {
         qWarning("Application launcher not found!");
         return 1;
