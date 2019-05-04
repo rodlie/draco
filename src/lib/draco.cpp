@@ -469,6 +469,8 @@ bool Draco::isBlacklistedApplication(const QString &exec)
     QStringList blacklisted;
     blacklisted << "qtfm-tray" << "powerkit" << "xfce" << "xfdesktop";
     blacklisted << "thunar-settings" << "thunar-volman-settings" << "thunar-volman";
+    blacklisted << "xfce4-power-manager" << "xfce4-power-manager-settings";
+    blacklisted << "xfce4-appfinder" << "hp-uiscan";
 
     if (blacklisted.contains(exec)) { return true; }
     return false;
