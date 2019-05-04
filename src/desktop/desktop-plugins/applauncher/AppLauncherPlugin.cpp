@@ -111,12 +111,12 @@ void AppLauncherPlugin::loadButton(){
 	  //button->setIcon( LXDG::findIcon("drive-removable-media","") );
 	}
         else{ iconame = "folder"; } //button->setIcon( LXDG::findIcon("folder","") );
-    }else if(LUtils::imageExtensions().contains(info.suffix().toLower()) ){
+    }/*else if(LUtils::imageExtensions().contains(info.suffix().toLower()) ){
       iconame = info.absoluteFilePath();
       //QPixmap pix;
       //if(pix.load(path)){ button->setIcon( QIcon(pix.scaled(256,256)) ); } //max size for thumbnails in memory
       //else{ iconame = "dialog-cancel"; } //button->setIcon( LXDG::findIcon("dialog-cancel","") );
-    }else{
+    }*/else{
       iconame = Draco::getProperMime(LXDG::findAppMimeForFile(path).replace("/","-"));
       qDebug() << "FOUND ICON APP MIME?" << iconame;
     }
