@@ -194,12 +194,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 else()
     set(LIB_INSTALL_DIR ${CMAKE_INSTALL_FULL_LIBDIR})
 endif()
-install(
-    TARGETS
-    ${LIB_NAME}
-    DESTINATION
-    ${LIB_INSTALL_DIR}
-)
 
 # org.dracolinux.Desktop
 add_executable(
@@ -269,12 +263,6 @@ target_link_libraries(
     Qt5::X11Extras
     ${LIB_NAME}
 )
-install(
-    TARGETS
-    ${DESKTOP_SERVICE_NAME}
-    DESTINATION
-    ${CMAKE_INSTALL_LIBEXECDIR}
-)
 
 # org.dracolinux.Powerd
 add_executable(
@@ -291,12 +279,6 @@ target_link_libraries(
     Qt5::Core
     Qt5::DBus
     ${LIB_NAME}
-)
-install(
-    TARGETS
-    ${POWERD_SERVICE_NAME}
-    DESTINATION
-    ${CMAKE_INSTALL_LIBEXECDIR}
 )
 
 # org.dracolinux.Power
@@ -322,12 +304,6 @@ target_link_libraries(
     ${XSS_LIB}
     ${LIB_NAME}
 )
-install(
-    TARGETS
-    ${POWER_SERVICE_NAME}
-    DESTINATION
-    ${CMAKE_INSTALL_LIBEXECDIR}
-)
 
 # org.dracolinux.Storage
 add_executable(
@@ -348,43 +324,6 @@ target_link_libraries(
     Qt5::Gui
     Qt5::Widgets
     ${LIB_NAME}
-)
-install(
-    TARGETS
-    ${STORAGE_SERVICE_NAME}
-    DESTINATION
-    ${CMAKE_INSTALL_LIBEXECDIR}
-)
-
-# start-draco
-add_executable(
-    start-${PROJECT_NAME}
-    src/session/main.cpp
-    src/session/session.cpp
-)
-target_include_directories(
-    start-${PROJECT_NAME}
-    PRIVATE
-    src/lib
-    src/lib/lumina
-)
-target_link_libraries(
-    start-${PROJECT_NAME}
-    Qt5::Core
-    Qt5::DBus
-    ${LIB_NAME}
-)
-install(
-    TARGETS
-    start-${PROJECT_NAME}
-    DESTINATION
-    ${CMAKE_INSTALL_BINDIR}
-)
-install(
-    FILES
-    share/xsessions/${PROJECT_NAME}.desktop
-    DESTINATION
-    ${CMAKE_INSTALL_DATAROOTDIR}/xsessions
 )
 
 # org.dracolinux.XDG
@@ -407,16 +346,28 @@ target_link_libraries(
     Qt5::Widgets
     ${LIB_NAME}
 )
-install(
-    TARGETS
-    ${XDG_OPEN}
-    DESTINATION
-    ${CMAKE_INSTALL_LIBEXECDIR}
+
+# start-draco
+add_executable(
+    start-${PROJECT_NAME}
+    src/session/main.cpp
+    src/session/session.cpp
+)
+target_include_directories(
+    start-${PROJECT_NAME}
+    PRIVATE
+    src/lib
+    src/lib/lumina
+)
+target_link_libraries(
+    start-${PROJECT_NAME}
+    Qt5::Core
+    Qt5::DBus
+    ${LIB_NAME}
 )
 
-
 # org.dracolinux.Settings
-
+#
 
 # docs
 install(
@@ -444,6 +395,54 @@ configure_file(
     share/daemon/service.in
     ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.service
     @ONLY
+)
+install(
+    TARGETS
+    ${LIB_NAME}
+    DESTINATION
+    ${LIB_INSTALL_DIR}
+)
+install(
+    TARGETS
+    ${DESKTOP_SERVICE_NAME}
+    DESTINATION
+    ${CMAKE_INSTALL_LIBEXECDIR}
+)
+install(
+    TARGETS
+    ${POWERD_SERVICE_NAME}
+    DESTINATION
+    ${CMAKE_INSTALL_LIBEXECDIR}
+)
+install(
+    TARGETS
+    ${POWER_SERVICE_NAME}
+    DESTINATION
+    ${CMAKE_INSTALL_LIBEXECDIR}
+)
+install(
+    TARGETS
+    ${STORAGE_SERVICE_NAME}
+    DESTINATION
+    ${CMAKE_INSTALL_LIBEXECDIR}
+)
+install(
+    TARGETS
+    ${XDG_OPEN}
+    DESTINATION
+    ${CMAKE_INSTALL_LIBEXECDIR}
+)
+install(
+    TARGETS
+    start-${PROJECT_NAME}
+    DESTINATION
+    ${CMAKE_INSTALL_BINDIR}
+)
+install(
+    FILES
+    share/xsessions/${PROJECT_NAME}.desktop
+    DESTINATION
+    ${CMAKE_INSTALL_DATAROOTDIR}/xsessions
 )
 install(
     FILES
