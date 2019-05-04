@@ -8,11 +8,13 @@
 #include <LUtils.h>
 #include <QDebug>
 #include <QSettings>
+#include "draco.h"
 
 //Reset current screen config to match previously-saved settings
 void RRSettings::ApplyPrevious(){
   QList<ScreenInfo> screens;
-  QSettings set("lumina-desktop","lumina-xconfig");
+  //QSettings set("lumina-desktop","lumina-xconfig");
+  QSettings set(Draco::xconfigSettingsFile(), QSettings::IniFormat);
   if(set.allKeys().isEmpty()){ return; }
   QString profile = set.value("default_profile","").toString();
   if(profile.isEmpty() || !savedProfiles().contains(profile) ){ screens = PreviousSettings(); }
@@ -130,7 +132,8 @@ QList<ScreenInfo> RRSettings::CurrentScreens(){
 }
 
 QList<ScreenInfo> RRSettings::PreviousSettings(QString profile){
-  QSettings set("lumina-desktop","lumina-xconfig");
+  //QSettings set("lumina-desktop","lumina-xconfig");
+  QSettings set(Draco::xconfigSettingsFile(), QSettings::IniFormat);
   if(profile.isEmpty()){ set.beginGroup("MonitorSettings"); }
   else{ set.beginGroup("MonitorProfiles/"+profile); }
   //Setup a couple lists
@@ -176,13 +179,15 @@ QList<ScreenInfo> RRSettings::PreviousSettings(QString profile){
 }
 
 QStringList RRSettings::savedProfiles(){
-  QSettings set("lumina-desktop","lumina-xconfig");
+  //QSettings set("lumina-desktop","lumina-xconfig");
+  QSettings set(Draco::xconfigSettingsFile(), QSettings::IniFormat);
   set.beginGroup("MonitorProfiles");
   return set.childGroups();
 }
 
 void RRSettings::removeProfile(QString profile){
-  QSettings set("lumina-desktop","lumina-xconfig");
+  //QSettings set("lumina-desktop","lumina-xconfig");
+  QSettings set(Draco::xconfigSettingsFile(), QSettings::IniFormat);
   set.beginGroup("MonitorProfiles");
   QStringList known = set.childGroups();
   if(known.contains(profile) && !profile.isEmpty()){
@@ -192,7 +197,8 @@ void RRSettings::removeProfile(QString profile){
 
 //Save the screen config for later
 bool RRSettings::SaveScreens(QList<ScreenInfo> screens, QString profile){
-  QSettings set("lumina-desktop","lumina-xconfig");
+  //QSettings set("lumina-desktop","lumina-xconfig");
+  QSettings set(Draco::xconfigSettingsFile(), QSettings::IniFormat);
   if(profile.isEmpty()){ set.beginGroup("MonitorSettings"); }
   else{ set.beginGroup("MonitorProfiles/"+profile); }
   //Setup a couple lists

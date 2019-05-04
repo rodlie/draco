@@ -4,10 +4,7 @@
 #include <QStringList>
 
 #include "MainUI.h"
-#include <LuminaOS.h>
-#include <LuminaThemes.h>
 #include <LUtils.h>
-#include <LuminaSingleApplication.h>
 
 #include "ScreenSettings.h"
 int main(int argc, char ** argv)
@@ -33,16 +30,16 @@ int main(int argc, char ** argv)
       }
     }
     if(CLIdone){ return 0; }
-   LTHEME::LoadCustomEnvSettings();
-    LSingleApplication a(argc, argv, "lumina-xconfig"); //loads translations inside constructor
-      if( !a.isPrimaryProcess()){ return 0; }
+   //LTHEME::LoadCustomEnvSettings();
+    QApplication a(argc, argv);
+      //if( !a.isPrimaryProcess()){ return 0; }
     //qDebug() << "Loaded QApplication";
-    a.setApplicationName("Lumina Screen Configuration");
+    //a.setApplicationName("Lumina Screen Configuration");
     //LuminaThemeEngine themes(&a);
 
     //Start the UI
     MainUI w;
-    QObject::connect(&a, SIGNAL(InputsAvailable(QStringList)), &w, SLOT(slotSingleInstance()) );
+    //QObject::connect(&a, SIGNAL(InputsAvailable(QStringList)), &w, SLOT(slotSingleInstance()) );
     //QObject::connect(&themes, SIGNAL(updateIcons()), &w, SLOT(loadIcons()) );
     w.show();
 

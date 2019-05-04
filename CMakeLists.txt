@@ -366,6 +366,31 @@ target_link_libraries(
     ${LIB_NAME}
 )
 
+# draco-xconfig
+add_executable(
+    ${PROJECT_NAME}-xconfig
+    src/settings/xconf/main.cpp
+    src/settings/xconf/MainUI.cpp
+    src/settings/xconf/ScreenSettings.cpp
+    src/settings/xconf/MainUI.ui
+)
+target_include_directories(
+    ${PROJECT_NAME}-xconfig
+    PRIVATE
+    src/lib
+    src/lib/lumina
+)
+target_link_libraries(
+    ${PROJECT_NAME}-xconfig
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    ${LIB_NAME}
+)
+
+
+
+
 # org.dracolinux.Settings
 #
 
@@ -404,6 +429,11 @@ configure_file(
 configure_file(
     share/autostart/${STORAGE_SERVICE_NAME}.desktop.in
     ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
+    @ONLY
+)
+configure_file(
+    share/applications/xconfig.desktop.in
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-xconfig.desktop
     @ONLY
 )
 install(
@@ -449,6 +479,12 @@ install(
     ${CMAKE_INSTALL_BINDIR}
 )
 install(
+    TARGETS
+    ${PROJECT_NAME}-xconfig
+    DESTINATION
+    ${CMAKE_INSTALL_BINDIR}
+)
+install(
     FILES
     share/xsessions/${PROJECT_NAME}.desktop
     DESTINATION
@@ -460,6 +496,12 @@ install(
     ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
     DESTINATION
     ${DEFAULT_SYSCONFDIR}/xdg/autostart
+)
+install(
+    FILES
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-xconfig.desktop
+    DESTINATION
+    ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
 install(
     FILES

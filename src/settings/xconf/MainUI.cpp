@@ -401,7 +401,7 @@ void MainUI::ApplyChanges(){
   RRSettings::Apply(SCREENS);
   //And update the UI and WM in a moment
   QTimer::singleShot(500, this, SLOT(UpdateScreens()) );
-  QTimer::singleShot(1000, this, SLOT(RestartFluxbox()) );
+  //QTimer::singleShot(1000, this, SLOT(RestartFluxbox()) );
 }
 
 void MainUI::SaveSettings(bool quiet){
@@ -416,7 +416,7 @@ void MainUI::SaveSettings(bool quiet){
 }
 
 void MainUI::RestartFluxbox(){
-  QProcess::startDetached("killall fluxbox");
+  //QProcess::startDetached("killall fluxbox");
 }
 
 void MainUI::removeProfile(){

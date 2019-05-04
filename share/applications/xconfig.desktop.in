@@ -1,0 +1,9 @@
+[Desktop Entry]
+Exec=@PROJECT_NAME@-xconfig
+Icon=video-display
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Settings;
+Name=Monitor Configuration
+OnlyShowIn=Draco;

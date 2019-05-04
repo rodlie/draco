@@ -64,7 +64,7 @@ const QString Draco::powerSessionFullPath()
 
 const QString Draco::xconfig()
 {
-    return QString("%1-display-manager").arg(DESKTOP_APP);
+    return QString("%1-xconfig").arg(DESKTOP_APP);
 }
 
 const QString Draco::storageApp()
@@ -169,6 +169,18 @@ const QString Draco::storageSettingsFile()
             .arg(configDir());
     if (!QFile::exists(file)) {
         qDebug() << "no user storage settings!";
+        QFile mkfile(file);
+        if (mkfile.open(QIODevice::WriteOnly)) { mkfile.close(); }
+    }
+    return file;
+}
+
+const QString Draco::xconfigSettingsFile()
+{
+    QString file = QString("%1/monitors.conf")
+            .arg(configDir());
+    if (!QFile::exists(file)) {
+        qDebug() << "no user monitors settings!";
         QFile mkfile(file);
         if (mkfile.open(QIODevice::WriteOnly)) { mkfile.close(); }
     }
