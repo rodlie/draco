@@ -182,8 +182,13 @@ void XDGDesktop::sync(){
     if (exec.contains("nm-applet")) {
         name = QObject::tr("Network Manager");
         isHidden = false;
+        catList.clear();
+        catList << "System";
     }
-    if (Draco::isBlacklistedApplication(exec)) { type = XDGDesktop::BAD; }
+    if (Draco::isBlacklistedApplication(exec)) {
+        isHidden = true;
+        type = XDGDesktop::BAD;
+    }
 }
 
 

@@ -467,8 +467,8 @@ void Draco::writeSetting(QString conf, QString key, QVariant value)
 bool Draco::isBlacklistedApplication(const QString &exec)
 {
     QStringList blacklisted;
-    blacklisted << "qtfm-tray" << "powerkit" << "xfce4-power" << "xfce4-panel" << "thunar-settings";
-    blacklisted << "thunar-volman" << "xfdesktop" << "xfce4-appfinder" << "xfce4-settings";
+    blacklisted << "qtfm-tray" << "powerkit" << "xfce" << "xfdesktop";
+    blacklisted << "thunar-settings" << "thunar-volman-settings" << "thunar-volman";
 
     if (blacklisted.contains(exec)) { return true; }
     return false;
