@@ -1,3 +1,4 @@
+![Logo](src/desktop/defaults/draco-logo.png)
 # Draco Desktop Environment
 ![GitHub last commit](https://img.shields.io/github/last-commit/rodlie/draco.svg)
 [![Build Status](https://travis-ci.com/rodlie/draco.svg?branch=master)](https://travis-ci.com/rodlie/draco)
