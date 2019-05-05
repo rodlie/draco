@@ -22,19 +22,11 @@
 #include <QPainter>
 #include <QMap>
 #include <QMapIterator>
-#include <QProcess>
 #include <QMap>
 #include <QFileSystemWatcher>
 #include <QEvent>
 #include <QWheelEvent>
-#include <QMenu>
-#include <QLabel>
-#include <QFrame>
-#include <QWidgetAction>
-#include <QSlider>
-#include <QTreeWidget>
-#include <QProgressBar>
-#include <QTabWidget>
+#include <QProcess>
 
 #include "org.freedesktop.PowerManagement.h"
 #include "org.freedesktop.ScreenSaver.h"
@@ -127,31 +119,12 @@ private:
     int backlightACValue;
     bool backlightBatteryDisableIfLower;
     bool backlightACDisableIfHigher;
-    QProcess *configDialog;
     bool warnOnLowBattery;
     bool warnOnVeryLowBattery;
     bool notifyOnBattery;
     bool notifyOnAC;
     bool backlightMouseWheel;
     bool ignoreKernelResume;
-
-    QMenu *powerMenu;
-    /*QAction *actSettings;
-    QAction *actPowerOff;
-    QAction *actRestart;
-    QAction *actSuspend;
-    QAction *actHibernate;*/
-    QLabel *labelBatteryStatus;
-    QLabel *labelBatteryIcon;
-    QFrame *menuFrame;
-    QWidgetAction *menuHeader;
-    QSlider *backlightSlider;
-    QLabel *backlightLabel;
-    QFileSystemWatcher *backlightWatcher;
-    /*QTreeWidget *deviceTree;
-    QMap<QString,QProgressBar*> devicesProg;
-    QTreeWidget *inhibitorTree;
-    QTabWidget *powerTab;*/
 
 private slots:
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
@@ -193,16 +166,6 @@ private slots:
     void switchInternalMonitor(bool toggle);
     void handleTrayWheel(TrayIcon::WheelAction action);
     void handleDeviceChanged(const QString &path);
-    void handleConfigDialogFinished(int result);
-    void showConfigDialog();
-    void populateMenu();
-    void updateMenu();
-    void updateBacklight(QString file);
-    void handleBacklightSlider(int value);
-    /*void updatePowerDevices();
-    bool powerDeviceExists(QString uid);
-    void powerDeviceRemove(QString uid);
-    void getInhibitors();*/
 };
 
 #endif // SYSTRAY_H
