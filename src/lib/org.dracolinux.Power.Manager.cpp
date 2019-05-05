@@ -267,28 +267,28 @@ void Power::setup()
                        PK_PREPARE_FOR_SLEEP,
                        this,
                        SLOT(handlePrepareForSuspend(bool)));
-        if (upower == NULL) {
+        if (upower == nullptr) {
             upower = new QDBusInterface(UPOWER_SERVICE,
                                         UPOWER_PATH,
                                         UPOWER_MANAGER,
                                         system,
                                         this);
         }
-        if (logind == NULL) {
+        if (logind == nullptr) {
             logind = new QDBusInterface(LOGIND_SERVICE,
                                         LOGIND_PATH,
                                         LOGIND_MANAGER,
                                         system,
                                         this);
         }
-        if (ckit == NULL) {
+        if (ckit == nullptr) {
             ckit = new QDBusInterface(CONSOLEKIT_SERVICE,
                                       CONSOLEKIT_PATH,
                                       CONSOLEKIT_MANAGER,
                                       system,
                                       this);
         }
-        if (pmd == NULL) {
+        if (pmd == nullptr) {
             pmd = new QDBusInterface(Draco::powerdSessionName(),
                                      Draco::powerdSessionPath(),
                                      QString("%1.Manager").arg(Draco::powerdSessionName()),
