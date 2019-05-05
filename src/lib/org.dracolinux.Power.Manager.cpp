@@ -397,16 +397,14 @@ void Power::handleDeviceChanged(const QString &device)
 
 void Power::handleResume()
 {
-    //if (HasLogind() || HasConsoleKit()) { return; }
-    if (logind->isValid() || ckit->isValid()) { return; }
+    if (HasLogind() || HasConsoleKit()) { return; }
     qDebug() << "handle resume from upower";
     handlePrepareForSuspend(false);
 }
 
 void Power::handleSuspend()
 {
-    //if (HasLogind() || HasConsoleKit()) { return; }
-    if (logind->isValid() || ckit->isValid()) { return; }
+    if (HasLogind() || HasConsoleKit()) { return; }
     qDebug() << "handle suspend from upower";
     if (lockScreenOnSuspend) { LockScreen(); }
     emit PrepareForSuspend();
@@ -526,6 +524,7 @@ void Power::setWakeAlarmFromSettings()
 bool Power::HasConsoleKit()
 {
     qDebug() << "PK CHECK FOR CONSOLEKIT";
+    if (ckit) { return ckit->isValid(); }
     return availableService(CONSOLEKIT_SERVICE,
                             CONSOLEKIT_PATH,
                             CONSOLEKIT_MANAGER);
@@ -534,6 +533,7 @@ bool Power::HasConsoleKit()
 bool Power::HasLogind()
 {
     qDebug() << "PK CHECK FOR LOGIND";
+    if (logind) { return logind->isValid(); }
     return availableService(LOGIND_SERVICE,
                             LOGIND_PATH,
                             LOGIND_MANAGER);
@@ -542,6 +542,7 @@ bool Power::HasLogind()
 bool Power::HasUPower()
 {
     qDebug() << "PK CHECK FOR UPOWER";
+    if (upower) { return upower->isValid(); }
     return availableService(UPOWER_SERVICE,
                             UPOWER_PATH,
                             UPOWER_MANAGER);
