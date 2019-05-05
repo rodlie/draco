@@ -64,11 +64,11 @@ SysTray::SysTray(QObject *parent)
     , backlightMouseWheel(true)
     , ignoreKernelResume(false)
     , powerMenu(nullptr)
-    , actSettings(nullptr)
+    /*, actSettings(nullptr)
     , actPowerOff(nullptr)
     , actRestart(nullptr)
     , actSuspend(nullptr)
-    , actHibernate(nullptr)
+    , actHibernate(nullptr)*/
     , labelBatteryStatus(nullptr)
     , labelBatteryIcon(nullptr)
     , menuFrame(nullptr)
@@ -76,9 +76,9 @@ SysTray::SysTray(QObject *parent)
     , backlightSlider(nullptr)
     , backlightLabel(nullptr)
     , backlightWatcher(nullptr)
-    , deviceTree(nullptr)
+    /*, deviceTree(nullptr)
     , inhibitorTree(nullptr)
-    , powerTab(nullptr)
+    , powerTab(nullptr)*/
 {
     // setup tray
     tray = new TrayIcon(this);
@@ -133,10 +133,10 @@ SysTray::SysTray(QObject *parent)
             SIGNAL(Update()),
             this,
             SLOT(loadSettings()));
-    connect(man,
+    /*connect(man,
             SIGNAL(UpdatedInhibitors()),
             this,
-            SLOT(getInhibitors()));
+            SLOT(getInhibitors()));*/
 
     // setup org.freedesktop.PowerManagement
     pm = new PowerManagement(this);
@@ -291,7 +291,7 @@ void SysTray::checkDevices()
     updateMenu();
 
     // update power devices
-    updatePowerDevices();
+    //updatePowerDevices();
 
     // get battery left and add tooltip
     double batteryLeft = man->BatteryLeft();
@@ -578,7 +578,7 @@ void SysTray::loadSettings()
 
     // backlight
     backlightDevice = PowerBacklight::getDevice();
-    hasBacklight = PowerBacklight::canAdjustBrightness(backlightDevice);
+    hasBacklight = !backlightDevice.isEmpty();//PowerBacklight::canAdjustBrightness(backlightDevice);
     if (PowerSettings::isValid(CONF_BACKLIGHT_MOUSE_WHEEL)) {
         backlightMouseWheel = PowerSettings::getValue(CONF_BACKLIGHT_MOUSE_WHEEL).toBool();
     }
@@ -1081,7 +1081,7 @@ void SysTray::populateMenu()
 
     batteryWidget->setContentsMargins(0,0,0,0);
     batteryContainerLayout->setContentsMargins(0,0,0,0);
-    batteryContainerLayout->setSpacing(0);
+    //batteryContainerLayout->setSpacing(0);
 
     backlightWidget->setContentsMargins(0,0,0,0);
     backlightContainerLayout->setContentsMargins(0,0,0,0);
@@ -1104,15 +1104,15 @@ void SysTray::populateMenu()
     connect(backlightSlider, SIGNAL(valueChanged(int)),
                 this, SLOT(handleBacklightSlider(int)));
 
-    powerTab = new QTabWidget(menuFrame);
+    //powerTab = new QTabWidget(menuFrame);
 
-    deviceTree = new QTreeWidget(menuFrame);
-    deviceTree->setStyleSheet("QTreeWidget, QTreeWidget::item,"
-                              "QTreeWidget::item:selected"
-                              "{ /*background:transparent;*/ border:0; }");
-    deviceTree->setHeaderHidden(true);
+    //deviceTree = new QTreeWidget(menuFrame);
+    //deviceTree->setStyleSheet("QTreeWidget, QTreeWidget::item,"
+    //                          "QTreeWidget::item:selected"
+    //                          "{ /*background:transparent;*/ border:0; }");
+    //deviceTree->setHeaderHidden(true);
     //deviceTree->setHeaderLabels(QStringList() << "1" /*<< "2"*/);
-    //deviceTree->setColumnWidth(0, 50);
+    /*//deviceTree->setColumnWidth(0, 50);
     //deviceTree->setMaximumHeight(30*3);
     //deviceTree->setMinimumHeight(0);
     deviceTree->setRootIsDecorated(false);
@@ -1129,7 +1129,7 @@ void SysTray::populateMenu()
     //powerTab->addTab(inhibitorTree, tr("Inhibitors"));
     powerTab->setMaximumHeight(30*4);
     powerTab->setTabPosition(QTabWidget::South);
-    //powerTab->hide();
+    //powerTab->hide();*/
 
     batteryContainerLayout->addWidget(labelBatteryIcon);
     batteryContainerLayout->addStretch();
@@ -1139,7 +1139,7 @@ void SysTray::populateMenu()
     menuContainerLayout->addWidget(batteryWidget);
     //menuContainerLayout->addWidget(deviceTree);
     //menuContainerLayout->addWidget(inhibitorTree);
-    menuContainerLayout->addWidget(powerTab);
+    //menuContainerLayout->addWidget(powerTab);
     menuContainerLayout->addWidget(backlightWidget);
 
     menuHeader = new QWidgetAction(NULL);
@@ -1174,6 +1174,13 @@ void SysTray::populateMenu()
     powerMenu->addSeparator();
     powerMenu->addAction(actSettings);*/
 
+
+
+    if (!hasBacklight) {
+        backlightWidget->hide();
+        backlightSlider->setDisabled(true);
+    }
+
     updateBacklight(QString());
     updateMenu();
 }
@@ -1181,6 +1188,7 @@ void SysTray::populateMenu()
 void SysTray::updateMenu()
 {
     qDebug() << "update menu";
+
     double left = man->BatteryLeft();
     if (left<0) { left = 0; }
     if (left>100) { left = 100; }
@@ -1228,13 +1236,14 @@ void SysTray::updateBacklight(QString file)
 void SysTray::handleBacklightSlider(int value)
 {
     qDebug() << "BACKLIGHT SLIDER CHANGED" << value;
+    if (!hasBacklight) { return; }
     if (PowerBacklight::getCurrentBrightness(backlightDevice) != value) {
         //if (hasBacklight) { Common::adjustBacklight(backlightDevice, value); }
         /*else {*/ man->setDisplayBacklight(backlightDevice, value); //}
     }
 }
 
-void SysTray::updatePowerDevices()
+/*void SysTray::updatePowerDevices()
 {
     QMapIterator<QString, Device*> i(man->getDevices());
     while (i.hasNext()) {
@@ -1345,7 +1354,7 @@ void SysTray::getInhibitors()
             powerTab->addTab(inhibitorTree, tr("Inhibitors"));
         }
     }
-}
+}*/
 
 // catch wheel events
 bool TrayIcon::event(QEvent *e)

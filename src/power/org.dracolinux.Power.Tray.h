@@ -136,11 +136,11 @@ private:
     bool ignoreKernelResume;
 
     QMenu *powerMenu;
-    QAction *actSettings;
+    /*QAction *actSettings;
     QAction *actPowerOff;
     QAction *actRestart;
     QAction *actSuspend;
-    QAction *actHibernate;
+    QAction *actHibernate;*/
     QLabel *labelBatteryStatus;
     QLabel *labelBatteryIcon;
     QFrame *menuFrame;
@@ -148,10 +148,10 @@ private:
     QSlider *backlightSlider;
     QLabel *backlightLabel;
     QFileSystemWatcher *backlightWatcher;
-    QTreeWidget *deviceTree;
+    /*QTreeWidget *deviceTree;
     QMap<QString,QProgressBar*> devicesProg;
     QTreeWidget *inhibitorTree;
-    QTabWidget *powerTab;
+    QTabWidget *powerTab;*/
 
 private slots:
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
@@ -199,10 +199,10 @@ private slots:
     void updateMenu();
     void updateBacklight(QString file);
     void handleBacklightSlider(int value);
-    void updatePowerDevices();
+    /*void updatePowerDevices();
     bool powerDeviceExists(QString uid);
     void powerDeviceRemove(QString uid);
-    void getInhibitors();
+    void getInhibitors();*/
 };
 
 #endif // SYSTRAY_H
