@@ -5,8 +5,8 @@
 # See the LICENSE file for full details
 */
 
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef KEYBOARD_COMMON_H
+#define KEYBOARD_COMMON_H
 
 #include <QStringList>
 #include <QCoreApplication>
@@ -17,6 +17,8 @@
 #include <QSettings>
 #include <QDebug>
 
+#include "draco.h"
+
 #define SETXKBMAP "setxkbmap"
 
 enum xkbType
@@ -26,7 +28,7 @@ enum xkbType
     xkbVariant
 };
 
-class Common
+class KeyboardCommon
 {
 public:
     static QStringList parseXKB(xkbType type)
@@ -89,13 +91,30 @@ public:
     }
     static void saveKeyboard(QString type, QString value)
     {
-        QSettings settings("lumina-desktop", "lumina-keyboard");
+        QSettings settings(Draco::keyboardSettingsFile(), QSettings::IniFormat);
         settings.setValue(type, value);
     }
     static QString defaultKeyboard(QString type)
     {
-        QSettings settings("lumina-desktop", "lumina-keyboard");
+        QSettings settings(Draco::keyboardSettingsFile(), QSettings::IniFormat);
         return settings.value(type).toString();
+    }
+    static const QString getKeyboardInfo(const QString &type)
+    {
+        QString result;
+        QProcess proc;
+        proc.start(QString("%1 -query").arg(SETXKBMAP));
+        proc.waitForFinished();
+        QString tmp = proc.readAll();
+        QStringList list = tmp.split("\n");
+        for (int i=0;i<list.size();++i) {
+            QString line = list.at(i);
+            if (line.startsWith(QString("%1:").arg(type))) {
+                result = line.replace(QString("%1:").arg(type), "").trimmed();
+            }
+        }
+        qDebug() << "using keyboard" << type <<result;
+        return result;
     }
     static void loadKeyboard()
     {
@@ -107,6 +126,9 @@ public:
         QString model = defaultKeyboard("model");
 
         if (layout.isEmpty()) { return; }
+        if (getKeyboardInfo("layout") == layout &&
+            getKeyboardInfo("model") == model) { return; }
+
         cmd.append(" -layout ");
         cmd.append(layout);
 
@@ -123,4 +145,4 @@ public:
 };
 
 
-#endif // COMMON_H
+#endif // KEYBOARD_COMMON_H

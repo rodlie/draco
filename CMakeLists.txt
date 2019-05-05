@@ -104,6 +104,7 @@ set(
     src/lib/org.dracolinux.Power.ScreenX11.cpp
     src/lib/org.dracolinux.Power.Settings.cpp
     src/lib/org.dracolinux.Power.SettingsDialog.cpp
+    src/lib/org.dracolinux.Power.KeyboardDialog.cpp
     src/lib/org.dracolinux.Powerd.Manager.Backlight.cpp
     src/lib/org.dracolinux.Powerd.Manager.CPU.cpp
     src/lib/org.dracolinux.Powerd.Manager.RTC.cpp
@@ -124,6 +125,7 @@ set(
     src/lib/lumina/LFileInfo.cpp
     src/lib/lumina/ResizeMenu.cpp
     src/lib/lumina/XDGMime.cpp
+    src/lib/keyboard_common.h
     )
 #if(USE_XINPUT)
 #    set(LIB_SOURCES "${LIB_SOURCES};src/lib/lumina/LInputDevice.cpp")

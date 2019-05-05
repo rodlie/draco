@@ -55,6 +55,7 @@ public:
     static const QString powerSettingsFile();
     static const QString storageSettingsFile();
     static const QString xconfigSettingsFile();
+    static const QString keyboardSettingsFile();
     static QStringList iconLocations(const QString &appPath);
     static QStringList pixmapLocations(const QString &appPath);
     static QStringList applicationLocations(const QString &appPath);

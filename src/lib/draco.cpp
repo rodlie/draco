@@ -187,6 +187,18 @@ const QString Draco::xconfigSettingsFile()
     return file;
 }
 
+const QString Draco::keyboardSettingsFile()
+{
+    QString file = QString("%1/keyboard.conf")
+            .arg(configDir());
+    if (!QFile::exists(file)) {
+        qDebug() << "no user keyboard settings!";
+        QFile mkfile(file);
+        if (mkfile.open(QIODevice::WriteOnly)) { mkfile.close(); }
+    }
+    return file;
+}
+
 QStringList Draco::iconLocations(const QString &appPath)
 {
     QStringList result;

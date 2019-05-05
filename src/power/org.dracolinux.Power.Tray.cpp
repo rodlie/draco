@@ -13,7 +13,7 @@
 #include "org.dracolinux.Powerd.Manager.Backlight.h"
 #include "power_def.h"
 #include "draco.h"
-
+#include "keyboard_common.h"
 #include <QMessageBox>
 #include <QApplication>
 
@@ -533,6 +533,9 @@ void SysTray::loadSettings()
     if (PowerSettings::isValid(CONF_BACKLIGHT_MOUSE_WHEEL)) {
         backlightMouseWheel = PowerSettings::getValue(CONF_BACKLIGHT_MOUSE_WHEEL).toBool();
     }
+
+    // keyboard
+    KeyboardCommon::loadKeyboard();
 }
 
 // register session services
