@@ -11,6 +11,7 @@
 #include <iostream>
 #include "LuminaXDG.h"
 #include "XDGMime.h"
+#include "LUtils.h"
 #include "AppDialog.h"
 #include "draco.h"
 
@@ -57,6 +58,7 @@ int main(int argc, char *argv[])
     bool isDesktop = false;
     bool runFile = false;
     QString cmd, desktopFile;
+    QString scheme;
 
     if (QFile::exists(fileName)) { // local
         isLocalFile = true;
@@ -65,6 +67,7 @@ int main(int argc, char *argv[])
         else { openFile = true; }
     } else { // remote
         QUrl url(fileName);
+        scheme = url.scheme();
         if (url.isValid() &&
             (url.scheme()=="http" ||
              url.scheme()=="https" ||
@@ -104,6 +107,12 @@ int main(int argc, char *argv[])
     }
 
     if (runFile) { cmd = fileName; } // run file directly
+
+    if (!scheme.isEmpty() && !openInBrowser) { // open misc urls
+        if (scheme == "tg" && LUtils::isValidBinary("Telegram")) { // telegram
+            cmd = QString("Telegram -- %1").arg(fileName);
+        }
+    }
 
     if (!cmd.isEmpty()) { // now run something
         cmd.replace("%u","");
