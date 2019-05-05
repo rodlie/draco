@@ -397,14 +397,16 @@ void Power::handleDeviceChanged(const QString &device)
 
 void Power::handleResume()
 {
-    if (HasLogind() || HasConsoleKit()) { return; }
+    //if (HasLogind() || HasConsoleKit()) { return; }
+    if (logind->isValid() || ckit->isValid()) { return; }
     qDebug() << "handle resume from upower";
     handlePrepareForSuspend(false);
 }
 
 void Power::handleSuspend()
 {
-    if (HasLogind() || HasConsoleKit()) { return; }
+    //if (HasLogind() || HasConsoleKit()) { return; }
+    if (logind->isValid() || ckit->isValid()) { return; }
     qDebug() << "handle suspend from upower";
     if (lockScreenOnSuspend) { LockScreen(); }
     emit PrepareForSuspend();
