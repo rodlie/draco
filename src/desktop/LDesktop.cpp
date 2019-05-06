@@ -415,10 +415,10 @@ void LDesktop::UpdateMenu(bool fast)
     }
 
     // Now add the desktop folder options (if desktop is icon-enabled)
-    if (settings->value(QString("%1generateDesktopIcons").arg(DPREFIX), false).toBool()) {
+    /*if (settings->value(QString("%1generateDesktopIcons").arg(DPREFIX), false).toBool()) {
         //deskMenu->addSeparator();
         deskMenu->addMenu(desktopFolderActionMenu);
-    }
+    }*/
 
     // Now add the system quit options
     deskMenu->addSeparator();
