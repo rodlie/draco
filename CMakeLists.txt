@@ -430,11 +430,11 @@ target_link_libraries(
 # draco-settings
 add_executable(
     ${PROJECT_NAME}-settings
-    src/todo/config/ColorDialog.cpp
+    #src/todo/config/ColorDialog.cpp
     src/todo/config/GetPluginDialog.cpp
     src/todo/config/LPlugins.cpp
     src/todo/config/PanelWidget.cpp
-    src/todo/config/ThemeDialog.cpp
+    #src/todo/config/ThemeDialog.cpp
     src/todo/config/main.cpp
     src/todo/config/mainWindow.cpp
     src/todo/config/pages/PageWidget.h
@@ -460,10 +460,10 @@ add_executable(
     #src/todo/config/pages/pages/page_session_locale.ui
     src/todo/config/pages/page_session_options.ui
     src/todo/config/pages/page_wallpaper.ui
-    src/todo/config/ColorDialog.ui
+    #src/todo/config/ColorDialog.ui
     src/todo/config/GetPluginDialog.ui
     src/todo/config/PanelWidget.ui
-    src/todo/config/ThemeDialog.ui
+    #src/todo/config/ThemeDialog.ui
     src/todo/config/mainWindow.ui
 )
 target_include_directories(
