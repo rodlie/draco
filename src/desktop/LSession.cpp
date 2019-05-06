@@ -21,7 +21,7 @@
 #include "LUtils.h"
 #include "LDesktopUtils.h"
 #include "draco.h" // common stuff
-
+#include "org.dracolinux.Power.Client.h"
 #include <QTime>
 #include <QScreen>
 #include <QtConcurrent>
@@ -53,7 +53,7 @@ LSession::LSession(int &argc, char ** argv) :
   , TrayStopping(false)
   , lastActiveWin(0)
   , startupApps(true)
-  //, pm(Q_NULLPTR)
+  , pm(Q_NULLPTR)
 {
     // Get the currently-set theme
     QString cTheme = QIcon::themeName();
@@ -139,6 +139,11 @@ LSession::LSession(int &argc, char ** argv) :
 
         // PM
         //pm = new PowerKit(this);
+
+        pm = new QDBusInterface(Draco::powerSessionName(),
+                                  Draco::powerSessionPath(),
+                                  Draco::powerSessionName(),
+                                  QDBusConnection::sessionBus(), this);
 
     //} // end check for primary process
 }
@@ -386,21 +391,25 @@ void LSession::reloadIconTheme()
 
 bool LSession::canShutdown()
 {
+    if (pm->isValid()) { return PowerClient::canPowerOff(pm); }
     return false; //pm->CanPowerOff();
 }
 
 bool LSession::canReboot()
 {
+    if (pm->isValid()) { return PowerClient::canRestart(pm); }
     return false; //pm->CanRestart();
 }
 
 bool LSession::canSuspend()
 {
+    if (pm->isValid()) { return PowerClient::canSuspend(pm); }
     return false; //pm->CanSuspend();
 }
 
 bool LSession::canHibernate()
 {
+    if (pm->isValid()) { return PowerClient::canHibernate(pm); }
     return false; //pm->CanHibernate();
 }
 

@@ -55,10 +55,11 @@ public:
     void UpdateGeometry();
 
 public slots:
+    void SystemAbout();
     void SystemLock();
     void SystemLogout();
     void SystemTerminal();
-    void SystemFileManager();
+    //void SystemFileManager();
     void SystemApplication(QAction*);
     void checkResolution();
 

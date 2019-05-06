@@ -32,7 +32,7 @@
 #include <QThread>
 #include <QUrl>
 #include <QClipboard>
-
+#include <QDBusInterface>
 //#include "powerkit.h"
 #include "AppMenu.h"
 //#include "SettingsMenu.h"
@@ -92,7 +92,7 @@ public:
 
     AppMenu* applicationMenu();
     void systemWindow();
-//    SettingsMenu* settingsMenu();
+    //SettingsMenu* settingsMenu();
 
     LXCB *XCB; //class for XCB usage
 
@@ -147,6 +147,7 @@ private:
     bool startupApps;
 
     //PowerKit *pm;
+    QDBusInterface *pm;
 
 public slots:
     void StartLogout();

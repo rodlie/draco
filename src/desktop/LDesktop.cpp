@@ -127,6 +127,11 @@ void LDesktop::UpdateGeometry()
     QTimer::singleShot(0, this, SLOT(UpdatePanels()));
 }
 
+void LDesktop::SystemAbout()
+{
+
+}
+
 void LDesktop::SystemLock()
 {
     QProcess::startDetached("xscreensaver-command -lock");
@@ -145,10 +150,10 @@ void LDesktop::SystemTerminal()
     LSession::LaunchApplication(QString("%1 \"%2\"").arg(Draco::launcherApp()).arg(term));
 }
 
-void LDesktop::SystemFileManager()
+/*void LDesktop::SystemFileManager()
 {
     QProcess::startDetached(QString("qtfm %1").arg(QDir::homePath()));
-}
+}*/
 
 void LDesktop::SystemApplication(QAction* act)
 {
@@ -388,11 +393,12 @@ void LDesktop::UpdateMenu(bool fast)
     deskMenu->addSeparator();
 
     // Now load the user's menu setup and fill the menu
-    QStringList items = settings->value("menu/itemlist", QStringList() << "windowlist" ).toStringList();
+    QStringList items = settings->value("menu/itemlist", QStringList() << "applications" << "windowlist" << "lockdesktop").toStringList();
     usewinmenu=false;
     for (int i=0; i<items.length(); i++) {
         if (items[i]=="lockdesktop") { deskMenu->addAction(LXDG::findIcon("system-lock-screen",""), tr("Lock Session"), this, SLOT(SystemLock()) ); }
         else if (items[i]=="line") { deskMenu->addSeparator(); }
+        else if(items[i]=="applications"){ deskMenu->addMenu( LSession::handle()->applicationMenu() ); }
         else if (items[i]=="windowlist") {
             deskMenu->addMenu( winMenu);
             usewinmenu=true;

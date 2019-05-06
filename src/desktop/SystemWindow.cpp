@@ -43,7 +43,7 @@ SystemWindow::SystemWindow() : QDialog(), ui(new Ui::SystemWindow)
     connect(ui->tool_hibernate, SIGNAL(clicked()), this, SLOT(sysHibernate()));
 
     updateWindow();
-    ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
+    //ui->tool_suspend->setVisible(LSession::handle()->canSuspend());
     connect(QApplication::instance(), SIGNAL(LocaleChanged()), this, SLOT(updateWindow()) );
     connect(QApplication::instance(), SIGNAL(IconThemeChanged()), this, SLOT(updateWindow()) );
 }
