@@ -129,7 +129,7 @@ void LDesktop::UpdateGeometry()
 
 void LDesktop::SystemAbout()
 {
-
+    QProcess::startDetached(QString("%1 --about").arg(Draco::launcherApp()));
 }
 
 void LDesktop::SystemLock()
@@ -384,7 +384,7 @@ void LDesktop::UpdateMenu(bool fast)
     // Put a label at the top
     int num = LSession::handle()->XCB->CurrentWorkspace(); //LX11::GetCurrentDesktop();
     qDebug() << "Found workspace number:" << num;
-    workspacelabel->setText(QString("%1 Desktop %2").arg(DESKTOP_APP_NAME).arg(DESKTOP_APP_VERSION));
+    workspacelabel->setText(QString("%1 %2").arg(DESKTOP_APP_NAME).arg(QString("%1%2").arg(DESKTOP_APP_VERSION).arg(DESKTOP_APP_VERSION_EXTRA)));
 
     if (fast && usewinmenu) { UpdateWinMenu(); }
     if (fast) { return; } // already done
@@ -422,7 +422,11 @@ void LDesktop::UpdateMenu(bool fast)
 
     // Now add the system quit options
     deskMenu->addSeparator();
-
+    deskMenu->addAction(LXDG::findIcon("help-about",""),
+                        tr("About"),
+                        this,
+                        SLOT(SystemAbout()));
+    deskMenu->addSeparator();
     deskMenu->addAction(LXDG::findIcon("system-lock-screen",""),
                         tr("Lock Session"),
                         this,

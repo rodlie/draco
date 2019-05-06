@@ -21,6 +21,7 @@
 #include <QProcess>
 #include <QDebug>
 #include <QUrl>
+#include <QMessageBox>
 
 int main(int argc, char *argv[])
 {
@@ -49,6 +50,45 @@ int main(int argc, char *argv[])
             if (!dlg.appselected.isEmpty()) {
                 fileName = dlg.appselected;
             } else { return 0; }
+        } else if (fileName == "--about") {
+            QMessageBox about;
+            about.setWindowTitle(QString("Draco Desktop Environment"));
+            about.setIconPixmap(QIcon(":/defaults/draco-logo.png").pixmap(128, 128));
+            about.setWindowIcon(QIcon::fromTheme("user-desktop"));
+            QString osPrettyName, osUname, osCpu = "N/A";
+            if (QFile::exists("/etc/os-release")) {
+                QFile os_release("/etc/os-release");
+                if (os_release.open(QIODevice::ReadOnly|QIODevice::Text)) {
+                    QString tmp = os_release.readAll();
+                    os_release.close();
+                    QStringList lines = tmp.split("\n");
+                    for (int i=0;i<lines.size();++i) {
+                        QString line = lines.at(i);
+                        if (line.startsWith("PRETTY_NAME=")) {
+                            osPrettyName = line.replace("PRETTY_NAME=", "").replace("\"", "").trimmed();
+                        }
+                    }
+                }
+            }
+            QProcess uname;
+            uname.start("uname -sr");
+            uname.waitForFinished();
+            osUname = uname.readAll().trimmed();
+            uname.start("uname -p");
+            uname.waitForFinished();
+            osCpu = uname.readAll().trimmed();
+            about.setInformativeText(QString("<h1 style=\"font-weight:normal;\">Draco Desktop Environment</h1>"
+                                             "<h3 style=\"font-weight:normal;\">Version %1</h3>"
+                                             "<p><b>Framework:</b> Qt %5<br><b>System:</b> %2<br><b>Kernel:</b> %3<br><b>CPU:</b> %4</p>"
+                                             "<p>Copyright &copy;2019 Ole-André Rodlie. All rights reserved.</p>"
+                                             "<p><a href=\"https://dracolinux.org\">https://dracolinux.org</a>"
+                                             "<br><a href=\"https://github.com/rodlie/draco\">https://github.com/rodlie/draco</a></p>")
+                                     .arg(QString("%1%2").arg(DESKTOP_APP_VERSION).arg(DESKTOP_APP_VERSION_EXTRA))
+                                     .arg(osPrettyName)
+                                     .arg(osUname).arg(osCpu)
+                                     .arg(qVersion()));
+            about.setDetailedText(QString(""));
+            return about.exec();
         }
     }
 

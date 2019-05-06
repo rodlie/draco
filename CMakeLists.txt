@@ -10,6 +10,7 @@ cmake_minimum_required(VERSION 3.0)
 include(GNUInstallDirs)
 
 project(draco VERSION 0.9.0)
+set(PROJECT_VERSION_EXTRA alpha1)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
@@ -44,6 +45,7 @@ add_definitions(-DDESKTOP_APP="${PROJECT_NAME}")
 add_definitions(-DDESKTOP_APP_NAME="${LIB_NAME}")
 add_definitions(-DDESKTOP_APP_DOMAIN="${DOMAIN}")
 add_definitions(-DDESKTOP_APP_VERSION="${PROJECT_VERSION}")
+add_definitions(-DDESKTOP_APP_VERSION_EXTRA="${PROJECT_VERSION_EXTRA}")
 add_definitions(-DDESKTOP_SERVICE_NAME="${DESKTOP_SERVICE_NAME}")
 add_definitions(-DPOWER_SERVICE_NAME="${POWER_SERVICE_NAME}")
 add_definitions(-DPOWERD_SERVICE_NAME="${POWERD_SERVICE_NAME}")
@@ -325,6 +327,7 @@ add_executable(
     src/launcher/main.cpp
     src/lib/lumina/AppDialog.h
     src/lib/lumina/AppDialog.ui
+    src/desktop/logo.qrc
 )
 target_include_directories(
     ${XDG_OPEN}
