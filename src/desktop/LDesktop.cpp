@@ -393,11 +393,10 @@ void LDesktop::UpdateMenu(bool fast)
     deskMenu->addSeparator();
 
     // Now load the user's menu setup and fill the menu
-    QStringList items = settings->value("menu/itemlist", QStringList() << "applications" << "windowlist" << "lockdesktop").toStringList();
+    QStringList items = settings->value("menu/itemlist", QStringList() << "applications" << "windowlist").toStringList();
     usewinmenu=false;
     for (int i=0; i<items.length(); i++) {
-        if (items[i]=="lockdesktop") { deskMenu->addAction(LXDG::findIcon("system-lock-screen",""), tr("Lock Session"), this, SLOT(SystemLock()) ); }
-        else if (items[i]=="line") { deskMenu->addSeparator(); }
+        if (items[i]=="line") { deskMenu->addSeparator(); }
         else if(items[i]=="applications"){ deskMenu->addMenu( LSession::handle()->applicationMenu() ); }
         else if (items[i]=="windowlist") {
             deskMenu->addMenu( winMenu);
@@ -423,6 +422,11 @@ void LDesktop::UpdateMenu(bool fast)
 
     // Now add the system quit options
     deskMenu->addSeparator();
+
+    deskMenu->addAction(LXDG::findIcon("system-lock-screen",""),
+                        tr("Lock Session"),
+                        this,
+                        SLOT(SystemLock()));
     deskMenu->addAction(LXDG::findIcon("system-log-out",""),
                         tr("Leave"),
                         this,
