@@ -155,23 +155,23 @@ void AppLauncherPlugin::loadButton(){
     this->contextMenu()->addAction( tr("Open With"), this, SLOT(openWith()) );
     ICONS->loadIcon(tmp, "document-preview");
   }
-  tmp = this->contextMenu()->addAction( tr("View Properties"), this, SLOT(fileProperties()) );
-  ICONS->loadIcon(tmp, "document-properties");
+  //tmp = this->contextMenu()->addAction( tr("View Properties"), this, SLOT(fileProperties()) );
+  //ICONS->loadIcon(tmp, "document-properties");
   this->contextMenu()->addSection(tr("File Operations"));
   if(!path.endsWith(".desktop")){
     tmp = this->contextMenu()->addAction( tr("Rename"), this, SLOT(fileRename()) );
     ICONS->loadIcon(tmp, "edit-rename");
   }
-  tmp = this->contextMenu()->addAction( tr("Copy"), this, SLOT(fileCopy()) );
-  ICONS->loadIcon(tmp, "edit-copy");
-  if(info.isWritable() || (info.isSymLink() && QFileInfo(info.absolutePath()).isWritable() ) ){
+  //tmp = this->contextMenu()->addAction( tr("Copy"), this, SLOT(fileCopy()) );
+  //ICONS->loadIcon(tmp, "edit-copy");
+  /*if(info.isWritable() || (info.isSymLink() && QFileInfo(info.absolutePath()).isWritable() ) ){
     tmp = this->contextMenu()->addAction( tr("Cut"), this, SLOT(fileCut()) );
     ICONS->loadIcon(tmp, "edit-cut");
     tmp = this->contextMenu()->addAction( tr("Delete"), this, SLOT(fileDelete()) );
     ICONS->loadIcon(tmp, "document-close");
   }
-  tmp = this->contextMenu()->addAction( tr("Drag to Application"), this, SLOT(startDragNDrop()) );
-  ICONS->loadIcon(tmp, "edit-redo");
+  //tmp = this->contextMenu()->addAction( tr("Drag to Application"), this, SLOT(startDragNDrop()) );
+  //ICONS->loadIcon(tmp, "edit-redo");
   iconLoaded(iconID); //make sure the emblem is layered on top
   //If the file is a symlink, put the overlay on the icon
   /*if(info.isSymLink()){

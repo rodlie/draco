@@ -119,11 +119,11 @@ protected:
 	  }
 	}
 
-	void dragEnterEvent(QDragEnterEvent *ev){
+    /*void dragEnterEvent(QDragEnterEvent *ev){
 	  if(ev->mimeData()->hasUrls() && this->acceptDrops()){ ev->acceptProposedAction(); }
-	}
+    }*/
 
-	void dropEvent(QDropEvent *ev){
+    /*void dropEvent(QDropEvent *ev){
 	  QList<QUrl> urls = ev->mimeData()->urls();
 	  bool ok = !urls.isEmpty() && this->acceptDrops();
 	  if(ok){
@@ -136,6 +136,6 @@ protected:
 	    }else{ ok = false; }
 	  }
 	  if(ok){ ev->acceptProposedAction(); }
-	}
+    }*/
 };
 #endif

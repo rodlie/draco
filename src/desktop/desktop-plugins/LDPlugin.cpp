@@ -57,8 +57,8 @@ void LDPlugin::setupMenu(){
   menu->addSeparator();
   menu->addAction( LXDG::findIcon("zoom-in",""), tr("Increase Item Sizes"), this, SIGNAL(IncreaseIconSize()) );
   menu->addAction( LXDG::findIcon("zoom-out",""), tr("Decrease Item Sizes"), this, SIGNAL(DecreaseIconSize()) );
-  menu->addSeparator();
-  menu->addAction( LXDG::findIcon("edit-delete",""), tr("Remove Item"), this, SLOT(slotRemovePlugin()) );
+  //menu->addSeparator();
+  //menu->addAction( LXDG::findIcon("edit-delete",""), tr("Remove Item"), this, SLOT(slotRemovePlugin()) );
 }
 
 void LDPlugin::showPluginMenu(){
