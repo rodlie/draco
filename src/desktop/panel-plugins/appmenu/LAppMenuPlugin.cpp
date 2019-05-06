@@ -82,18 +82,18 @@ void LAppMenuPlugin::UpdateMenu(){
   QHash<QString, QList<XDGDesktop*> > *HASH = LSession::handle()->applicationMenu()->currentAppHash();
     //Now Re-create the menu (orignally copied from the AppMenu class)
 
-    // Add link to the file manager
-    QAction *tmpact = mainmenu->addAction( LXDG::findIcon("user-home", ""), tr("Browse Files") );
-    tmpact->setWhatsThis("\""+QDir::homePath()+"\"");
-    tmpact = mainmenu->addAction( LXDG::findIcon("user-home", ""), tr("Browse Files") );
-
     // Add link to web browser
     QString browserPath = LXDG::findDefaultAppForMime("x-scheme-handler/http");
     XDGDesktop browser(browserPath);
     if (browser.isValid()) {
-       tmpact = mainmenu->addAction(LXDG::findIcon("web-browser", ""), tr("Web Browser"));
-       tmpact->setWhatsThis(browserPath);
+        QAction *browserAct = mainmenu->addAction(LXDG::findIcon("web-browser", ""), tr("Web Browser"));
+        browserAct->setWhatsThis(browserPath);
     }
+
+    // Add link to the file manager
+    QAction *tmpact = mainmenu->addAction( LXDG::findIcon("user-home", ""), tr("Browse Files") );
+    tmpact->setWhatsThis("\""+QDir::homePath()+"\"");
+
     //--Look for the app store
     /*XDGDesktop store(LOS::AppStoreShortcut());
     if(store.isValid()){
