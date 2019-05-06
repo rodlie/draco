@@ -6,8 +6,10 @@
 //===========================================
 #ifndef _LUMINA_CONFIG_PAGE_DEFAULTAPPS_H
 #define _LUMINA_CONFIG_PAGE_DEFAULTAPPS_H
-#include "../globals.h"
+//#include "../globals.h"
 #include "PageWidget.h"
+
+#include <QToolButton>
 
 namespace Ui{
 	class page_defaultapps;

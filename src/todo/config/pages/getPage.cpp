@@ -17,7 +17,7 @@
 #include "page_interface_desktop.h"
 #include "page_interface_panels.h"
 //#include "page_interface_menu.h"
-#include "page_session_locale.h"
+//#include "page_session_locale.h"
 #include "page_session_options.h"
 //#include "page_compton.h"
 //#include "page_soundtheme.h"
@@ -50,7 +50,7 @@ QList<PAGEINFO> Pages::KnownPages(){
   list << Pages::PageInfo("interface-desktop", QObject::tr("Desktop"), QObject::tr("Desktop Plugins"), "preferences-desktop-icons",QObject::tr("Change what icons or tools are embedded on the desktop"), "appearance", QStringList(), QStringList() << "desktop" << "plugins" << "embed" << "icons" << "utilities");
   list << Pages::PageInfo("interface-panel", QObject::tr("Panels"), QObject::tr("Panels and Plugins"), "configure-toolbars",QObject::tr("Change any floating panels and what they show"), "appearance", QStringList(), QStringList() << "desktop" << "toolbar" << "panel" << "floating" << "plugins");
   //list << Pages::PageInfo("interface-menu", QObject::tr("Menu"), QObject::tr("Menu Plugins"), "format-list-unordered",QObject::tr("Change what options are shown on the desktop context menu"), "interface", QStringList(), QStringList() << "desktop" << "menu" << "plugins" << "shortcuts");
-  list << Pages::PageInfo("session-locale", QObject::tr("Localization"), QObject::tr("Locale Settings"), "preferences-desktop-locale",QObject::tr("Change the default locale settings for this user"), "user", QStringList(), QStringList() << "user"<<"locale"<<"language"<<"translations");
+  //list << Pages::PageInfo("session-locale", QObject::tr("Localization"), QObject::tr("Locale Settings"), "preferences-desktop-locale",QObject::tr("Change the default locale settings for this user"), "user", QStringList(), QStringList() << "user"<<"locale"<<"language"<<"translations");
   list << Pages::PageInfo("session-options", QObject::tr("General Options"), QObject::tr("User Settings"), "configure",QObject::tr("Change basic user settings such as time/date formats"), "user", QStringList(), QStringList() << "user"<<"settings"<<"time"<<"date"<<"icon"<<"reset"<<"numlock"<<"clock");
   //list << Pages::PageInfo("soundtheme", QObject::tr("Sound Themeing"), QObject::tr("Theme"), "media-playlist-audio",QObject::tr("Change basic sound settings"), "session", QStringList(), QStringList() << "session"<<"settings"<<"sound"<<"theme");
  // list << Pages::PageInfo("mouse-settings", QObject::tr("TrueOS Mouse Settings"), QObject::tr("TrueOS Mouse Settings"), "preferences-desktop-mouse",QObject::tr("Adjust mouse devices"), "user", QStringList(), QStringList() << "user"<<"speed"<<"accel"<<"mouse");
@@ -71,7 +71,7 @@ PageWidget* Pages::GetNewPage(QString id, QWidget *parent){
   else if(id=="interface-desktop"){ page = new page_interface_desktop(parent); }
   else if(id=="interface-panel"){ page = new page_interface_panels(parent); }
   //else if(id=="interface-menu"){ page = new page_interface_menu(parent); }
-  else if(id=="session-locale"){ page = new page_session_locale(parent); }
+  //else if(id=="session-locale"){ page = new page_session_locale(parent); }
   else if(id=="session-options"){ page = new page_session_options(parent); }
   //else if(id=="compton"){ page = new page_compton(parent); }
   //else if(id=="soundtheme"){ page = new page_soundtheme(parent); }

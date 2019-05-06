@@ -55,7 +55,7 @@ Dialog::Dialog(QWidget *parent)
 {
     // setup dialog
     setAttribute(Qt::WA_QuitOnClose, true);
-    setWindowTitle(tr("Power Settings"));
+    setWindowTitle(tr("Power Configuration"));
     setMinimumSize(QSize(390, 310));
 
     // setup dbus

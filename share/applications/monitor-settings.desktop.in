@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=@PROJECT_NAME@-xconfig
+Exec=@PROJECT_NAME@-x11-settings
 Icon=video-display
 Terminal=false
 Type=Application

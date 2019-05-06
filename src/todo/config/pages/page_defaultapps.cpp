@@ -6,7 +6,10 @@
 //===========================================
 #include "page_defaultapps.h"
 #include "ui_page_defaultapps.h"
-#include "../AppDialog.h"
+#include "AppDialog.h"
+#include "LUtils.h"
+#include <QFileDialog>
+#include <QMessageBox>
 
 //==========
 //    PUBLIC

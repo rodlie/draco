@@ -368,33 +368,119 @@ target_link_libraries(
     ${LIB_NAME}
 )
 
-# draco-xconfig
+# draco-monitor-settings
 add_executable(
-    ${PROJECT_NAME}-xconfig
+    ${PROJECT_NAME}-monitor-settings
     src/settings/xconf/main.cpp
     src/settings/xconf/MainUI.cpp
     src/settings/xconf/ScreenSettings.cpp
     src/settings/xconf/MainUI.ui
 )
 target_include_directories(
-    ${PROJECT_NAME}-xconfig
+    ${PROJECT_NAME}-monitor-settings
     PRIVATE
     src/lib
     src/lib/lumina
 )
 target_link_libraries(
-    ${PROJECT_NAME}-xconfig
+    ${PROJECT_NAME}-monitor-settings
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
     ${LIB_NAME}
 )
 
+# draco-power-settings
+add_executable(
+    ${PROJECT_NAME}-power-settings
+    src/settings/powerconf/main.cpp
+)
+target_include_directories(
+    ${PROJECT_NAME}-power-settings
+    PRIVATE
+    src/lib
+    src/lib/lumina
+)
+target_link_libraries(
+    ${PROJECT_NAME}-power-settings
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    ${LIB_NAME}
+)
 
+# draco-keyboard-settings
+add_executable(
+    ${PROJECT_NAME}-keyboard-settings
+    src/settings/keyboardconf/main.cpp
+)
+target_include_directories(
+    ${PROJECT_NAME}-keyboard-settings
+    PRIVATE
+    src/lib
+)
+target_link_libraries(
+    ${PROJECT_NAME}-keyboard-settings
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    ${LIB_NAME}
+)
 
-
-# org.dracolinux.Settings
-#
+# draco-settings
+add_executable(
+    ${PROJECT_NAME}-settings
+    src/todo/config/ColorDialog.cpp
+    src/todo/config/GetPluginDialog.cpp
+    src/todo/config/LPlugins.cpp
+    src/todo/config/PanelWidget.cpp
+    src/todo/config/ThemeDialog.cpp
+    src/todo/config/main.cpp
+    src/todo/config/mainWindow.cpp
+    src/todo/config/pages/PageWidget.h
+    src/todo/config/pages/getPage.cpp
+    src/todo/config/pages/getPage.h
+    src/todo/config/pages/page_autostart.cpp
+    src/todo/config/pages/page_defaultapps.cpp
+    src/todo/config/pages/page_interface_desktop.cpp
+    src/todo/config/pages/page_interface_menu.cpp
+    src/todo/config/pages/page_interface_panels.cpp
+    src/todo/config/pages/page_main.cpp
+    src/todo/config/pages/page_main.ui
+    #src/todo/config/pages/page_session_locale.cpp
+    src/todo/config/pages/page_session_options.cpp
+    src/todo/config/pages/page_wallpaper.cpp
+    src/lib/lumina/AppDialog.h
+    src/lib/lumina/AppDialog.ui
+    src/todo/config/pages/page_autostart.ui
+    src/todo/config/pages/page_defaultapps.ui
+    src/todo/config/pages/page_interface_desktop.ui
+    src/todo/config/pages/page_interface_menu.ui
+    src/todo/config/pages/page_interface_panels.ui
+    #src/todo/config/pages/pages/page_session_locale.ui
+    src/todo/config/pages/page_session_options.ui
+    src/todo/config/pages/page_wallpaper.ui
+    src/todo/config/ColorDialog.ui
+    src/todo/config/GetPluginDialog.ui
+    src/todo/config/PanelWidget.ui
+    src/todo/config/ThemeDialog.ui
+    src/todo/config/mainWindow.ui
+)
+target_include_directories(
+    ${PROJECT_NAME}-settings
+    PRIVATE
+    src/lib
+    src/lib/lumina
+    src/todo/config
+    src/todo/config/pages
+)
+target_link_libraries(
+    ${PROJECT_NAME}-settings
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    ${LIB_NAME}
+)
 
 # docs
 install(
@@ -434,8 +520,18 @@ configure_file(
     @ONLY
 )
 configure_file(
-    share/applications/xconfig.desktop.in
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-xconfig.desktop
+    share/applications/monitor-settings.desktop.in
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-monitor-settings.desktop
+    @ONLY
+)
+configure_file(
+    share/applications/power-settings.desktop.in
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-power-settings.desktop
+    @ONLY
+)
+configure_file(
+    share/applications/keyboard-settings.desktop.in
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-keyboard-settings.desktop
     @ONLY
 )
 install(
@@ -482,7 +578,19 @@ install(
 )
 install(
     TARGETS
-    ${PROJECT_NAME}-xconfig
+    ${PROJECT_NAME}-monitor-settings
+    DESTINATION
+    ${CMAKE_INSTALL_BINDIR}
+)
+install(
+    TARGETS
+    ${PROJECT_NAME}-power-settings
+    DESTINATION
+    ${CMAKE_INSTALL_BINDIR}
+)
+install(
+    TARGETS
+    ${PROJECT_NAME}-keyboard-settings
     DESTINATION
     ${CMAKE_INSTALL_BINDIR}
 )
@@ -501,7 +609,19 @@ install(
 )
 install(
     FILES
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-xconfig.desktop
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-monitor-settings.desktop
+    DESTINATION
+    ${CMAKE_INSTALL_DATAROOTDIR}/applications
+)
+install(
+    FILES
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-power-settings.desktop
+    DESTINATION
+    ${CMAKE_INSTALL_DATAROOTDIR}/applications
+)
+install(
+    FILES
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-keyboard-settings.desktop
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
