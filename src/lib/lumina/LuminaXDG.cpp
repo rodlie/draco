@@ -1229,9 +1229,10 @@ QStringList LXDG::listFileMimeDefaults(){
   QStringList mimes = LXDG::loadMimeFileGlobs2();
   //Remove all the application files from the list (only a single app defines/uses this type in general)
   /*QStringList apps = mimes.filter(":application/");
-  //qDebug() << "List Mime Defaults";
+  qDebug() << "List Mime Defaults";
   for(int i=0; i<apps.length(); i++){ mimes.removeAll(apps[i]); }*/
   //Now start filling the output list
+  qDebug() << "MIMES!!!" << mimes;
   QStringList out;
   for(int i=0; i<mimes.length(); i++){
     QString mimetype = mimes[i].section(":",1,1);
@@ -1247,7 +1248,7 @@ QStringList LXDG::listFileMimeDefaults(){
     QString dapp = LXDG::findDefaultAppForMime(mimetype); //default app;
     
     //Create the output entry
-    //qDebug() << "Mime entry:" << i << mimetype << dapp;
+    qDebug() << "Mime entry:" << i << mimetype << dapp;
     out << mimetype+"::::"+extlist.join(", ")+"::::"+dapp+"::::"+LXDG::findMimeComment(mimetype);
     
     i--; //go back one (continue until the list is empty)
@@ -1279,15 +1280,15 @@ QString LXDG::findMimeComment(QString mime){
 QString LXDG::findDefaultAppForMime(QString mime){
   //First get the priority-ordered list of default file locations
   QStringList dirs;
-  dirs << QString(getenv("XDG_CONFIG_HOME"))+"/lumina-mimeapps.list" \
-	 << QString(getenv("XDG_CONFIG_HOME"))+"/mimeapps.list";
+  //dirs << QString(getenv("XDG_CONFIG_HOME"))+"/lumina-mimeapps.list"
+  dirs << QString(getenv("XDG_CONFIG_HOME"))+"/mimeapps.list";
   QStringList tmp = QString(getenv("XDG_CONFIG_DIRS")).split(":");
-	for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/lumina-mimeapps.list"; }
+    //for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/lumina-mimeapps.list"; }
 	for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/mimeapps.list"; }
-  dirs << QString(getenv("XDG_DATA_HOME"))+"/applications/lumina-mimeapps.list" \
-	 << QString(getenv("XDG_DATA_HOME"))+"/applications/mimeapps.list";  
+  //dirs << QString(getenv("XDG_DATA_HOME"))+"/applications/lumina-mimeapps.list"
+  dirs << QString(getenv("XDG_DATA_HOME"))+"/applications/mimeapps.list";
   tmp = QString(getenv("XDG_DATA_DIRS")).split(":");
-	for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/applications/lumina-mimeapps.list"; }
+    //for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/applications/lumina-mimeapps.list"; }
 	for(int i=0; i<tmp.length(); i++){ dirs << tmp[i]+"/applications/mimeapps.list"; }
 	
   //Now go through all the files in order of priority until a default is found
@@ -1317,7 +1318,7 @@ QString LXDG::findDefaultAppForMime(QString mime){
     }
     // Now check for any white-listed files in this work dir 
     // find the full path to the file (should run even if nothing in this file)
-    //qDebug() << "WhiteList:" << white;
+    qDebug() << "WhiteList:" << white;
     for(int w=0; w<white.length(); w++){
       if(white[w].isEmpty()){ continue; }
       //First check for absolute paths to *.desktop file
@@ -1330,7 +1331,7 @@ QString LXDG::findDefaultAppForMime(QString mime){
       //Now go through the XDG DATA dirs and see if the file is in there
       else{
         white[w] = LUtils::AppToAbsolute(white[w]);
-        if(QFile::exists(white[w])){ cdefault = white[w]; }
+        if(QFile::exists(white[w])){ cdefault = white[w]; break; }
       }
     }
     /* WRITTEN BUT UNUSED CODE FOR MIMETYPE ASSOCIATIONS
@@ -1406,10 +1407,10 @@ QStringList LXDG::findAvailableAppsForMime(QString mime){
 
 void LXDG::setDefaultAppForMime(QString mime, QString app){
   //qDebug() << "Set Default App For Mime:" << mime << app;
-  QString filepath = QString(getenv("XDG_CONFIG_HOME"))+"/lumina-mimeapps.list";
+  QString filepath = QString(getenv("XDG_CONFIG_HOME"))+"/mimeapps.list";
   QStringList cinfo = LUtils::readFile(filepath);
   //If this is a new file, make sure to add the header appropriately
-  if(cinfo.isEmpty()){ cinfo << "#Automatically generated with lumina-config" << "# DO NOT CHANGE MANUALLY" << "[Default Applications]"; }
+  if(cinfo.isEmpty()){ cinfo << "#Automatically generated" << "# DO NOT CHANGE MANUALLY" << "[Default Applications]"; }
   //Check for any current entry for this mime type
   QStringList tmp = cinfo.filter(mime+"=");
   int index = -1;
@@ -1447,7 +1448,7 @@ QStringList LXDG::findAVFileExtensions(){
 QStringList LXDG::loadMimeFileGlobs2(){
   //output format: <weight>:<mime type>:<file extension (*.something)>
   if(mimeglobs.isEmpty() || (mimechecktime < (QDateTime::currentMSecsSinceEpoch()-30000)) ){
-    //qDebug() << "Loading globs2 mime DB files";
+    qDebug() << "Loading globs2 mime DB files";
     mimeglobs.clear();
     mimechecktime = QDateTime::currentMSecsSinceEpoch(); //save the current time this was last checked
     QStringList dirs = LXDG::systemMimeDirs();

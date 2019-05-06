@@ -305,10 +305,10 @@ QStringList XDGMime::findAvailableAppsForMime(QString mime){
 }
 
 void XDGMime::setDefaultAppForMime(QString mime, QString app){
-  QString filepath = QString(getenv("XDG_CONFIG_HOME"))+"/lumina-mimeapps.list";
+  QString filepath = QString(getenv("XDG_CONFIG_HOME"))+"/mimeapps.list";
   QStringList cinfo = LUtils::readFile(filepath);
   //If this is a new file, make sure to add the header appropriately
-  if(cinfo.isEmpty()){ cinfo << "#Automatically generated with lumina-config" << "# DO NOT CHANGE MANUALLY" << "[Default Applications]"; }
+  if(cinfo.isEmpty()){ cinfo << "#Automatically generated" << "# DO NOT CHANGE MANUALLY" << "[Default Applications]"; }
   //Check for any current entry for this mime type
   QStringList tmp = cinfo.filter(mime+"=");
   int index = -1;

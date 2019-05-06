@@ -47,7 +47,7 @@ void page_defaultapps::LoadSettings(int){
   //First load the lumina-open specific defaults
   //  - Default File Manager
   defaultFileManager = LXDG::findDefaultAppForMime("inode/directory"); 
-  if(defaultFileManager.isEmpty()){ defaultFileManager = "lumina-fm"; }
+  //if(defaultFileManager.isEmpty()){ defaultFileManager = "lumina-fm"; }
   updateDefaultButton(ui->tool_default_filemanager, defaultFileManager);
 
   // - Default Terminal
@@ -65,7 +65,8 @@ void page_defaultapps::LoadSettings(int){
   //Now load the XDG mime defaults
   ui->tree_defaults->clear();
   QStringList defMimeList = LXDG::listFileMimeDefaults();
-  //qDebug() << "Mime List:\n" << defMimeList.join("\n");
+  //qDebug() << defMimeList;
+  qDebug() << "Mime List:\n" << defMimeList.join("\n");
   defMimeList.sort(); //sort by group/mime
   //Now fill the tree by group/mime
   QTreeWidgetItem *group = 0;
@@ -173,6 +174,11 @@ void page_defaultapps::changeDefaultBrowser(){
   defaultBrowser = app;
   LXDG::setDefaultAppForMime("x-scheme-handler/http", app.section("/",-1));
   LXDG::setDefaultAppForMime("x-scheme-handler/https", app.section("/",-1));
+  LXDG::setDefaultAppForMime("x-scheme-handler/ftp", app.section("/",-1));
+  LXDG::setDefaultAppForMime("text/html", app.section("/",-1));
+  LXDG::setDefaultAppForMime("text/htm", app.section("/",-1));
+  LXDG::setDefaultAppForMime("text/xml", app.section("/",-1));
+  LXDG::setDefaultAppForMime("application/xhtml_xml", app.section("/",-1));
   updateDefaultButton(ui->tool_default_webbrowser, app);
 }
 
@@ -191,7 +197,7 @@ void page_defaultapps::changeDefaultFileManager(){
   //Prompt for the new app
   QString app = getSysApp(true, defaultFileManager);
   if(app.isEmpty()){ return; }//nothing selected
-  if(app=="reset"){ app = "lumina-fm"; }
+  if(app=="reset"){ app.clear(); }
   //save the new app setting and adjust the button appearance
   defaultFileManager = app;
   LXDG::setDefaultAppForMime("inode/directory", app.section("/",-1));

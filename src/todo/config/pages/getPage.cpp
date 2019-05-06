@@ -15,9 +15,9 @@
 #include "page_interface_panels.h"
 #include "page_session_options.h"
 #include "page_keyboard.h"
-
+#include "page_defaultapps.h"
 //#include "page_theme.h"
-//#include "page_defaultapps.h"
+
 //#include "page_fluxbox_keys.h"
 //#include "page_fluxbox_settings.h"
 //#include "page_interface_menu.h"
@@ -93,10 +93,18 @@ QList<PAGEINFO> Pages::KnownPages(){
                           "user",
                           QStringList(),
                           QStringList());
+  list << Pages::PageInfo("defaultapps",
+                          QObject::tr("Default Applications"),
+                          QObject::tr("Mimetype Settings"),
+                          "preferences-desktop-default-applications",
+                          QObject::tr("Change default applications"),
+                          "session",
+                          QStringList(),
+                          QStringList() << "apps" << "default" << "services" << "xdg" << "session");
 
   //list << Pages::PageInfo(LUtils::AppToAbsolute("lthemeengine.desktop"), QObject::tr("Theme"), QObject::tr("Theme Settings"), "preferences-desktop-theme",QObject::tr("Change interface fonts and colors"), "appearance", QStringList(), QStringList() << "background" << "interface" << "color" << "theme" << "plugins");
   //list << Pages::PageInfo("compton", QObject::tr("Window Effects"), QObject::tr("Window Effects"), "window-duplicate",QObject::tr("Adjust transparency levels and window effects"), "appearance", QStringList(), QStringList() << "background" << "interface" << "color" << "transparency" << "windows" << "compositing");
-  //list << Pages::PageInfo("defaultapps", QObject::tr("Applications"), QObject::tr("Mimetype Settings"), "preferences-desktop-default-applications",QObject::tr("Change default applications"), "session", QStringList(), QStringList() << "apps" << "default" << "services" << "xdg" << "session");
+
   //list << Pages::PageInfo("fluxbox-keys", QObject::tr("Keyboard Shortcuts"), QObject::tr("Keyboard Shortcuts"), "preferences-desktop-keyboard",QObject::tr("Change keyboard shortcuts"), "session", QStringList(), QStringList() << "apps" << "fluxbox" << "keys" << "keyboard" << "session" << "launch");
   //list << Pages::PageInfo("fluxbox-settings", QObject::tr("Window Manager"), QObject::tr("Window Settings"), "preferences-system-windows-actions",QObject::tr("Change window settings and appearances"), "appearance", QStringList(), QStringList() << "window" << "frame" << "border" << "workspace" << "theme" << "fluxbox" << "session");
   //list << Pages::PageInfo("interface-menu", QObject::tr("Menu"), QObject::tr("Menu Plugins"), "format-list-unordered",QObject::tr("Change what options are shown on the desktop context menu"), "interface", QStringList(), QStringList() << "desktop" << "menu" << "plugins" << "shortcuts");
@@ -117,8 +125,9 @@ PageWidget* Pages::GetNewPage(QString id, QWidget *parent){
   else if(id=="interface-panel"){ page = new page_interface_panels(parent); }
   else if(id=="session-options"){ page = new page_session_options(parent); }
   else if(id=="keyboard"){ page = new page_keyboard(parent); }
+  else if(id=="defaultapps"){ page = new page_defaultapps(parent); }
   //else if(id=="theme"){ page = new page_theme(parent); }
-  //else if(id=="defaultapps"){ page = new page_defaultapps(parent); }
+
   //else if(id=="fluxbox-keys"){ page = new page_fluxbox_keys(parent); }
   //else if(id=="fluxbox-settings"){ page = new page_fluxbox_settings(parent); }
   //else if(id=="interface-menu"){ page = new page_interface_menu(parent); }
