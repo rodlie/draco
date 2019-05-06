@@ -6,6 +6,7 @@
 //===========================================
 #include "page_wallpaper.h"
 #include "ui_page_wallpaper.h"
+#include "draco.h"
 #include <QSettings>
 #include <QScreen>
 #include <QDesktopWidget>
@@ -37,7 +38,7 @@ page_wallpaper::~page_wallpaper(){
 //    PUBLIC SLOTS
 //================
 void page_wallpaper::SaveSettings(){
-  QSettings settings(QString("%1-desktop").arg(DESKTOP_APP),"desktopsettings");
+  QSettings settings(DESKTOP_APP, DE_DESKTOP_SETTINGS);
   QString screenID = QApplication::screens().at(cScreen)->name();
   QString DPrefix = "desktop-"+screenID+"/";
   QStringList bgs; //get the list of backgrounds to use
@@ -62,7 +63,7 @@ void page_wallpaper::LoadSettings(int screennum){
   emit ChangePageTitle( tr("Wallpaper Settings") );
   cScreen = screennum; //save for later
   loading = true;
-  QSettings settings(QString("%1-desktop").arg(DESKTOP_APP),"desktopsettings");
+  QSettings settings(DESKTOP_APP, DE_DESKTOP_SETTINGS);
   QString screenID = QApplication::screens().at(cScreen)->name();
   QString DPrefix = "desktop-"+screenID+"/";
 

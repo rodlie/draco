@@ -10,6 +10,7 @@
 
 #include "GetPluginDialog.h"
 #include "AppDialog.h"
+#include "draco.h"
 
 #include <QScreen>
 #include <QTimer>
@@ -21,7 +22,7 @@ page_interface_panels::page_interface_panels(QWidget *parent) : PageWidget(paren
   ui->setupUi(this);
   loading = false;
   PINFO = new LPlugins();
-  settings = new QSettings(QString("%1-desktop").arg(DESKTOP_APP),"desktopsettings");
+  settings = new QSettings(DESKTOP_APP, DE_DESKTOP_SETTINGS);
   connect(ui->tool_panels_add, SIGNAL(clicked()), this, SLOT(newPanel()) );
   updateIcons();
 

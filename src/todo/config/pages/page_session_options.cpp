@@ -6,6 +6,7 @@
 //===========================================
 #include "page_session_options.h"
 #include "ui_page_session_options.h"
+#include "draco.h"
 
 #include <QSettings>
 #include <QMessageBox>
@@ -57,7 +58,7 @@ page_session_options::~page_session_options(){
 //    PUBLIC SLOTS
 //================
 void page_session_options::SaveSettings(){
-  QSettings sessionsettings(QString("%1-desktop").arg(DESKTOP_APP),"sessionsettings");
+  QSettings sessionsettings(DESKTOP_APP, DE_SESSION_SETTINGS);
   sessionsettings.setValue("AutomaticDesktopAppLinks",  ui->check_autoapplinks->isChecked());
 
   //sessionsettings.setValue("EnableNumlock", ui->check_session_numlock->isChecked());
@@ -107,7 +108,7 @@ void page_session_options::LoadSettings(int){
   emit HasPendingChanges(false);
   emit ChangePageTitle( tr("Desktop Settings") );
   loading = true;
-  QSettings sessionsettings(QString("%1-desktop").arg(DESKTOP_APP),"sessionsettings");
+  QSettings sessionsettings(DESKTOP_APP, DE_SESSION_SETTINGS);
   //ui->check_session_numlock->setChecked( sessionsettings.value("EnableNumlock", true).toBool() );
   //ui->check_session_playloginaudio->setChecked( sessionsettings.value("PlayStartupAudio",true).toBool() );
   //ui->check_session_playlogoutaudio->setChecked( sessionsettings.value("PlayLogoutAudio",true).toBool() );

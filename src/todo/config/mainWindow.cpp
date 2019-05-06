@@ -43,8 +43,8 @@ mainWindow::mainWindow() : QMainWindow(), ui(new Ui::mainWindow()){
   setupIcons();
   loadMonitors();
   //changePage(""); //load the default main page
-  QSettings S(QString("%1-desktop").arg(DESKTOP_APP),
-              QString("%1-config").arg(DESKTOP_APP));
+  QSettings S(DESKTOP_APP,
+              QString("%1-settings").arg(DESKTOP_APP));
   QRect geom = S.value("window_geometry", QRect()).toRect();
   if(!geom.isNull()){ this->setGeometry(geom); }
 }
@@ -132,7 +132,7 @@ void mainWindow::changePage(QString id){
 //  PRIVATE SLOTS
 //================
 void mainWindow::saveWinGeometry(){
-  QSettings S(QString("%1-desktop").arg(DESKTOP_APP), QString("%1-config").arg(DESKTOP_APP));
+  QSettings S(DESKTOP_APP, QString("%1-settings").arg(DESKTOP_APP));
   S.setValue("window_geometry", this->geometry());
 }
 

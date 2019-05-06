@@ -52,7 +52,7 @@ LDesktop::LDesktop(int deskNum, bool setdefault) : QObject()
 
     // Setup the internal variables
     settings = new QSettings(QSettings::UserScope,
-                             QString("%1-desktop").arg(DESKTOP_APP),
+                             DESKTOP_APP,
                              DE_DESKTOP_SETTINGS,
                              this);
     qDebug() << " - Desktop Settings File:" << settings->fileName();

@@ -82,7 +82,7 @@ void LSession::procFinished(){
 }
 
 void LSession::startProcess(QString ID, QString command, QStringList watchfiles){
-  QString dir = QString(getenv("XDG_CONFIG_HOME"))+"/draco-desktop/logs";
+  QString dir = QString(getenv("XDG_CONFIG_HOME"))+QString("/%1/logs").arg(DESKTOP_APP);
   QString display = QString(getenv("DISPLAY")).section(":",1,1);
   if(!QFile::exists(dir)){ QDir tmp(dir); tmp.mkpath(dir); }
   QString logfile = dir+"/"+ID+"_"+display+".log";

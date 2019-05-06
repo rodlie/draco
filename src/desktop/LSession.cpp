@@ -165,9 +165,9 @@ void LSession::setupSession()
     qsrand( QTime::currentTime().msec() );
 
     // Initialize settings files
-    sessionsettings = new QSettings(QString("%1-desktop").arg(DESKTOP_APP),
+    sessionsettings = new QSettings(DESKTOP_APP,
                                     QString(DE_SESSION_SETTINGS));
-    DPlugSettings = new QSettings(QString("%1-desktop").arg(DESKTOP_APP),
+    DPlugSettings = new QSettings(DESKTOP_APP,
                                   QString("%1/%2")
                                   .arg(DE_PLUGIN_SETTINGS)
                                   .arg(DE_DESKTOP_SETTINGS));
@@ -412,11 +412,11 @@ void LSession::watcherChange(QString changed)
 
     if (changed.contains(Draco::windowManagerConf())) { refreshWindowManager(); }
     if (changed.contains(Draco::dracoStyleConf())) { emit IconThemeChanged(); }
-    if (changed.endsWith("sessionsettings.conf") ) {
+    if (changed.endsWith(QString("%1.conf").arg(DE_SESSION_SETTINGS)) ) {
         sessionsettings->sync();
         emit SessionConfigChanged();
     }
-    else if (changed.endsWith("desktopsettings.conf") ) { emit DesktopConfigChanged(); }
+    else if (changed.endsWith(QString("%1.conf").arg(DE_DESKTOP_SETTINGS))) { emit DesktopConfigChanged(); }
     else if (changed == LUtils::standardDirectory(LUtils::Desktop) )
     {
         desktopFiles = QDir(changed).entryInfoList(QDir::NoDotAndDotDot |
@@ -539,9 +539,7 @@ void LSession::updateDesktops()
 
     bool firstrun = (DESKTOPS.length()==0);
     //bool numchange = DESKTOPS.length()!=sC;
-    QSettings dset(QString("%1-desktop")
-                 .arg(DESKTOP_APP),
-                 DE_DESKTOP_SETTINGS);
+    QSettings dset(DESKTOP_APP, DE_DESKTOP_SETTINGS);
 
     // add fallback desktop settings
     setupFallbackDesktop(&dset);

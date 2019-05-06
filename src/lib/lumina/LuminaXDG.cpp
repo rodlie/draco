@@ -892,7 +892,7 @@ void LXDG::setEnvironmentVars(){
   //Don't set "XDG_RUNTIME_DIR" yet - need to look into the specs
 
   QString path = getenv("PATH");
-  if (!path.contains(QString("%1-desktop").arg(DESKTOP_APP))) {
+  if (!path.contains(DESKTOP_APP)) {
       QString shadowPath =  QString("%1/bin").arg(Draco::configDir());
       qDebug() << "MISSING SHADOW BIN DIR IN PATH!" << shadowPath;
       path.prepend(QString("%1:").arg(shadowPath));

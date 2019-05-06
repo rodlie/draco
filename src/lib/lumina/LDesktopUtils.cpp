@@ -31,7 +31,7 @@ QStringList LDesktopUtils::listFavorites(){
   QStringList fav;
   //QDateTime cur = QDateTime::currentDateTime();
   //if(lastRead.isNull() || fav.isEmpty() || lastRead<QFileInfo( QString(getenv("XDG_CONFIG_HOME"))+"/lumina-desktop/favorites.list").lastModified()){
-    fav = LUtils::readFile(QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/favorites.list").arg(DESKTOP_APP));
+    fav = LUtils::readFile(QString(getenv("XDG_CONFIG_HOME"))+QString("/%1/favorites.list").arg(DESKTOP_APP));
     fav.removeAll(""); //remove any empty lines
     fav.removeDuplicates();
     //lastRead = cur;
@@ -42,7 +42,7 @@ QStringList LDesktopUtils::listFavorites(){
 bool LDesktopUtils::saveFavorites(QStringList list){
   list.removeDuplicates();
   //qDebug() << "Save Favorites:" << list;
-  bool ok = LUtils::writeFile(QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/favorites.list").arg(DESKTOP_APP), list, true);
+  bool ok = LUtils::writeFile(QString(getenv("XDG_CONFIG_HOME"))+QString("/%1/favorites.list").arg(DESKTOP_APP), list, true);
   //if(ok){ fav = list; } //also save internally in case of rapid write/read of the file
   return ok;
 }

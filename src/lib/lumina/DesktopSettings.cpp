@@ -212,7 +212,7 @@ void DesktopSettings::locateFiles(){
   tmp = filesForRunMode(DesktopSettings::SystemFull);
   for(int i=0; i<systemdirs.length(); i++){
     if(systemdirs[i].endsWith("/xdg")){ systemdirs[i] = systemdirs[i].section("/",0,-2); }
-    if( !QFile::exists(systemdirs[i]+QString("/%1-desktop").arg(DESKTOP_APP)) ){ continue; }
+    if( !QFile::exists(systemdirs[i]+QString("/%1").arg(DESKTOP_APP)) ){ continue; }
     for(int j=0; j<tmp.length(); j++){
       QString path = systemdirs[i]+rel_path(tmp[j]);
       if(QFile::exists(path)){

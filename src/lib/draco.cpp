@@ -106,7 +106,7 @@ const QString Draco::terminalApp()
 
 const QString Draco::configDir()
 {
-    QString path = QString("%1/.config/%2-desktop").arg(QDir::homePath()).arg(DESKTOP_APP);
+    QString path = QString("%1/.config/%2").arg(QDir::homePath()).arg(DESKTOP_APP);
     QDir dir(path);
     if (!dir.exists(path)) { dir.mkpath(path); }
     return path;
