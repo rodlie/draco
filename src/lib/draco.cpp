@@ -64,7 +64,7 @@ const QString Draco::powerSessionFullPath()
 
 const QString Draco::xconfig()
 {
-    return QString("%1-monitor-settings").arg(DESKTOP_APP);
+    return QString("%1-settings-x11").arg(DESKTOP_APP);
 }
 
 const QString Draco::storageApp()

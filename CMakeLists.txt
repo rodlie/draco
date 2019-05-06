@@ -200,8 +200,6 @@ endif()
 # org.dracolinux.Desktop
 add_executable(
     ${DESKTOP_SERVICE_NAME}
-
-    # desktop and panel
     src/desktop/main.cpp
     src/desktop/LXcbEventFilter.cpp
     src/desktop/LWinInfo.cpp
@@ -211,15 +209,11 @@ add_executable(
     src/desktop/LDesktopBackground.cpp
     src/desktop/LDesktopPluginSpace.cpp
     src/desktop/LPanel.cpp
-
-    # desktop plugins
     src/desktop/desktop-plugins/LDPlugin.cpp
     src/desktop/desktop-plugins/NewDP.h
     src/desktop/desktop-plugins/applauncher/AppLauncherPlugin.cpp
     src/desktop/desktop-plugins/applauncher/AppLauncherPlugin.h
     src/desktop/desktop-plugins/applauncher/OutlineToolButton.h
-
-    # panel plugins
     src/desktop/panel-plugins/LPPlugin.h
     src/desktop/panel-plugins/NewPP.h
     src/desktop/panel-plugins/LTBWidget.h
@@ -234,16 +228,13 @@ add_executable(
     src/desktop/panel-plugins/applauncher/AppLaunchButton.cpp
     src/desktop/panel-plugins/spacer/LSpacer.h
     src/desktop/panel-plugins/line/LLine.h
-
     src/desktop/SystemWindow.cpp
     src/lib/qtcopydialog/qtcopydialog.cpp
     src/lib/qtcopydialog/qtfilecopier.cpp
-
     src/desktop/SystemWindow.ui
     src/lib/qtcopydialog/qtcopydialog.ui
     src/lib/qtcopydialog/qtoverwritedialog.ui
     src/lib/qtcopydialog/qtotherdialog.ui
-
     src/desktop/desktop.qrc
 )
 target_include_directories(
@@ -368,22 +359,22 @@ target_link_libraries(
     ${LIB_NAME}
 )
 
-# draco-monitor-settings
+# draco-settings-x11
 add_executable(
-    ${PROJECT_NAME}-monitor-settings
+    ${PROJECT_NAME}-settings-x11
     src/settings/xconf/main.cpp
     src/settings/xconf/MainUI.cpp
     src/settings/xconf/ScreenSettings.cpp
     src/settings/xconf/MainUI.ui
 )
 target_include_directories(
-    ${PROJECT_NAME}-monitor-settings
+    ${PROJECT_NAME}-settings-x11
     PRIVATE
     src/lib
     src/lib/lumina
 )
 target_link_libraries(
-    ${PROJECT_NAME}-monitor-settings
+    ${PROJECT_NAME}-settings-x11
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
@@ -409,32 +400,12 @@ target_link_libraries(
     ${LIB_NAME}
 )
 
-# draco-keyboard-settings
-add_executable(
-    ${PROJECT_NAME}-keyboard-settings
-    src/settings/keyboardconf/main.cpp
-)
-target_include_directories(
-    ${PROJECT_NAME}-keyboard-settings
-    PRIVATE
-    src/lib
-)
-target_link_libraries(
-    ${PROJECT_NAME}-keyboard-settings
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    ${LIB_NAME}
-)
-
 # draco-settings
 add_executable(
     ${PROJECT_NAME}-settings
-    #src/todo/config/ColorDialog.cpp
     src/todo/config/GetPluginDialog.cpp
     src/todo/config/LPlugins.cpp
     src/todo/config/PanelWidget.cpp
-    #src/todo/config/ThemeDialog.cpp
     src/todo/config/main.cpp
     src/todo/config/mainWindow.cpp
     src/todo/config/pages/PageWidget.h
@@ -444,7 +415,6 @@ add_executable(
     src/todo/config/pages/page_autostart.cpp
     src/todo/config/pages/page_defaultapps.cpp
     #src/todo/config/pages/page_interface_desktop.cpp
-    #src/todo/config/pages/page_interface_menu.cpp
     src/todo/config/pages/page_interface_panels.cpp
     src/todo/config/pages/page_main.cpp
     src/todo/config/pages/page_main.ui
@@ -457,15 +427,12 @@ add_executable(
     src/todo/config/pages/page_autostart.ui
     src/todo/config/pages/page_defaultapps.ui
     #src/todo/config/pages/page_interface_desktop.ui
-    #src/todo/config/pages/page_interface_menu.ui
     src/todo/config/pages/page_interface_panels.ui
     #src/todo/config/pages/pages/page_session_locale.ui
     src/todo/config/pages/page_session_options.ui
     src/todo/config/pages/page_wallpaper.ui
-    #src/todo/config/ColorDialog.ui
     src/todo/config/GetPluginDialog.ui
     src/todo/config/PanelWidget.ui
-    #src/todo/config/ThemeDialog.ui
     src/todo/config/mainWindow.ui
 )
 target_include_directories(
@@ -522,8 +489,8 @@ configure_file(
     @ONLY
 )
 configure_file(
-    share/applications/monitor-settings.desktop.in
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-monitor-settings.desktop
+    share/applications/settings-x11.desktop.in
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-x11.desktop
     @ONLY
 )
 configure_file(
@@ -531,11 +498,6 @@ configure_file(
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-power-settings.desktop
     @ONLY
 )
-#configure_file(
-#    share/applications/keyboard-settings.desktop.in
-#    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-keyboard-settings.desktop
-#    @ONLY
-#)
 install(
     TARGETS
     ${LIB_NAME}
@@ -580,7 +542,7 @@ install(
 )
 install(
     TARGETS
-    ${PROJECT_NAME}-monitor-settings
+    ${PROJECT_NAME}-settings-x11
     DESTINATION
     ${CMAKE_INSTALL_BINDIR}
 )
@@ -590,12 +552,6 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_BINDIR}
 )
-#install(
-#    TARGETS
-#    ${PROJECT_NAME}-keyboard-settings
-#    DESTINATION
-#    ${CMAKE_INSTALL_BINDIR}
-#)
 install(
     FILES
     share/xsessions/${PROJECT_NAME}.desktop
@@ -611,7 +567,7 @@ install(
 )
 install(
     FILES
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-monitor-settings.desktop
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-x11.desktop
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
@@ -621,12 +577,6 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
-#install(
-#    FILES
-#    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-keyboard-settings.desktop
-#    DESTINATION
-#    ${CMAKE_INSTALL_DATAROOTDIR}/applications
-#)
 install(
     FILES
     ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.conf

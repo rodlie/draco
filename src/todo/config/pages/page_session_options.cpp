@@ -31,21 +31,21 @@ page_session_options::page_session_options(QWidget *parent) : PageWidget(parent)
   ui->combo_session_datetimeorder->addItem( tr("Time first then Date"), "timedate");
   ui->combo_session_datetimeorder->addItem( tr("Date first then Time"), "datetime");
 
-  connect(ui->push_session_setUserIcon, SIGNAL(clicked()), this, SLOT(sessionChangeUserIcon()) );
-  connect(ui->push_session_resetSysDefaults, SIGNAL(clicked()), this, SLOT(sessionResetSys()) );
-  connect(ui->push_session_resetLuminaDefaults, SIGNAL(clicked()), this, SLOT(sessionResetLumina()) );
+  //connect(ui->push_session_setUserIcon, SIGNAL(clicked()), this, SLOT(sessionChangeUserIcon()) );
+  //connect(ui->push_session_resetSysDefaults, SIGNAL(clicked()), this, SLOT(sessionResetSys()) );
+  //connect(ui->push_session_resetLuminaDefaults, SIGNAL(clicked()), this, SLOT(sessionResetLumina()) );
   connect(ui->tool_help_time, SIGNAL(clicked()), this, SLOT(sessionShowTimeCodes()) );
   connect(ui->tool_help_date, SIGNAL(clicked()), this, SLOT(sessionShowDateCodes()) );
   connect(ui->line_session_time, SIGNAL(textChanged(QString)), this, SLOT(sessionLoadTimeSample()) );
   connect(ui->line_session_date, SIGNAL(textChanged(QString)), this, SLOT(sessionLoadDateSample()) );
   connect(ui->combo_session_datetimeorder, SIGNAL(currentIndexChanged(int)), this, SLOT(settingChanged()) );
-  connect(ui->check_session_numlock, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
-  connect(ui->check_session_playloginaudio, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
-  connect(ui->check_session_playlogoutaudio, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
+  //connect(ui->check_session_numlock, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
+  //connect(ui->check_session_playloginaudio, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
+  //connect(ui->check_session_playlogoutaudio, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
   connect(ui->check_autoapplinks, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
-  connect(ui->check_watch_app_procs, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
-  connect(ui->check_quotes, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
-  connect(ui->mywindowmanager, SIGNAL(currentIndexChanged(int)), this, SLOT(settingChanged()));
+  //connect(ui->check_watch_app_procs, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
+  //connect(ui->check_quotes, SIGNAL(toggled(bool)), this, SLOT(settingChanged()) );
+  //connect(ui->mywindowmanager, SIGNAL(currentIndexChanged(int)), this, SLOT(settingChanged()));
   updateIcons();
 }
 
@@ -59,15 +59,16 @@ page_session_options::~page_session_options(){
 void page_session_options::SaveSettings(){
   QSettings sessionsettings(QString("%1-desktop").arg(DESKTOP_APP),"sessionsettings");
   sessionsettings.setValue("AutomaticDesktopAppLinks",  ui->check_autoapplinks->isChecked());
-  sessionsettings.setValue("EnableNumlock", ui->check_session_numlock->isChecked());
-  sessionsettings.setValue("PlayStartupAudio", ui->check_session_playloginaudio->isChecked());
-  sessionsettings.setValue("PlayLogoutAudio", ui->check_session_playlogoutaudio->isChecked());
+
+  //sessionsettings.setValue("EnableNumlock", ui->check_session_numlock->isChecked());
+  //sessionsettings.setValue("PlayStartupAudio", ui->check_session_playloginaudio->isChecked());
+  //sessionsettings.setValue("PlayLogoutAudio", ui->check_session_playlogoutaudio->isChecked());
   sessionsettings.setValue("TimeFormat", ui->line_session_time->text());
   sessionsettings.setValue("DateFormat", ui->line_session_date->text());
   sessionsettings.setValue("DateTimeOrder", ui->combo_session_datetimeorder->currentData().toString());
-  sessionsettings.setValue("DisableQuotes", ui->check_quotes->isChecked());
+  //sessionsettings.setValue("DisableQuotes", ui->check_quotes->isChecked());
 
-  QString my_win = ui->mywindowmanager->currentData().toString();
+  /*QString my_win = ui->mywindowmanager->currentData().toString();
   // Warn user if they select a non-default window manager
   if (! my_win.isEmpty() )
       QMessageBox::information(this, tr("Window manager"), "Warning: Please note window managers other than Lumina are not supported." );
@@ -76,19 +77,19 @@ void page_session_options::SaveSettings(){
      sessionsettings.remove("WindowManager");
   else
      sessionsettings.setValue("WindowManager", my_win);
+*/
 
 
-
-  QString lopenWatchFile = QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/nowatch").arg(DESKTOP_APP);
+  /*QString lopenWatchFile = QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/nowatch").arg(DESKTOP_APP);
   if(QFile::exists(lopenWatchFile) && ui->check_watch_app_procs->isChecked()){
     QFile::remove(lopenWatchFile);
   }else if(!QFile::exists(lopenWatchFile) && !ui->check_watch_app_procs->isChecked()){
     QFile file(lopenWatchFile);
     if(file.open(QIODevice::WriteOnly) ){ file.close(); } //just need to touch it to create the file
-  }
+  }*/
 
   //User Icon
-  QString path = QDir::homePath()+"/.loginIcon.png"; //where the icon should be placed
+  /*QString path = QDir::homePath()+"/.loginIcon.png"; //where the icon should be placed
   QString icopath = ui->push_session_setUserIcon->whatsThis();
   qDebug() << "User Icon:" << icopath;
   if(icopath != path && QFile::exists(icopath)){
@@ -97,6 +98,7 @@ void page_session_options::SaveSettings(){
     bool ok = ico.save(path);
     qDebug() << "  - Saved User Icon:" << ok;
   }
+  */
 
   emit HasPendingChanges(false);
 }
@@ -106,22 +108,22 @@ void page_session_options::LoadSettings(int){
   emit ChangePageTitle( tr("Desktop Settings") );
   loading = true;
   QSettings sessionsettings(QString("%1-desktop").arg(DESKTOP_APP),"sessionsettings");
-  ui->check_session_numlock->setChecked( sessionsettings.value("EnableNumlock", true).toBool() );
-  ui->check_session_playloginaudio->setChecked( sessionsettings.value("PlayStartupAudio",true).toBool() );
-  ui->check_session_playlogoutaudio->setChecked( sessionsettings.value("PlayLogoutAudio",true).toBool() );
+  //ui->check_session_numlock->setChecked( sessionsettings.value("EnableNumlock", true).toBool() );
+  //ui->check_session_playloginaudio->setChecked( sessionsettings.value("PlayStartupAudio",true).toBool() );
+  //ui->check_session_playlogoutaudio->setChecked( sessionsettings.value("PlayLogoutAudio",true).toBool() );
   ui->check_autoapplinks->setChecked( sessionsettings.value("AutomaticDesktopAppLinks",true).toBool() );
-  ui->check_quotes->setChecked( sessionsettings.value("DisableQuotes",true).toBool() );
-  ui->push_session_setUserIcon->setIcon( LXDG::findIcon(QDir::homePath()+"/.loginIcon.png", "user-identity") );
+  //ui->check_quotes->setChecked( sessionsettings.value("DisableQuotes",true).toBool() );
+  //ui->push_session_setUserIcon->setIcon( LXDG::findIcon(QDir::homePath()+"/.loginIcon.png", "user-identity") );*/
   ui->line_session_time->setText( sessionsettings.value("TimeFormat","").toString() );
   ui->line_session_date->setText( sessionsettings.value("DateFormat","").toString() );
   int index = ui->combo_session_datetimeorder->findData( sessionsettings.value("DateTimeOrder","timeonly").toString() );
   ui->combo_session_datetimeorder->setCurrentIndex(index);
 
-  FindWindowManagerOptions();  // check system for available options
-  QString old_wm = sessionsettings.value("WindowManager").toString();
+//  FindWindowManagerOptions();  // check system for available options
+  //QString old_wm = sessionsettings.value("WindowManager").toString();
 
   // Check to see if old window manager is in our list and, if not, add it
-  if ( old_wm.length() > 0 )
+  /*if ( old_wm.length() > 0 )
   {
       index = ui->mywindowmanager->findData( old_wm );
       if (index == -1)  // did not find existing option in list, so add it
@@ -137,7 +139,7 @@ void page_session_options::LoadSettings(int){
   ui->mywindowmanager->setCurrentIndex(index);
 
   QString lopenWatchFile = QString(getenv("XDG_CONFIG_HOME"))+QString("/%1-desktop/nowatch").arg(DESKTOP_APP);
-  ui->check_watch_app_procs->setChecked( !QFile::exists(lopenWatchFile) );
+  ui->check_watch_app_procs->setChecked( !QFile::exists(lopenWatchFile) );*/
 
   sessionLoadTimeSample();
   sessionLoadDateSample();
@@ -146,8 +148,8 @@ void page_session_options::LoadSettings(int){
 }
 
 void page_session_options::updateIcons(){
-  ui->push_session_resetSysDefaults->setIcon( LXDG::findIcon("start-here-lumina","view-refresh") );
-  ui->push_session_resetLuminaDefaults->setIcon( LXDG::findIcon("Lumina-DE","") );
+  //ui->push_session_resetSysDefaults->setIcon( LXDG::findIcon("start-here-lumina","view-refresh") );
+  //ui->push_session_resetLuminaDefaults->setIcon( LXDG::findIcon("Lumina-DE","") );
   ui->tool_help_time->setIcon( LXDG::findIcon("help-about","") );
   ui->tool_help_date->setIcon( LXDG::findIcon("help-about","") );
 }
@@ -156,8 +158,8 @@ void page_session_options::updateIcons(){
 //         PRIVATE
 //=================
 
-void page_session_options::FindWindowManagerOptions(){
-    // Try to find all available window managers and add them to drop-down box.
+//void page_session_options::FindWindowManagerOptions(){
+  /*  // Try to find all available window managers and add them to drop-down box.
     ui->mywindowmanager->clear();
     ui->mywindowmanager->addItem("Default (fluxbox)"); // make sure there is a default at position 0
     QStringList wms; wms << "kwin" << "openbox" << "i3";
@@ -168,7 +170,7 @@ void page_session_options::FindWindowManagerOptions(){
       if(LUtils::isValidBinary(path)){ //This will change the "path" variable to the full path if it exists
         ui->mywindowmanager->addItem(wms[i], path);
       }
-    }
+    }*/
     /*if (QFileInfo::exists("/usr/bin/fluxbox"))
         ui->mywindowmanager->addItem("/usr/bin/fluxbox");
     else if (QFileInfo::exists("/usr/local/bin/fluxbox"))
@@ -181,7 +183,7 @@ void page_session_options::FindWindowManagerOptions(){
         ui->mywindowmanager->addItem("/usr/bin/openbox");
     else if (QFileInfo::exists("/usr/local/bin/openbox"))
         ui->mywindowmanager->addItem("/usr/local/bin/openbox");*/
-}
+//}
 
 bool page_session_options::verifySettingsReset(){
   bool ok =(QMessageBox::Yes ==  QMessageBox::warning(this, tr("Verify Settings Reset"), tr("Are you sure you want to reset your desktop settings? This change cannot be reversed!"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel) );
@@ -191,7 +193,7 @@ bool page_session_options::verifySettingsReset(){
 //=================
 //    PRIVATE SLOTS
 //=================
-void page_session_options::sessionChangeUserIcon(){
+/*void page_session_options::sessionChangeUserIcon(){
   //Prompt for a new image file
   QStringList imgformats;
   QList<QByteArray> fmts = QImageReader::supportedImageFormats();
@@ -205,7 +207,7 @@ void page_session_options::sessionChangeUserIcon(){
     if(QFile::exists(QDir::homePath()+"/.loginIcon.png")){
       if(QMessageBox::Yes == QMessageBox::question(this,tr("Reset User Image"), tr("Would you like to reset the user image to the system default?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) ){
 	//QFile::remove(QDir::homePath()+"/.loginIcon.png");
-	ui->push_session_setUserIcon->setWhatsThis("reset");
+    //ui->push_session_setUserIcon->setWhatsThis("reset");
       }else{
 	return;
       }
@@ -231,7 +233,7 @@ void page_session_options::sessionResetLumina(){
   if( !verifySettingsReset() ){ return; } //cancelled
   //LDesktopUtils::LoadSystemDefaults(true); //skip OS customizations
   QTimer::singleShot(500,this, SLOT(LoadSettings()) );
-}
+}*/
 
 void page_session_options::sessionLoadTimeSample(){
   if(ui->line_session_time->text().simplified().isEmpty()){

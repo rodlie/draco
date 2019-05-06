@@ -63,11 +63,11 @@ void LPlugins::LoadPanelPlugins(){
   PANEL.clear();
   //User Button
   LPI info;
-    info.name = QObject::tr("User Menu");
+    /*info.name = QObject::tr("User Menu");
     info.description = QObject::tr("Start menu alternative focusing on the user's files, directories, and favorites.");
     info.ID = "userbutton";
     info.icon = "user-identity";
-  PANEL.insert(info.ID, info);
+  PANEL.insert(info.ID, info);*/
    //Application Menu
   info = LPI(); //clear it
     info.name = QObject::tr("Application Menu");
@@ -76,12 +76,12 @@ void LPlugins::LoadPanelPlugins(){
     info.icon = "system-run";
   PANEL.insert(info.ID, info);   
   //Desktop Bar
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("Desktop Bar");
     info.description = QObject::tr("This provides shortcuts to everything in the desktop folder - allowing easy access to all your favorite files/applications.");
     info.ID = "desktopbar";
     info.icon = "user-desktop";
-  PANEL.insert(info.ID, info);  
+  PANEL.insert(info.ID, info);*/
   //Spacer
   info = LPI(); //clear it
     info.name = QObject::tr("Spacer");
@@ -104,12 +104,12 @@ void LPlugins::LoadPanelPlugins(){
     info.icon = "preferences-system-windows";
   PANEL.insert(info.ID, info);  	
   //Battery
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("Battery Monitor");
     info.description = QObject::tr("Keep track of your battery status.");
     info.ID = "battery";
     info.icon = "battery-charging";
-  PANEL.insert(info.ID, info);  	
+  PANEL.insert(info.ID, info);  	*/
   //Clock
   info = LPI(); //clear it
     info.name = QObject::tr("Time/Date");
@@ -118,12 +118,12 @@ void LPlugins::LoadPanelPlugins(){
     info.icon = "preferences-system-time";
   PANEL.insert(info.ID, info);  
   //System Dachboard plugin
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("System Dashboard");
     info.description = QObject::tr("View or change system settings (audio volume, screen brightness, battery life, virtual desktops).");
     info.ID = "systemdashboard";
     info.icon = "applications-system";
-  PANEL.insert(info.ID, info);  
+  PANEL.insert(info.ID, info);*/
   //Task Manager
   info = LPI(); //clear it
     info.name = QObject::tr("Task Manager");
@@ -132,12 +132,12 @@ void LPlugins::LoadPanelPlugins(){
     info.icon = "preferences-system-windows";
   PANEL.insert(info.ID, info); 
   //Task Manager
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("Task Manager (No Groups)");
     info.description = QObject::tr("View and control any running application windows (every individual window has a button)");
     info.ID = "taskmanager-nogroups";
     info.icon = "preferences-system-windows";
-  PANEL.insert(info.ID, info); 
+  PANEL.insert(info.ID, info);*/
   //System Tray
   info = LPI(); //clear it
     info.name = QObject::tr("System Tray");
@@ -153,12 +153,12 @@ void LPlugins::LoadPanelPlugins(){
     info.icon = "user-desktop";
   PANEL.insert(info.ID, info);
   //Start Menu
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("Start Menu");
     info.description = QObject::tr("Unified system access and application launch menu.");
     info.ID = "systemstart";
     info.icon = "Lumina-DE";
-  PANEL.insert(info.ID, info);  
+  PANEL.insert(info.ID, info);*/
   //Application Launcher
   info = LPI(); //clear it
     info.name = QObject::tr("Application Launcher");
@@ -167,19 +167,19 @@ void LPlugins::LoadPanelPlugins(){
     info.icon = "quickopen";
   PANEL.insert(info.ID, info); 
   //Audio Player Plugin
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("Audio Player");
     info.description = QObject::tr("Play through lists of audio files");
     info.ID = "audioplayer";
     info.icon = "media-playback-start";
-  PANEL.insert(info.ID, info);
+  PANEL.insert(info.ID, info);*/
   //JSON Menu Scripts
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("Menu Script");
     info.description = QObject::tr("Run an external script to generate a user defined menu");
     info.ID = "jsonmenu";
     info.icon = "text-x-script";
-  PANEL.insert(info.ID, info);
+  PANEL.insert(info.ID, info);*/
 }
 
 // DESKTOP PLUGINS
@@ -187,11 +187,11 @@ void LPlugins::LoadDesktopPlugins(){
   DESKTOP.clear();
   //Calendar Plugin
   LPI info;
-    info.name = QObject::tr("Calendar");
+    /*info.name = QObject::tr("Calendar");
     info.description = QObject::tr("Display a calendar on the desktop");
     info.ID = "calendar";
     info.icon = "view-calendar";
-  DESKTOP.insert(info.ID, info);
+  DESKTOP.insert(info.ID, info);*/
   //Application Launcher Plugin
   info = LPI(); //clear it
     info.name = QObject::tr("Application Launcher");
@@ -207,33 +207,33 @@ void LPlugins::LoadDesktopPlugins(){
     info.icon = "preferences-desktop-icons";
   DESKTOP.insert(info.ID, info);
   //Notepad Plugin
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("Note Pad");
     info.description = QObject::tr("Keep simple text notes on your desktop");
     info.ID = "notepad";
     info.icon = "text-enriched";
-  DESKTOP.insert(info.ID, info);
+  DESKTOP.insert(info.ID, info);*/
   //Audio Player Plugin
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("Audio Player");
     info.description = QObject::tr("Play through lists of audio files");
     info.ID = "audioplayer";
     info.icon = "media-playback-start";
-  DESKTOP.insert(info.ID, info);
+  DESKTOP.insert(info.ID, info);*/
   //System Monitor Plugin
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("System Monitor");
     info.description = QObject::tr("Keep track of system statistics such as CPU/Memory usage and CPU temperatures.");
     info.ID = "systemmonitor";
     info.icon = "cpu";
-  DESKTOP.insert(info.ID, info);
+  DESKTOP.insert(info.ID, info);*/
   //RSS Reader Plugin
-  info = LPI(); //clear it
+  /*info = LPI(); //clear it
     info.name = QObject::tr("RSS Reader");
     info.description = QObject::tr("Monitor RSS Feeds (Requires internet connection)");
     info.ID = "rssreader";
     info.icon = "application-rss+xml";
-  DESKTOP.insert(info.ID, info);
+  DESKTOP.insert(info.ID, info);*/
   //Available QtQuick scripts
   /*QStringList quickID = LUtils::listQuickPlugins();
   for(int i=0; i<quickID.length(); i++){

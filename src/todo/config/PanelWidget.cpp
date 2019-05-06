@@ -129,7 +129,7 @@ void PanelWidget::LoadIcons(){
   ui->tool_selectcolor->setIcon( LXDG::findIcon("preferences-desktop-color","") );
   ui->tabWidget->setTabIcon(0,LXDG::findIcon("transform-move",""));
   ui->tabWidget->setTabIcon(1,LXDG::findIcon("preferences-desktop-display",""));
-  ui->tabWidget->setTabIcon(2,LXDG::findIcon("preferences-plugin",""));
+  ui->tabWidget->setTabIcon(2,LXDG::findIcon("application-x-addon",""));
 }
 
 void PanelWidget::reloadColorSample(){

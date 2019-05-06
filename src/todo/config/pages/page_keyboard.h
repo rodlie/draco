@@ -2,6 +2,8 @@
 #define CONFIG_PAGE_KEYBOARD_H
 
 #include "PageWidget.h"
+#include <QComboBox>
+#include "keyboard_common.h"
 
 namespace Ui{
     class page_keyboard;
@@ -29,6 +31,12 @@ private:
     bool verifySettingsReset();
 
 private slots:
+    void populateBox(QComboBox *box, xkbType type);
+    void populateBoxes();
+    void handleLayoutChanged(int index);
+    void handleVariantChanged(int index);
+    void handleModelChanged(int index);
+    void setCurrentIndex(QComboBox *box, xkbType type);
 };
 
 #endif

@@ -30,13 +30,13 @@ public slots:
 private:
 	Ui::page_session_options *ui;
 	bool loading;
-        void FindWindowManagerOptions();
+        //void FindWindowManagerOptions();
 	bool verifySettingsReset();
 
 private slots:
-	void sessionChangeUserIcon();
-	void sessionResetSys();
-	void sessionResetLumina();
+    //void sessionChangeUserIcon();
+    //void sessionResetSys();
+    //void sessionResetLumina();
 	void sessionLoadTimeSample();
 	void sessionShowTimeCodes();
 	void sessionLoadDateSample();

@@ -22,7 +22,7 @@ page_main::page_main(QWidget *parent) : PageWidget(parent), ui(new Ui::page_main
 
 
   // temp icon theme
-  QIcon::setThemeName("Adwaita");
+  //QIcon::setThemeName("Adwaita");
 
   findShort = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_F), this, SLOT(showFind()));
   ui->treeWidget->setMouseTracking(true);

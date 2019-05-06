@@ -96,7 +96,7 @@ void page_interface_panels::LoadSettings(int screennum){
 
 void page_interface_panels::updateIcons(){
   ui->tool_panels_add->setIcon( LXDG::findIcon("list-add","") );
-  ui->tool_profile->setIcon( LXDG::findIcon("document-import","") );
+  ui->tool_profile->setIcon( LXDG::findIcon("preferences-desktop","") );
 }
 
 //=================
@@ -112,14 +112,14 @@ void page_interface_panels::setupProfiles(){
   ui->tool_profile->menu()->addSection("Profiles");
   QAction *act = ui->tool_profile->menu()->addAction(tr("No Panels"));
     act->setWhatsThis("none");
-  act = ui->tool_profile->menu()->addAction("Windows");
+/*  act = ui->tool_profile->menu()->addAction("Windows");
     act->setWhatsThis("windows");
   act = ui->tool_profile->menu()->addAction("GNOME2/MATE");
     act->setWhatsThis("gnome2");
   act = ui->tool_profile->menu()->addAction("XFCE");
     act->setWhatsThis("xfce");
   act = ui->tool_profile->menu()->addAction("Mac OSX");
-    act->setWhatsThis("osx");
+    act->setWhatsThis("osx");*/
 
   //Add in any custom profiles
   //qDebug() << " - read settings";
@@ -234,7 +234,7 @@ void page_interface_panels::applyProfile(QAction *act){
   qDebug() << "Apply Profile:" << act->whatsThis() << "To Monitor:" << screenID;
   if(act->whatsThis()=="none"){
     settings->setValue(DPrefix+"panels", 0); //number of panels
-  }else if(act->whatsThis()=="windows"){
+  }/*else if(act->whatsThis()=="windows"){
     settings->setValue(DPrefix+"panels", 1); //number of panels
     //Panel 1 settings (index 0)
     settings->setValue(PPrefix+"0/customColor", false);
@@ -299,7 +299,7 @@ void page_interface_panels::applyProfile(QAction *act){
     settings->setValue(PPrefix+"1/pinLocation", "center");
     settings->setValue(PPrefix+"1/pluginlist", QStringList() << "systemstart" << "applauncher::lumina-fm.desktop" << "desktopbar"<<"spacer" << "line"<< "taskmanager");
 
-  }else{
+  }*/else{
     qDebug() << " - unknown profile! ("+act->whatsThis()+")";
     return;
   }
