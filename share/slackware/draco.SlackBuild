@@ -25,7 +25,7 @@
 PRGNAM=draco
 VERSION=${VERSION:-0.9.0}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_draco}
+TAG=${TAG:-}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -72,7 +72,7 @@ rm -rf $PRGNAM-$VERSION
 if [ "$GIT" = "" ]; then
   tar xvf $CWD/$PRGNAM-$VERSION.tar.xz
 else
-  git clone --recurse "$CWD/../.." $PRGNAM-$VERSION
+  git clone "$CWD/../.." $PRGNAM-$VERSION
 fi
 
 cd $PRGNAM-$VERSION
@@ -118,7 +118,7 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
 # Make package
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
-cat $CWD/slack-required > $PKG/install/slack-required
+#cat $CWD/slack-required > $PKG/install/slack-required
 cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG

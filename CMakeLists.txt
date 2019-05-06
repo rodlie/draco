@@ -440,10 +440,11 @@ add_executable(
     src/todo/config/pages/PageWidget.h
     src/todo/config/pages/getPage.cpp
     src/todo/config/pages/getPage.h
+    src/todo/config/pages/page_keyboard.cpp
     src/todo/config/pages/page_autostart.cpp
     src/todo/config/pages/page_defaultapps.cpp
-    src/todo/config/pages/page_interface_desktop.cpp
-    src/todo/config/pages/page_interface_menu.cpp
+    #src/todo/config/pages/page_interface_desktop.cpp
+    #src/todo/config/pages/page_interface_menu.cpp
     src/todo/config/pages/page_interface_panels.cpp
     src/todo/config/pages/page_main.cpp
     src/todo/config/pages/page_main.ui
@@ -452,10 +453,11 @@ add_executable(
     src/todo/config/pages/page_wallpaper.cpp
     src/lib/lumina/AppDialog.h
     src/lib/lumina/AppDialog.ui
+    src/todo/config/pages/page_keyboard.ui
     src/todo/config/pages/page_autostart.ui
     src/todo/config/pages/page_defaultapps.ui
-    src/todo/config/pages/page_interface_desktop.ui
-    src/todo/config/pages/page_interface_menu.ui
+    #src/todo/config/pages/page_interface_desktop.ui
+    #src/todo/config/pages/page_interface_menu.ui
     src/todo/config/pages/page_interface_panels.ui
     #src/todo/config/pages/pages/page_session_locale.ui
     src/todo/config/pages/page_session_options.ui
@@ -529,11 +531,11 @@ configure_file(
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-power-settings.desktop
     @ONLY
 )
-configure_file(
-    share/applications/keyboard-settings.desktop.in
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-keyboard-settings.desktop
-    @ONLY
-)
+#configure_file(
+#    share/applications/keyboard-settings.desktop.in
+#    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-keyboard-settings.desktop
+#    @ONLY
+#)
 install(
     TARGETS
     ${LIB_NAME}
@@ -588,12 +590,12 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_BINDIR}
 )
-install(
-    TARGETS
-    ${PROJECT_NAME}-keyboard-settings
-    DESTINATION
-    ${CMAKE_INSTALL_BINDIR}
-)
+#install(
+#    TARGETS
+#    ${PROJECT_NAME}-keyboard-settings
+#    DESTINATION
+#    ${CMAKE_INSTALL_BINDIR}
+#)
 install(
     FILES
     share/xsessions/${PROJECT_NAME}.desktop
@@ -619,12 +621,12 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
-install(
-    FILES
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-keyboard-settings.desktop
-    DESTINATION
-    ${CMAKE_INSTALL_DATAROOTDIR}/applications
-)
+#install(
+#    FILES
+#    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-keyboard-settings.desktop
+#    DESTINATION
+#    ${CMAKE_INSTALL_DATAROOTDIR}/applications
+#)
 install(
     FILES
     ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.conf

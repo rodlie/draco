@@ -73,7 +73,7 @@ void LPlugins::LoadPanelPlugins(){
     info.name = QObject::tr("Application Menu");
     info.description = QObject::tr("Start menu alternative which focuses on launching applications.");
     info.ID = "appmenu";
-    info.icon = "format-list-unordered";
+    info.icon = "system-run";
   PANEL.insert(info.ID, info);   
   //Desktop Bar
   info = LPI(); //clear it
@@ -101,7 +101,7 @@ void LPlugins::LoadPanelPlugins(){
     info.name = QObject::tr("Workspace Switcher");
     info.description = QObject::tr("Controls for switching between the various virtual desktops.");
     info.ID = "desktopswitcher";
-    info.icon = "format-view-carousel";
+    info.icon = "preferences-system-windows";
   PANEL.insert(info.ID, info);  	
   //Battery
   info = LPI(); //clear it

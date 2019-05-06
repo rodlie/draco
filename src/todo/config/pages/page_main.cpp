@@ -73,11 +73,11 @@ void page_main::UpdateItems(QString search){
     session->setText(0, tr("Desktop Defaults"));
     session->setFirstColumnSpanned(true);
   QTreeWidgetItem *user = new QTreeWidgetItem();
-    user->setIcon(0, LXDG::findIcon("preferences-desktop-user",""));
+    user->setIcon(0, LXDG::findIcon("system-users",""));
     user->setText(0, tr("User Settings"));
     user->setFirstColumnSpanned(true);
     QTreeWidgetItem *system = new QTreeWidgetItem();
-    system->setIcon(0, LXDG::findIcon("preferences-system",""));
+    system->setIcon(0, LXDG::findIcon("computer",""));
     system->setText(0, tr("System Settings"));
     system->setFirstColumnSpanned(true);
   //Now go through and add in the known pages for each category
