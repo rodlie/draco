@@ -152,16 +152,17 @@ void AppLauncherPlugin::loadButton(){
   if(this->contextMenu()->isEmpty()){
     tmp = this->contextMenu()->addAction( tr("Open"), this, SLOT(buttonClicked()) );
     ICONS->loadIcon(tmp, "document-open");
-    this->contextMenu()->addAction( tr("Open With"), this, SLOT(openWith()) );
-    ICONS->loadIcon(tmp, "document-preview");
+    // TODO
+    //this->contextMenu()->addAction( tr("Open With"), this, SLOT(openWith()) );
+    //ICONS->loadIcon(tmp, "document-preview");
   }
   //tmp = this->contextMenu()->addAction( tr("View Properties"), this, SLOT(fileProperties()) );
   //ICONS->loadIcon(tmp, "document-properties");
-  this->contextMenu()->addSection(tr("File Operations"));
+  /*this->contextMenu()->addSection(tr("File Operations"));
   if(!path.endsWith(".desktop")){
     tmp = this->contextMenu()->addAction( tr("Rename"), this, SLOT(fileRename()) );
     ICONS->loadIcon(tmp, "edit-rename");
-  }
+  }*/
   //tmp = this->contextMenu()->addAction( tr("Copy"), this, SLOT(fileCopy()) );
   //ICONS->loadIcon(tmp, "edit-copy");
   /*if(info.isWritable() || (info.isSymLink() && QFileInfo(info.absolutePath()).isWritable() ) ){
@@ -169,19 +170,19 @@ void AppLauncherPlugin::loadButton(){
     ICONS->loadIcon(tmp, "edit-cut");
     tmp = this->contextMenu()->addAction( tr("Delete"), this, SLOT(fileDelete()) );
     ICONS->loadIcon(tmp, "document-close");
-  }
+  }*/
   //tmp = this->contextMenu()->addAction( tr("Drag to Application"), this, SLOT(startDragNDrop()) );
   //ICONS->loadIcon(tmp, "edit-redo");
   iconLoaded(iconID); //make sure the emblem is layered on top
   //If the file is a symlink, put the overlay on the icon
-  /*if(info.isSymLink()){
+  if(info.isSymLink()){
     QImage img = button->icon().pixmap(QSize(icosize,icosize)).toImage();
     int oSize = icosize/3; //overlay size
     QPixmap overlay = ICONS->loadIcon("emblem-symbolic-link").pixmap(oSize,oSize).scaled(oSize,oSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     QPainter painter(&img);
       painter.drawPixmap(icosize-oSize,icosize-oSize,overlay); //put it in the bottom-right corner
     button->setIcon( QIcon(QPixmap::fromImage(img)) );
-  }*/
+  }
   //Now adjust the visible text as necessary based on font/grid sizing
   if(button->toolTip().isEmpty()){ button->setToolTip(txt); }
   //Double check that the visual icon size matches the requested size - otherwise upscale the icon
@@ -286,19 +287,22 @@ void AppLauncherPlugin::openWith(){
 }
 
 void AppLauncherPlugin::fileProperties(){
+    /*
   QString path = button->whatsThis();
   if(path.isEmpty() || !QFile::exists(path)){ return; } //invalid file
-  LSession::LaunchApplication("lumina-fileinfo \""+path+"\"");
+  LSession::LaunchApplication("lumina-fileinfo \""+path+"\"");*/
 }
 
 void AppLauncherPlugin::fileDelete(){
+    /*
   QString path = button->whatsThis();
   if(path.isEmpty() || !QFile::exists(path)){ return; } //invalid file
   if(QFileInfo(path).isDir()){ QProcess::startDetached("rm -r \""+path+"\""); }
-  else{ QFile::remove(path); }
+  else{ QFile::remove(path); }*/
 }
 
 void AppLauncherPlugin::fileCut(){
+    /*
   QString path = button->whatsThis();
   QList<QUrl> urilist; //Also assemble a URI list for cros-app compat (no copy/cut distinguishing)
   urilist << QUrl::fromLocalFile(path);
@@ -309,10 +313,11 @@ void AppLauncherPlugin::fileCut(){
 	dat->setData("x-special/lumina-copied-files", path.toLocal8Bit());
 	dat->setUrls(urilist); //the text/uri-list mimetype - built in Qt conversion/use
   QApplication::clipboard()->clear();
-  QApplication::clipboard()->setMimeData(dat);
+  QApplication::clipboard()->setMimeData(dat);*/
 }
 
 void AppLauncherPlugin::fileCopy(){
+    /*
   QString path = button->whatsThis();
   QList<QUrl> urilist; //Also assemble a URI list for cros-app compat (no copy/cut distinguishing)
   urilist << QUrl::fromLocalFile(path);
@@ -323,10 +328,11 @@ void AppLauncherPlugin::fileCopy(){
 	dat->setData("x-special/lumina-copied-files", path.toLocal8Bit());
 	dat->setUrls(urilist); //the text/uri-list mimetype - built in Qt conversion/use
   QApplication::clipboard()->clear();
-  QApplication::clipboard()->setMimeData(dat);
+  QApplication::clipboard()->setMimeData(dat);*/
 }
 
 void AppLauncherPlugin::fileRename(){
+    /*
   if(inputDLG == 0){
     inputDLG = new QInputDialog(0, Qt::Dialog | Qt::WindowStaysOnTopHint);
     inputDLG->setInputMode(QInputDialog::TextInput);
@@ -335,7 +341,7 @@ void AppLauncherPlugin::fileRename(){
     inputDLG->setLabelText( tr("New Filename") );
     connect(inputDLG, SIGNAL(finished(int)), this, SLOT(renameFinished(int)) );
   }
-  inputDLG->showNormal();
+  inputDLG->showNormal();*/
 }
 
 void AppLauncherPlugin::renameFinished(int result){
@@ -353,6 +359,9 @@ void AppLauncherPlugin::renameFinished(int result){
 }
 
 void AppLauncherPlugin::fileDrop(bool copy, QList<QUrl> urls){
+    Q_UNUSED(copy)
+    Q_UNUSED(urls)
+    /*
   for(int i=0; i<urls.length(); i++){
     QString oldpath = urls[i].toLocalFile();
     if(!QFile::exists(oldpath)){ continue; } //not a local file?
@@ -364,5 +373,5 @@ void AppLauncherPlugin::fileDrop(bool copy, QList<QUrl> urls){
       qDebug() << "Moving File:" << oldpath << "->" << button->whatsThis()+"/"+filename;
       QFile::rename(oldpath, button->whatsThis()+"/"+filename);
     }
-  }
+  }*/
 }
