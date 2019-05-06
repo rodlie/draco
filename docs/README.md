@@ -1,14 +1,8 @@
 # Draco Desktop Environment
 ![GitHub last commit](https://img.shields.io/github/last-commit/rodlie/draco.svg)
 [![Build Status](https://travis-ci.com/rodlie/draco.svg?branch=master)](https://travis-ci.com/rodlie/draco)
-[![GitHub release](https://img.shields.io/github/release/rodlie/draco.svg)](https://github.com/rodlie/draco/releases)
-![GitHub Release Date](https://img.shields.io/github/release-date/rodlie/draco.svg)
-[![Github commits (since latest release)](https://img.shields.io/github/commits-since/rodlie/draco/latest.svg)](https://github.com/rodlie/draco)
-![GitHub All Releases](https://img.shields.io/github/downloads/rodlie/draco/total.svg)
 ![GitHub issues](https://img.shields.io/github/issues/rodlie/draco.svg)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/rodlie/draco.svg)
-![GitHub repo size](https://img.shields.io/github/repo-size/rodlie/draco.svg)
-![GitHub top language](https://img.shields.io/github/languages/top/rodlie/draco.svg)
+[![GitHub release](https://img.shields.io/github/release/rodlie/draco.svg)](https://github.com/rodlie/draco/releases)
 
 ![GitHub stars](https://img.shields.io/github/stars/rodlie/draco.svg?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/rodlie/draco.svg?style=social)
@@ -21,8 +15,16 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
 
 ## Features
 
+...
+
 ### Desktop
+
+...
+
 ### Panel
+
+...
+
 ### Storage management
 
   * Show available storage/optical devices in system tray
