@@ -1,0 +1,9 @@
+[Desktop Entry]
+Exec=@PROJECT_NAME@-settings
+Icon=preferences-desktop
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Settings;
+Name=Desktop Configuration
+OnlyShowIn=Draco;

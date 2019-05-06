@@ -381,7 +381,7 @@ target_link_libraries(
     ${LIB_NAME}
 )
 
-# draco-power-settings
+# draco-power-settings (MERGE WITH SETTINGS!)
 add_executable(
     ${PROJECT_NAME}-power-settings
     src/settings/powerconf/main.cpp
@@ -494,6 +494,11 @@ configure_file(
     @ONLY
 )
 configure_file(
+    share/applications/settings.desktop.in
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings.desktop
+    @ONLY
+)
+configure_file(
     share/applications/power-settings.desktop.in
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-power-settings.desktop
     @ONLY
@@ -542,6 +547,12 @@ install(
 )
 install(
     TARGETS
+    ${PROJECT_NAME}-settings
+    DESTINATION
+    ${CMAKE_INSTALL_BINDIR}
+)
+install(
+    TARGETS
     ${PROJECT_NAME}-settings-x11
     DESTINATION
     ${CMAKE_INSTALL_BINDIR}
@@ -568,6 +579,12 @@ install(
 install(
     FILES
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-x11.desktop
+    DESTINATION
+    ${CMAKE_INSTALL_DATAROOTDIR}/applications
+)
+install(
+    FILES
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings.desktop
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
