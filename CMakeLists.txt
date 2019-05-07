@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.0)
 include(GNUInstallDirs)
 
 project(draco VERSION 0.9.0)
-set(PROJECT_VERSION_EXTRA alpha1)
+set(PROJECT_VERSION_EXTRA _alpha1)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
@@ -458,10 +458,10 @@ target_link_libraries(
 install(
     FILES
     docs/LICENSE
-    #docs/ChangeLog
+    docs/ChangeLog.md
     docs/README.md
     DESTINATION
-    ${CMAKE_INSTALL_DOCDIR}/${PROJECT_NAME}-${PROJECT_VERSION}
+    ${CMAKE_INSTALL_DOCDIR}/${PROJECT_NAME}-${PROJECT_VERSION}${PROJECT_VERSION_EXTRA}
 )
 
 # etc

@@ -41,9 +41,13 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
   * Inhibit actions if external monitor(s) is connected
   * Enables applications to inhibit display and suspend
   * Display backlight support
-  * Display hotplug support
+  * Display hotplug support **(WIP)**
   * RTC support **(WIP)**
   * CPU support **(WIP)**
+
+## Usage
+
+...
 
 ## History
 
@@ -68,6 +72,7 @@ Build and runtime requirements.
     * ``libXrandr``
     * ``libXfixes``
     * ``xrandr``
+    * ``setxkbmap``
     * ``xinit``
     * ``xcb``
       * ``xcb-randr``
@@ -81,10 +86,11 @@ Build and runtime requirements.
   * **``xscreensaver``**
   * **``qt5ct``**
   * **``xdg-utils``**
+  * **``shared-mime-info``**
   * **``hicolor-icon-theme``**
-  * **``adwaita-icon-theme``** *(=< 3.28.0)*
+  * **``adwaita-icon-theme``** *(3.18 recommended)*
   * **``openbox``**
-  * **``UDisks``** *(or compatible service)*
+  * **``UDisks2``** *(or compatible service)*
   * **``UPower``** *(>= 0.9.23 or compatible service)*
   * **``ConsoleKit``**/**``logind``** *(or compatible service)*
 
@@ -97,25 +103,41 @@ Optional recommended applications.
 
 ## Build
 
+### Daemon notice
+
+Draco includes a power daemon (to be able to adjust screen and cpu) this daemon must run as ``root`` (or a user with write access to ``/sys``), this service run through D-Bus and can only be accessed by a predefined system group, this should be a common desktop user group like ``power`` or something similar. The default when building Draco is ``root`` as user and ``power`` as group. If you want something else you can change this during build.
+
+Add the following during ``cmake`` configure:
+
+```
+-DPOWERD_SERVICE_USER=<run service as this user>
+```
+```
+-DPOWERD_SERVICE_GROUP=<user group that have access to service>
+```
+
+You can also change the ``/etc/dbus-1/system.d/org.dracolinux.Powerd.conf`` file manually if you want.
+
 ### Slackware Linux (14.2+)
 
 Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (packages may be available [here](http://www.slackware.com/~alien/slackbuilds/)):
- * qt5
+ * qt5 *(5.9.7/5.12.x recommended)*
  * qt5ct
  * openbox
- * pnmixer (optional)
- * qtfm (optional)
- * qterminal (optional)
+ * *pnmixer (optional)*
+ * *qtfm (optional)*
+ * *qterminal (optional)*
 
  The rest should be available in a standard installation.
 
-A [draco.SlackBuild](share/slackware/draco.SlackBuild) is available (will build latest from git):
+A [draco.SlackBuild](share/slackware/draco.SlackBuild) is available (will build latest from git if run from repo):
 ```
 git clone https://github.com/rodlie/draco
 cd draco/share/slackware
 sudo sh draco.SlackBuild
 ```
-or build it manually:
+
+Install the package and off you go. Or you can of course build it manually:
 
 ```
 mkdir build && cd build
@@ -124,11 +146,17 @@ make
 sudo make install
 ```
 
+**Note that the install prefix should be the same folder as D-Bus (usually in ``/usr``), else you will need to copy the Draco service files to the proper location manually.**
+
 ### Ubuntu (Xenial+)
 
 Minimal testing is done on Ubuntu, some features may not work.
 
-Dependencies:
+Known issues:
+ * Add your user to the ``power`` group before running Draco (add group if not exists).
+ * Hibernate does not work, will add instructions on fixing this
+
+Dependencies (based on a miminal install of Xenial):
 
 ```
 sudo apt-get install build-essential cmake pkg-config openbox adwaita-icon-theme-full xscreensaver xdg-utils qt5ct qtbase5-dev libqt5x11extras5-dev libx11-dev libxss-dev libxdamage-dev libxrandr-dev libxfixes-dev libxcb1-dev libx11-xcb-dev libxcb-randr0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-util0-dev libxcb-shm0-dev
@@ -147,3 +175,5 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib64 -DCMAKE_INSTALL_L
 make
 sudo make install
 ```
+
+**Note that the install prefix should be the same folder as D-Bus (usually in ``/usr``), else you will need to copy the Draco service files to the proper location manually.**
