@@ -56,6 +56,7 @@ public:
     static const QString storageSettingsFile();
     static const QString xconfigSettingsFile();
     static const QString keyboardSettingsFile();
+    static const QString themeSettingsFile();
     static QStringList iconLocations(const QString &appPath);
     static QStringList pixmapLocations(const QString &appPath);
     static QStringList applicationLocations(const QString &appPath);
@@ -67,9 +68,9 @@ public:
     static const QString dracoStyleConf();
     static const QString panelStyleSheet();
     static const QString desktopStyleSheet();
-    static void themeEngineCheckConf();
-    static void checkGtk2Conf();
-    static void checkGtk3Conf();
+    static void themeEngineCheckConf(const QString &theme = QString());
+    static void checkGtk2Conf(const QString &theme = QString());
+    static void checkGtk3Conf(const QString &theme = QString());
     static void checkConfigs();
     static const QString getProperMime(const QString &mime);
     static const QString filterIconName(const QString &name);

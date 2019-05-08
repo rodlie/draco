@@ -12,6 +12,7 @@
 //#include "XDGMime.h"
 #include "LuminaXDG.h"
 #include "LUtils.h"
+#include <QTextStream>
 
 Draco::Draco() {}
 
@@ -199,6 +200,12 @@ const QString Draco::keyboardSettingsFile()
     return file;
 }
 
+const QString Draco::themeSettingsFile()
+{
+    themeEngineCheckConf();
+    return QString("%1/.config/qt5ct/qt5ct.conf").arg(QDir::homePath());
+}
+
 QStringList Draco::iconLocations(const QString &appPath)
 {
     QStringList result;
@@ -324,7 +331,7 @@ const QString Draco::desktopStyleSheet()
     return result;
 }
 
-void Draco::themeEngineCheckConf()
+void Draco::themeEngineCheckConf(const QString &theme)
 {
     QString conf = QString("%1/.config/qt5ct/qt5ct.conf").arg(QDir::homePath());
     if (!QFile::exists(conf)) {
@@ -341,47 +348,82 @@ void Draco::themeEngineCheckConf()
             def.close();
         }
     }
+    if (theme.isEmpty()) { return; }
 }
 
-void Draco::checkGtk2Conf()
+void Draco::checkGtk2Conf(const QString &theme)
 {
     QString conf = QString("%1/.gtkrc-2.0").arg(QDir::homePath());
     if (!QFile::exists(conf)) {
-        qDebug() << "GTK2 CONF MISSING!";
         QFile file(conf);
         QFile def(":/theme/gtkrc-2.0");
         if (def.open(QIODevice::ReadOnly|QIODevice::Text)) {
-            qDebug() << "OPEN FALLBACK GTK2 CONF";
             if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
                 file.write(def.readAll());
-                qDebug() << "WRITE NEW GTK2 CONF";
                 file.close();
             }
             def.close();
         }
     }
+    if (theme.isEmpty() || theme == "hicolor") { return; }
+    QFile gtkconf(conf);
+    if (!gtkconf.open(QIODevice::ReadOnly|QIODevice::Text)) { return; }
+    QString data = gtkconf.readAll();
+    gtkconf.close();
+    QString foundTheme;
+    QStringList lines = data.split("\n");
+    for (int i=0;i<lines.size();++i) {
+        QString line = lines.at(i);
+        if (line.startsWith("gtk-icon-theme-name")) {
+            foundTheme = line
+                         .replace("gtk-icon-theme-name", "")
+                         .replace("=", "")
+                         .replace("\"", "")
+                         .trimmed();
+            break;
+        }
+    }
+    if (foundTheme.isEmpty()) { return; }
+    if (foundTheme.toUpper() == theme.toUpper()) { return; }
+    if (!gtkconf.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate)) { return; }
+    for (int i=0;i<lines.size();++i) {
+        QString line = lines.at(i);
+        QTextStream stream(&gtkconf);
+        if (line.startsWith("gtk-icon-theme-name")) {
+            stream << QString("gtk-icon-theme-name = \"%1\"").arg(theme) << endl;
+        }
+        else { stream << line << endl; }
+    }
+    gtkconf.close();
 }
 
-void Draco::checkGtk3Conf()
+void Draco::checkGtk3Conf(const QString &theme)
 {
     QString gtkdir = QString("%1/.config/gtk-3.0").arg(QDir::homePath());
-    QString conf = QString("%1/%2/settings.ini").arg(QDir::homePath()).arg(gtkdir);
+    QString conf = QString("%1/settings.ini").arg(gtkdir);
     if (!QFile::exists(conf)) {
-        QDir dir(gtkdir);
-        if (!dir.exists()) { dir.mkpath(gtkdir); }
-        qDebug() << "GTK3 CONF MISSING!";
+        if (!QFile::exists(gtkdir)) {
+            QDir dir(gtkdir);
+            dir.mkpath(gtkdir);
+        }
         QFile file(conf);
         QFile def(":/theme/settings.ini");
         if (def.open(QIODevice::ReadOnly|QIODevice::Text)) {
-            qDebug() << "OPEN FALLBACK GTK3 CONF";
             if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
                 file.write(def.readAll());
-                qDebug() << "WRITE NEW GTK3 CONF";
                 file.close();
             }
             def.close();
         }
     }
+    if (theme.isEmpty() || theme == "hicolor") { return; }
+    QSettings gtk3conf(conf, QSettings::IniFormat);
+    gtk3conf.beginGroup("Settings");
+    QString foundTheme = gtk3conf.value("gtk-icon-theme-name").toString();
+    if (theme.toUpper() != foundTheme.toUpper()) {
+        gtk3conf.setValue("gtk-icon-theme-name", theme);
+    }
+    gtk3conf.endGroup();
 }
 
 void Draco::checkConfigs()
