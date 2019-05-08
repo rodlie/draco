@@ -120,7 +120,11 @@ int main(int argc, char *argv[])
             desktopFile = XDGMime::findDefaultAppForMime("application/x-directory");
         } else { // is file, try to get default application for mime type
             QString mime = XDGMime::findAppMimeForFile(fileName);
-            if (mime.endsWith("appimage")) { // run appimage's directly
+            qDebug() << "FILE MIME" << mime;
+            if (mime.endsWith("appimage") ||
+                mime.endsWith("x-executable") ||
+                mime.endsWith("/run"))
+            { // run directly
                 runFile = true;
             } else {
                 desktopFile = XDGMime::findDefaultAppForMime(mime);
