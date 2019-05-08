@@ -18,6 +18,7 @@ class page_session_options : public PageWidget{
 public:
 	page_session_options(QWidget *parent);
 	~page_session_options();
+    bool needsScreenSelector(){ return true; }
 
 public slots:
 	void SaveSettings();
@@ -29,6 +30,7 @@ public slots:
 	}
 private:
 	Ui::page_session_options *ui;
+    int cscreen; //current monitor/screen number
 	bool loading;
         //void FindWindowManagerOptions();
 	bool verifySettingsReset();
