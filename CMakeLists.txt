@@ -386,45 +386,45 @@ target_link_libraries(
 # draco-settings
 add_executable(
     ${PROJECT_NAME}-settings
-    src/todo/config/GetPluginDialog.cpp
-    src/todo/config/LPlugins.cpp
-    src/todo/config/PanelWidget.cpp
-    src/todo/config/main.cpp
-    src/todo/config/mainWindow.cpp
-    src/todo/config/pages/PageWidget.h
-    src/todo/config/pages/getPage.cpp
-    src/todo/config/pages/getPage.h
-    src/todo/config/pages/page_keyboard.cpp
-    src/todo/config/pages/page_power.cpp
-    src/todo/config/pages/page_autostart.cpp
-    src/todo/config/pages/page_defaultapps.cpp
-    src/todo/config/pages/page_interface_panels.cpp
-    src/todo/config/pages/page_main.cpp
-    src/todo/config/pages/page_main.ui
-    #src/todo/config/pages/page_session_locale.cpp
-    src/todo/config/pages/page_session_options.cpp
-    src/todo/config/pages/page_wallpaper.cpp
+    src/settings/config/GetPluginDialog.cpp
+    src/settings/config/LPlugins.cpp
+    src/settings/config/PanelWidget.cpp
+    src/settings/config/main.cpp
+    src/settings/config/mainWindow.cpp
+    src/settings/config/pages/PageWidget.h
+    src/settings/config/pages/getPage.cpp
+    src/settings/config/pages/getPage.h
+    src/settings/config/pages/page_keyboard.cpp
+    src/settings/config/pages/page_power.cpp
+    src/settings/config/pages/page_autostart.cpp
+    src/settings/config/pages/page_defaultapps.cpp
+    src/settings/config/pages/page_interface_panels.cpp
+    src/settings/config/pages/page_main.cpp
+    src/settings/config/pages/page_main.ui
+    #src/settings/config/pages/page_session_locale.cpp
+    src/settings/config/pages/page_session_options.cpp
+    src/settings/config/pages/page_wallpaper.cpp
     src/lib/lumina/AppDialog.h
     src/lib/lumina/AppDialog.ui
-    src/todo/config/pages/page_keyboard.ui
-    src/todo/config/pages/page_power.ui
-    src/todo/config/pages/page_autostart.ui
-    src/todo/config/pages/page_defaultapps.ui
-    src/todo/config/pages/page_interface_panels.ui
-    #src/todo/config/pages/pages/page_session_locale.ui
-    src/todo/config/pages/page_session_options.ui
-    src/todo/config/pages/page_wallpaper.ui
-    src/todo/config/GetPluginDialog.ui
-    src/todo/config/PanelWidget.ui
-    src/todo/config/mainWindow.ui
+    src/settings/config/pages/page_keyboard.ui
+    src/settings/config/pages/page_power.ui
+    src/settings/config/pages/page_autostart.ui
+    src/settings/config/pages/page_defaultapps.ui
+    src/settings/config/pages/page_interface_panels.ui
+    #src/settings/config/pages/pages/page_session_locale.ui
+    src/settings/config/pages/page_session_options.ui
+    src/settings/config/pages/page_wallpaper.ui
+    src/settings/config/GetPluginDialog.ui
+    src/settings/config/PanelWidget.ui
+    src/settings/config/mainWindow.ui
 )
 target_include_directories(
     ${PROJECT_NAME}-settings
     PRIVATE
     src/lib
     src/lib/lumina
-    src/todo/config
-    src/todo/config/pages
+    src/settings/config
+    src/settings/config/pages
 )
 target_link_libraries(
     ${PROJECT_NAME}-settings
