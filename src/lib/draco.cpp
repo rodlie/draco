@@ -351,7 +351,7 @@ void Draco::themeEngineCheckConf(const QString &theme)
     if (theme.isEmpty()) { return; }
 }
 
-void Draco::checkGtk2Conf(const QString &theme)
+void Draco::checkGtk2Conf(const QString &theme, QFont font)
 {
     QString conf = QString("%1/.gtkrc-2.0").arg(QDir::homePath());
     if (!QFile::exists(conf)) {
@@ -365,13 +365,14 @@ void Draco::checkGtk2Conf(const QString &theme)
             def.close();
         }
     }
-    if (theme.isEmpty() || theme == "hicolor") { return; }
+    if ((theme.isEmpty() || theme == "hicolor") && font.family().isEmpty()) { return; }
     QFile gtkconf(conf);
     if (!gtkconf.open(QIODevice::ReadOnly|QIODevice::Text)) { return; }
     QString data = gtkconf.readAll();
     gtkconf.close();
-    QString foundTheme;
-    QStringList lines = data.split("\n");
+    QString foundTheme, foundFont;
+    QString themeFont = QString("%1 %2").arg(font.family()).arg(font.pointSize());
+    QStringList lines = data.split("\n", QString::SkipEmptyParts);
     for (int i=0;i<lines.size();++i) {
         QString line = lines.at(i);
         if (line.startsWith("gtk-icon-theme-name")) {
@@ -380,21 +381,42 @@ void Draco::checkGtk2Conf(const QString &theme)
                          .replace("=", "")
                          .replace("\"", "")
                          .trimmed();
-            break;
+        }
+        if (line.startsWith("gtk-font-name")) {
+            foundFont = line
+                        .replace("gtk-font-name", "")
+                        .replace("=", "")
+                        .replace("\"", "")
+                        .trimmed();
         }
     }
-    if (foundTheme.isEmpty()) { return; }
-    if (foundTheme.toUpper() == theme.toUpper()) { return; }
-    if (!gtkconf.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate)) { return; }
-    for (int i=0;i<lines.size();++i) {
-        QString line = lines.at(i);
-        QTextStream stream(&gtkconf);
-        if (line.startsWith("gtk-icon-theme-name")) {
-            stream << QString("gtk-icon-theme-name = \"%1\"").arg(theme) << endl;
+    if ((foundTheme.toUpper() != theme.toUpper()) ||
+        (foundFont.toUpper() != themeFont.toUpper())) {
+        if (gtkconf.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate)) {
+            bool foundIconLine = false,foundFontLine = false;
+            for (int i=0;i<lines.size();++i) {
+                QString line = lines.at(i);
+                QTextStream stream(&gtkconf);
+                if (line.startsWith("gtk-icon-theme-name")) {
+                    foundIconLine = true;
+                    stream << QString("gtk-icon-theme-name = \"%1\"").arg(theme) << endl;
+                } else if (line.startsWith("gtk-font-name")) {
+                    foundFontLine = true;
+                    stream << QString("gtk-font-name = \"%1\"").arg(themeFont) << endl;
+                } else { stream << line << endl; }
+            }
+            if (!foundIconLine || !foundFontLine) {
+                QTextStream stream(&gtkconf);
+                if (!foundIconLine) {
+                    stream << QString("gtk-icon-theme-name = \"%1\"").arg(theme) << endl;
+                }
+                if (!foundFontLine) {
+                    stream << QString("gtk-font-name = \"%1\"").arg(themeFont) << endl;
+                }
+            }
+            gtkconf.close();
         }
-        else { stream << line << endl; }
     }
-    gtkconf.close();
 }
 
 void Draco::checkGtk3Conf(const QString &theme)

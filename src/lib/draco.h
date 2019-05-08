@@ -19,6 +19,7 @@
 #include <QDirIterator>
 #include <QApplication>
 #include <QVariant>
+#include <QFont>
 
 #define DE_SESSION_SETTINGS "sessionsettings"
 #define DE_DESKTOP_SETTINGS "desktopsettings"
@@ -69,7 +70,7 @@ public:
     static const QString panelStyleSheet();
     static const QString desktopStyleSheet();
     static void themeEngineCheckConf(const QString &theme = QString());
-    static void checkGtk2Conf(const QString &theme = QString());
+    static void checkGtk2Conf(const QString &theme = QString(), QFont font = QFont());
     static void checkGtk3Conf(const QString &theme = QString());
     static void checkConfigs();
     static const QString getProperMime(const QString &mime);

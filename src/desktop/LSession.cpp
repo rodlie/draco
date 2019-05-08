@@ -242,7 +242,7 @@ void LSession::setupSession()
             SLOT(SessionEnding()));
 
     // Check gtk config
-    Draco::checkGtk2Conf(QIcon::themeName());
+    Draco::checkGtk2Conf(QIcon::themeName(), QApplication::font());
     Draco::checkGtk3Conf(QIcon::themeName());
 
     // Initialize startup applications
@@ -427,7 +427,7 @@ void LSession::watcherChange(QString changed)
     if (changed.contains(Draco::windowManagerConf())) { refreshWindowManager(); }
     if (changed.contains(Draco::dracoStyleConf())) { emit IconThemeChanged(); }
     if (changed.contains(Draco::themeSettingsFile())) {
-        Draco::checkGtk2Conf(QIcon::themeName()); // update gtk2 conf
+        Draco::checkGtk2Conf(QIcon::themeName(), QApplication::font()); // update gtk2 conf
         Draco::checkGtk3Conf(QIcon::themeName()); // update gtk3 conf
     }
     if (changed.endsWith(QString("%1.conf").arg(DE_SESSION_SETTINGS)) ) {
