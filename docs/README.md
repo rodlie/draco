@@ -130,7 +130,7 @@ Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (p
 
  The rest should be available in a standard installation.
 
-A [draco.SlackBuild](share/slackware/draco.SlackBuild) is available (will build latest from git if run from repo):
+A [draco.SlackBuild](https://github.com/rodlie/draco/blob/master/share/slackware/draco.SlackBuild) is available (will build latest from git if run from repo):
 ```
 git clone https://github.com/rodlie/draco
 cd draco/share/slackware
