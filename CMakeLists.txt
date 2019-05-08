@@ -323,7 +323,7 @@ target_link_libraries(
 # org.dracolinux.XDG
 add_executable(
     ${XDG_OPEN}
-    src/launcher/main.cpp
+    src/session/xdg.cpp
     src/lib/lumina/AppDialog.h
     src/lib/lumina/AppDialog.ui
     src/desktop/logo.qrc
