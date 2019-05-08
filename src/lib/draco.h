@@ -71,7 +71,7 @@ public:
     static const QString desktopStyleSheet();
     static void themeEngineCheckConf(const QString &theme = QString());
     static void checkGtk2Conf(const QString &theme = QString(), QFont font = QFont());
-    static void checkGtk3Conf(const QString &theme = QString());
+    static void checkGtk3Conf(const QString &theme = QString(), QFont font = QFont());
     static void checkConfigs();
     static const QString getProperMime(const QString &mime);
     static const QString filterIconName(const QString &name);

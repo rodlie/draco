@@ -419,7 +419,7 @@ void Draco::checkGtk2Conf(const QString &theme, QFont font)
     }
 }
 
-void Draco::checkGtk3Conf(const QString &theme)
+void Draco::checkGtk3Conf(const QString &theme, QFont font)
 {
     QString gtkdir = QString("%1/.config/gtk-3.0").arg(QDir::homePath());
     QString conf = QString("%1/settings.ini").arg(gtkdir);
@@ -438,12 +438,17 @@ void Draco::checkGtk3Conf(const QString &theme)
             def.close();
         }
     }
-    if (theme.isEmpty() || theme == "hicolor") { return; }
+    if ((theme.isEmpty() || theme == "hicolor") && font.family().isEmpty()) { return; }
     QSettings gtk3conf(conf, QSettings::IniFormat);
     gtk3conf.beginGroup("Settings");
     QString foundTheme = gtk3conf.value("gtk-icon-theme-name").toString();
+    QString foundFont = gtk3conf.value("gtk-font-name").toString();
+    QString themeFont = QString("%1 %2").arg(font.family()).arg(font.pointSize());
     if (theme.toUpper() != foundTheme.toUpper()) {
         gtk3conf.setValue("gtk-icon-theme-name", theme);
+    }
+    if (themeFont.toUpper() != foundFont.toUpper()) {
+        gtk3conf.setValue("gtk-font-name", themeFont);
     }
     gtk3conf.endGroup();
 }
