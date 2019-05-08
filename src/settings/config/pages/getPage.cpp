@@ -51,7 +51,7 @@ QList<PAGEINFO> Pages::KnownPages(){
                           QObject::tr("Wallpaper Settings"),
                           "preferences-desktop-wallpaper",
                           QObject::tr("Change background image(s)"),
-                          "appearance",
+                          "user",
                           QStringList(),
                           QStringList() << "background" << "wallpaper" << "color" << "image");
   list << Pages::PageInfo("autostart",
@@ -75,7 +75,7 @@ QList<PAGEINFO> Pages::KnownPages(){
                           QObject::tr("Panels and Plugins"),
                           "preferences-desktop-display",
                           QObject::tr("Change any floating panels and what they show"),
-                          "appearance",
+                          "user",
                           QStringList(),
                           QStringList() << "desktop" << "toolbar" << "panel" << "floating" << "plugins");
   list << Pages::PageInfo("session-options",
@@ -103,11 +103,11 @@ QList<PAGEINFO> Pages::KnownPages(){
                           QStringList(),
                           QStringList());
   list << Pages::PageInfo("defaultapps",
-                          QObject::tr("Default Applications"),
+                          QObject::tr("Applications"),
                           QObject::tr("Mimetype Settings"),
                           "preferences-desktop-default-applications",
                           QObject::tr("Change default applications"),
-                          "session",
+                          "user",
                           QStringList(),
                           QStringList() << "apps" << "default" << "services" << "xdg" << "session");
 
