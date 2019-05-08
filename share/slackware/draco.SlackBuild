@@ -102,6 +102,7 @@ make -j${NUMJOBS}
 
 # Install
 make DESTDIR=$PKG install
+chmod +x $PKG/etc/X11/xinit/xinitrc.draco
 
 # Strip
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \

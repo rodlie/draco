@@ -8,7 +8,7 @@
 #
 */
 
-#include "org.dracolinux.Power.SettingsDialog.h"
+#include "org.dracolinux.Power.SettingsWidget.h"
 #include "org.dracolinux.Power.Settings.h"
 #include "org.dracolinux.Powerd.Manager.Backlight.h"
 #include "org.dracolinux.Power.Client.h"
@@ -20,8 +20,8 @@
 
 #define MAX_WIDTH 150
 
-Dialog::Dialog(QWidget *parent)
-    : QDialog(parent)
+PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
+    : QWidget(parent)
     , dbus(nullptr)
     , lidActionBattery(nullptr)
     , lidActionAC(nullptr)
@@ -53,11 +53,6 @@ Dialog::Dialog(QWidget *parent)
     , resumeLockScreen(nullptr)
     , bypassKernel(nullptr)
 {
-    // setup dialog
-    setAttribute(Qt::WA_QuitOnClose, true);
-    setWindowTitle(tr("Power Configuration"));
-    setMinimumSize(QSize(390, 310));
-
     // setup dbus
     QDBusConnection session = QDBusConnection::sessionBus();
     dbus = new QDBusInterface(Draco::powerSessionName(),
@@ -68,84 +63,83 @@ Dialog::Dialog(QWidget *parent)
         QMessageBox::warning(this,
                              tr("Power manager not running"),
                              tr("Power manager is not running, please make sure it's running before using settings."));
-        QTimer::singleShot(100, qApp, SLOT(quit()));
-        return;
+    } else {
+
+        // trigger generation of powerkit.conf if not exists
+        PowerSettings::getConf();
+
+        // setup theme
+        //Theme::setIconTheme();
+        //setWindowIcon(QIcon::fromTheme(DEFAULT_AC_ICON));
+
+        setupWidgets(); // setup widgets
+        populate(); // populate boxes
+        loadSettings(); // load settings
+
+        // connect widgets
+        connect(lidActionBattery, SIGNAL(currentIndexChanged(int)),
+                this, SLOT(handleLidActionBattery(int)));
+        connect(lidActionAC, SIGNAL(currentIndexChanged(int)),
+                this, SLOT(handleLidActionAC(int)));
+        connect(criticalActionBattery, SIGNAL(currentIndexChanged(int)),
+                this, SLOT(handleCriticalAction(int)));
+        connect(criticalBattery, SIGNAL(valueChanged(int)),
+                this, SLOT(handleCriticalBattery(int)));
+        connect(autoSleepBattery, SIGNAL(valueChanged(int)),
+                this, SLOT(handleAutoSleepBattery(int)));
+        connect(autoSleepAC, SIGNAL(valueChanged(int)),
+                this, SLOT(handleAutoSleepAC(int)));
+        connect(desktopSS, SIGNAL(toggled(bool)),
+                this, SLOT(handleDesktopSS(bool)));
+        connect(desktopPM, SIGNAL(toggled(bool)),
+                this, SLOT(handleDesktopPM(bool)));
+        connect(showNotifications, SIGNAL(toggled(bool)),
+                this, SLOT(handleShowNotifications(bool)));
+        connect(showSystemTray, SIGNAL(toggled(bool)),
+                this, SLOT(handleShowSystemTray(bool)));
+        connect(disableLidAction, SIGNAL(toggled(bool)),
+                this, SLOT(handleDisableLidAction(bool)));
+        connect(autoSleepBatteryAction, SIGNAL(currentIndexChanged(int)),
+                this, SLOT(handleAutoSleepBatteryAction(int)));
+        connect(autoSleepACAction, SIGNAL(currentIndexChanged(int)),
+                this, SLOT(handleAutoSleepACAction(int)));
+        connect(backlightBatteryCheck, SIGNAL(toggled(bool)),
+                this, SLOT(handleBacklightBatteryCheck(bool)));
+        connect(backlightACCheck, SIGNAL(toggled(bool)),
+                this, SLOT(handleBacklightACCheck(bool)));
+        connect(backlightSliderBattery, SIGNAL(valueChanged(int)),
+                this, SLOT(handleBacklightBatterySlider(int)));
+        connect(backlightSliderAC, SIGNAL(valueChanged(int)),
+                this, SLOT(handleBacklightACSlider(int)));
+        connect(backlightBatteryLowerCheck, SIGNAL(toggled(bool)),
+                this, SLOT(handleBacklightBatteryCheckLower(bool)));
+        connect(backlightACHigherCheck, SIGNAL(toggled(bool)),
+                this, SLOT(handleBacklightACCheckHigher(bool)));
+        connect(warnOnLowBattery, SIGNAL(toggled(bool)),
+                this, SLOT(handleWarnOnLowBattery(bool)));
+        connect(warnOnVeryLowBattery, SIGNAL(toggled(bool)),
+                this, SLOT(handleWarnOnVeryLowBattery(bool)));
+        connect(notifyOnBattery, SIGNAL(toggled(bool)),
+                this, SLOT(handleNotifyBattery(bool)));
+        connect(notifyOnAC, SIGNAL(toggled(bool)),
+                this, SLOT(handleNotifyAC(bool)));
+        connect(backlightMouseWheel, SIGNAL(toggled(bool)),
+                this, SLOT(handleBacklightMouseWheel(bool)));
+        connect(suspendLockScreen, SIGNAL(toggled(bool)),
+                this, SLOT(handleSuspendLockScreen(bool)));
+        connect(resumeLockScreen, SIGNAL(toggled(bool)),
+                this, SLOT(handleResumeLockScreen(bool)));
+        connect(bypassKernel, SIGNAL(toggled(bool)),
+                this, SLOT(handleKernelBypass(bool)));
     }
-
-    // trigger generation of powerkit.conf if not exists
-    PowerSettings::getConf();
-
-    // setup theme
-    //Theme::setIconTheme();
-    setWindowIcon(QIcon::fromTheme(DEFAULT_AC_ICON));
-
-    setupWidgets(); // setup widgets
-    populate(); // populate boxes
-    loadSettings(); // load settings
-
-    // connect widgets
-    connect(lidActionBattery, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(handleLidActionBattery(int)));
-    connect(lidActionAC, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(handleLidActionAC(int)));
-    connect(criticalActionBattery, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(handleCriticalAction(int)));
-    connect(criticalBattery, SIGNAL(valueChanged(int)),
-            this, SLOT(handleCriticalBattery(int)));
-    connect(autoSleepBattery, SIGNAL(valueChanged(int)),
-            this, SLOT(handleAutoSleepBattery(int)));
-    connect(autoSleepAC, SIGNAL(valueChanged(int)),
-            this, SLOT(handleAutoSleepAC(int)));
-    connect(desktopSS, SIGNAL(toggled(bool)),
-            this, SLOT(handleDesktopSS(bool)));
-    connect(desktopPM, SIGNAL(toggled(bool)),
-            this, SLOT(handleDesktopPM(bool)));
-    connect(showNotifications, SIGNAL(toggled(bool)),
-            this, SLOT(handleShowNotifications(bool)));
-    connect(showSystemTray, SIGNAL(toggled(bool)),
-            this, SLOT(handleShowSystemTray(bool)));
-    connect(disableLidAction, SIGNAL(toggled(bool)),
-            this, SLOT(handleDisableLidAction(bool)));
-    connect(autoSleepBatteryAction, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(handleAutoSleepBatteryAction(int)));
-    connect(autoSleepACAction, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(handleAutoSleepACAction(int)));
-    connect(backlightBatteryCheck, SIGNAL(toggled(bool)),
-            this, SLOT(handleBacklightBatteryCheck(bool)));
-    connect(backlightACCheck, SIGNAL(toggled(bool)),
-            this, SLOT(handleBacklightACCheck(bool)));
-    connect(backlightSliderBattery, SIGNAL(valueChanged(int)),
-            this, SLOT(handleBacklightBatterySlider(int)));
-    connect(backlightSliderAC, SIGNAL(valueChanged(int)),
-            this, SLOT(handleBacklightACSlider(int)));
-    connect(backlightBatteryLowerCheck, SIGNAL(toggled(bool)),
-            this, SLOT(handleBacklightBatteryCheckLower(bool)));
-    connect(backlightACHigherCheck, SIGNAL(toggled(bool)),
-            this, SLOT(handleBacklightACCheckHigher(bool)));
-    connect(warnOnLowBattery, SIGNAL(toggled(bool)),
-            this, SLOT(handleWarnOnLowBattery(bool)));
-    connect(warnOnVeryLowBattery, SIGNAL(toggled(bool)),
-            this, SLOT(handleWarnOnVeryLowBattery(bool)));
-    connect(notifyOnBattery, SIGNAL(toggled(bool)),
-            this, SLOT(handleNotifyBattery(bool)));
-    connect(notifyOnAC, SIGNAL(toggled(bool)),
-            this, SLOT(handleNotifyAC(bool)));
-    connect(backlightMouseWheel, SIGNAL(toggled(bool)),
-            this, SLOT(handleBacklightMouseWheel(bool)));
-    connect(suspendLockScreen, SIGNAL(toggled(bool)),
-            this, SLOT(handleSuspendLockScreen(bool)));
-    connect(resumeLockScreen, SIGNAL(toggled(bool)),
-            this, SLOT(handleResumeLockScreen(bool)));
-    connect(bypassKernel, SIGNAL(toggled(bool)),
-            this, SLOT(handleKernelBypass(bool)));
 }
 
-Dialog::~Dialog()
+PowerSettingsWidget::~PowerSettingsWidget()
 {
     PowerSettings::setValue(CONF_DIALOG, saveGeometry());
 }
 
-void Dialog::setupWidgets()
+void PowerSettingsWidget::setupWidgets()
 {
     // setup widgets
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -555,7 +549,7 @@ void Dialog::setupWidgets()
 }
 
 // populate widgets with default values
-void Dialog::populate()
+void PowerSettingsWidget::populate()
 {
     lidActionBattery->clear();
     lidActionBattery->addItem(QIcon::fromTheme(DEFAULT_NONE_ICON),
@@ -619,7 +613,7 @@ void Dialog::populate()
 }
 
 // load settings and set defaults
-void Dialog::loadSettings()
+void PowerSettingsWidget::loadSettings()
 {
     if (PowerSettings::isValid(CONF_DIALOG_GEOMETRY)) {
         restoreGeometry(PowerSettings::getValue(CONF_DIALOG_GEOMETRY).toByteArray());
@@ -796,7 +790,7 @@ void Dialog::loadSettings()
     enableLid(PowerClient::lidIsPresent(dbus));
 }
 
-void Dialog::saveSettings()
+void PowerSettingsWidget::saveSettings()
 {
     PowerSettings::setValue(CONF_LID_BATTERY_ACTION,
                               lidActionBattery->currentIndex());
@@ -855,7 +849,7 @@ void Dialog::saveSettings()
 }
 
 // set default action in combobox
-void Dialog::setDefaultAction(QComboBox *box, int action)
+void PowerSettingsWidget::setDefaultAction(QComboBox *box, int action)
 {
     for (int i=0;i<box->count();i++) {
         if (box->itemData(i).toInt() == action) {
@@ -866,13 +860,13 @@ void Dialog::setDefaultAction(QComboBox *box, int action)
 }
 
 // set default value in spinbox
-void Dialog::setDefaultAction(QSpinBox *box, int action)
+void PowerSettingsWidget::setDefaultAction(QSpinBox *box, int action)
 {
     box->setValue(action);
 }
 
 // set default value in combobox
-void Dialog::setDefaultAction(QComboBox *box, QString value)
+void PowerSettingsWidget::setDefaultAction(QComboBox *box, QString value)
 {
     for (int i=0;i<box->count();i++) {
         if (box->itemText(i) == value) {
@@ -883,40 +877,40 @@ void Dialog::setDefaultAction(QComboBox *box, QString value)
 }
 
 // save current value and update power manager
-void Dialog::handleLidActionBattery(int index)
+void PowerSettingsWidget::handleLidActionBattery(int index)
 {
     checkPerms();
     PowerSettings::setValue(CONF_LID_BATTERY_ACTION, index);
 }
 
-void Dialog::handleLidActionAC(int index)
+void PowerSettingsWidget::handleLidActionAC(int index)
 {
     checkPerms();
     PowerSettings::setValue(CONF_LID_AC_ACTION, index);
 }
 
-void Dialog::handleCriticalAction(int index)
+void PowerSettingsWidget::handleCriticalAction(int index)
 {
     checkPerms();
     PowerSettings::setValue(CONF_CRITICAL_BATTERY_ACTION, index);
 }
 
-void Dialog::handleCriticalBattery(int value)
+void PowerSettingsWidget::handleCriticalBattery(int value)
 {
     PowerSettings::setValue(CONF_CRITICAL_BATTERY_TIMEOUT, value);
 }
 
-void Dialog::handleAutoSleepBattery(int value)
+void PowerSettingsWidget::handleAutoSleepBattery(int value)
 {
     PowerSettings::setValue(CONF_SUSPEND_BATTERY_TIMEOUT, value);
  }
 
-void Dialog::handleAutoSleepAC(int value)
+void PowerSettingsWidget::handleAutoSleepAC(int value)
 {
     PowerSettings::setValue(CONF_SUSPEND_AC_TIMEOUT, value);
 }
 
-void Dialog::handleDesktopSS(bool triggered)
+void PowerSettingsWidget::handleDesktopSS(bool triggered)
 {
     PowerSettings::setValue(CONF_FREEDESKTOP_SS, triggered);
     QMessageBox::information(this, tr("Restart required"),
@@ -924,7 +918,7 @@ void Dialog::handleDesktopSS(bool triggered)
     // TODO: add restart now?
 }
 
-void Dialog::handleDesktopPM(bool triggered)
+void PowerSettingsWidget::handleDesktopPM(bool triggered)
 {
     PowerSettings::setValue(CONF_FREEDESKTOP_PM, triggered);
     QMessageBox::information(this, tr("Restart required"),
@@ -932,34 +926,34 @@ void Dialog::handleDesktopPM(bool triggered)
     // TODO: add restart now?
 }
 
-void Dialog::handleShowNotifications(bool triggered)
+void PowerSettingsWidget::handleShowNotifications(bool triggered)
 {
     PowerSettings::setValue(CONF_TRAY_NOTIFY, triggered);
 }
 
-void Dialog::handleShowSystemTray(bool triggered)
+void PowerSettingsWidget::handleShowSystemTray(bool triggered)
 {
     PowerSettings::setValue(CONF_TRAY_SHOW, triggered);
 }
 
-void Dialog::handleDisableLidAction(bool triggered)
+void PowerSettingsWidget::handleDisableLidAction(bool triggered)
 {
     PowerSettings::setValue(CONF_LID_DISABLE_IF_EXTERNAL, triggered);
 }
 
-void Dialog::handleAutoSleepBatteryAction(int index)
+void PowerSettingsWidget::handleAutoSleepBatteryAction(int index)
 {
     checkPerms();
     PowerSettings::setValue(CONF_SUSPEND_BATTERY_ACTION, index);
 }
 
-void Dialog::handleAutoSleepACAction(int index)
+void PowerSettingsWidget::handleAutoSleepACAction(int index)
 {
     checkPerms();
     PowerSettings::setValue(CONF_SUSPEND_AC_ACTION, index);
 }
 
-void Dialog::checkPerms()
+void PowerSettingsWidget::checkPerms()
 {
     if (!PowerClient::canHibernate(dbus)) {
         bool warnCantHibernate = false;
@@ -1020,49 +1014,49 @@ void Dialog::checkPerms()
     }
 }
 
-void Dialog::handleBacklightBatteryCheck(bool triggered)
+void PowerSettingsWidget::handleBacklightBatteryCheck(bool triggered)
 {
     PowerSettings::setValue(CONF_BACKLIGHT_BATTERY_ENABLE, triggered);
 }
 
-void Dialog::handleBacklightACCheck(bool triggered)
+void PowerSettingsWidget::handleBacklightACCheck(bool triggered)
 {
     PowerSettings::setValue(CONF_BACKLIGHT_AC_ENABLE, triggered);
 }
 
-void Dialog::handleBacklightBatterySlider(int value)
+void PowerSettingsWidget::handleBacklightBatterySlider(int value)
 {
     PowerSettings::setValue(CONF_BACKLIGHT_BATTERY, value);
 }
 
-void Dialog::handleBacklightACSlider(int value)
+void PowerSettingsWidget::handleBacklightACSlider(int value)
 {
     PowerSettings::setValue(CONF_BACKLIGHT_AC, value);
 }
 
-void Dialog::hibernateWarn()
+void PowerSettingsWidget::hibernateWarn()
 {
     QMessageBox::warning(this, tr("Hibernate not supported"),
                          tr("Hibernate not supported, consult your OS documentation."));
 }
 
-void Dialog::sleepWarn()
+void PowerSettingsWidget::sleepWarn()
 {
     QMessageBox::warning(this, tr("Sleep not supported"),
                          tr("Sleep not supported, consult your OS documentation."));
 }
 
-void Dialog::handleBacklightBatteryCheckLower(bool triggered)
+void PowerSettingsWidget::handleBacklightBatteryCheckLower(bool triggered)
 {
     PowerSettings::setValue(CONF_BACKLIGHT_BATTERY_DISABLE_IF_LOWER, triggered);
 }
 
-void Dialog::handleBacklightACCheckHigher(bool triggered)
+void PowerSettingsWidget::handleBacklightACCheckHigher(bool triggered)
 {
     PowerSettings::setValue(CONF_BACKLIGHT_AC_DISABLE_IF_HIGHER, triggered);
 }
 
-void Dialog::enableBacklight(bool enabled)
+void PowerSettingsWidget::enableBacklight(bool enabled)
 {
     backlightSliderBattery->setEnabled(enabled);
     backlightSliderAC->setEnabled(enabled);
@@ -1075,27 +1069,27 @@ void Dialog::enableBacklight(bool enabled)
     backlightMouseWheel->setEnabled(enabled);
 }
 
-void Dialog::handleWarnOnLowBattery(bool triggered)
+void PowerSettingsWidget::handleWarnOnLowBattery(bool triggered)
 {
     PowerSettings::setValue(CONF_WARN_ON_LOW_BATTERY, triggered);
 }
 
-void Dialog::handleWarnOnVeryLowBattery(bool triggered)
+void PowerSettingsWidget::handleWarnOnVeryLowBattery(bool triggered)
 {
     PowerSettings::setValue(CONF_WARN_ON_VERYLOW_BATTERY, triggered);
 }
 
-void Dialog::handleNotifyBattery(bool triggered)
+void PowerSettingsWidget::handleNotifyBattery(bool triggered)
 {
     PowerSettings::setValue(CONF_NOTIFY_ON_BATTERY, triggered);
 }
 
-void Dialog::handleNotifyAC(bool triggered)
+void PowerSettingsWidget::handleNotifyAC(bool triggered)
 {
     PowerSettings::setValue(CONF_NOTIFY_ON_AC, triggered);
 }
 
-void Dialog::enableLid(bool enabled)
+void PowerSettingsWidget::enableLid(bool enabled)
 {
     lidActionAC->setEnabled(enabled);
     lidActionBattery->setEnabled(enabled);
@@ -1104,22 +1098,22 @@ void Dialog::enableLid(bool enabled)
     disableLidAction->setEnabled(enabled);
 }
 
-void Dialog::handleBacklightMouseWheel(bool triggered)
+void PowerSettingsWidget::handleBacklightMouseWheel(bool triggered)
 {
     PowerSettings::setValue(CONF_BACKLIGHT_MOUSE_WHEEL, triggered);
 }
 
-void Dialog::handleSuspendLockScreen(bool triggered)
+void PowerSettingsWidget::handleSuspendLockScreen(bool triggered)
 {
     PowerSettings::setValue(CONF_SUSPEND_LOCK_SCREEN, triggered);
 }
 
-void Dialog::handleResumeLockScreen(bool triggered)
+void PowerSettingsWidget::handleResumeLockScreen(bool triggered)
 {
     PowerSettings::setValue(CONF_RESUME_LOCK_SCREEN, triggered);
 }
 
-void Dialog::handleKernelBypass(bool triggered)
+void PowerSettingsWidget::handleKernelBypass(bool triggered)
 {
     PowerSettings::setValue(CONF_KERNEL_BYPASS, triggered);
 }

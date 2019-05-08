@@ -105,8 +105,7 @@ set(
     src/lib/org.dracolinux.Power.Manager.cpp
     src/lib/org.dracolinux.Power.ScreenX11.cpp
     src/lib/org.dracolinux.Power.Settings.cpp
-    src/lib/org.dracolinux.Power.SettingsDialog.cpp
-    src/lib/org.dracolinux.Power.KeyboardDialog.cpp
+    src/lib/org.dracolinux.Power.SettingsWidget.cpp
     src/lib/org.dracolinux.Powerd.Manager.Backlight.cpp
     src/lib/org.dracolinux.Powerd.Manager.CPU.cpp
     src/lib/org.dracolinux.Powerd.Manager.RTC.cpp
@@ -384,25 +383,6 @@ target_link_libraries(
     ${LIB_NAME}
 )
 
-# draco-power-settings (MERGE WITH SETTINGS!)
-add_executable(
-    ${PROJECT_NAME}-power-settings
-    src/settings/powerconf/main.cpp
-)
-target_include_directories(
-    ${PROJECT_NAME}-power-settings
-    PRIVATE
-    src/lib
-    src/lib/lumina
-)
-target_link_libraries(
-    ${PROJECT_NAME}-power-settings
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    ${LIB_NAME}
-)
-
 # draco-settings
 add_executable(
     ${PROJECT_NAME}-settings
@@ -415,9 +395,9 @@ add_executable(
     src/todo/config/pages/getPage.cpp
     src/todo/config/pages/getPage.h
     src/todo/config/pages/page_keyboard.cpp
+    src/todo/config/pages/page_power.cpp
     src/todo/config/pages/page_autostart.cpp
     src/todo/config/pages/page_defaultapps.cpp
-    #src/todo/config/pages/page_interface_desktop.cpp
     src/todo/config/pages/page_interface_panels.cpp
     src/todo/config/pages/page_main.cpp
     src/todo/config/pages/page_main.ui
@@ -427,9 +407,9 @@ add_executable(
     src/lib/lumina/AppDialog.h
     src/lib/lumina/AppDialog.ui
     src/todo/config/pages/page_keyboard.ui
+    src/todo/config/pages/page_power.ui
     src/todo/config/pages/page_autostart.ui
     src/todo/config/pages/page_defaultapps.ui
-    #src/todo/config/pages/page_interface_desktop.ui
     src/todo/config/pages/page_interface_panels.ui
     #src/todo/config/pages/pages/page_session_locale.ui
     src/todo/config/pages/page_session_options.ui
@@ -501,11 +481,6 @@ configure_file(
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings.desktop
     @ONLY
 )
-configure_file(
-    share/applications/power-settings.desktop.in
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-power-settings.desktop
-    @ONLY
-)
 install(
     TARGETS
     ${LIB_NAME}
@@ -561,12 +536,6 @@ install(
     ${CMAKE_INSTALL_BINDIR}
 )
 install(
-    TARGETS
-    ${PROJECT_NAME}-power-settings
-    DESTINATION
-    ${CMAKE_INSTALL_BINDIR}
-)
-install(
     FILES
     share/xsessions/${PROJECT_NAME}.desktop
     DESTINATION
@@ -588,12 +557,6 @@ install(
 install(
     FILES
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings.desktop
-    DESTINATION
-    ${CMAKE_INSTALL_DATAROOTDIR}/applications
-)
-install(
-    FILES
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-power-settings.desktop
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )

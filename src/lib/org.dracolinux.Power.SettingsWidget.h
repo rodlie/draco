@@ -8,10 +8,10 @@
 #
 */
 
-#ifndef DIALOG_H
-#define DIALOG_H
+#ifndef POWER_SETTINGS_WIDGET_H
+#define POWER_SETTINGS_WIDGET_H
 
-#include <QDialog>
+#include <QWidget>
 #include <QComboBox>
 #include <QSpinBox>
 #include <QCheckBox>
@@ -30,13 +30,13 @@
 #include <QDateTime>
 #include <QScrollArea>
 
-class Dialog : public QDialog
+class PowerSettingsWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-   explicit Dialog(QWidget *parent = nullptr);
-   ~Dialog();
+   explicit PowerSettingsWidget(QWidget *parent = nullptr);
+   ~PowerSettingsWidget();
 
 private:
     QDBusInterface *dbus;
@@ -116,4 +116,4 @@ private slots:
     void handleKernelBypass(bool triggered);
 };
 
-#endif // DIALOG_H
+#endif // POWER_SETTINGS_WIDGET_H
