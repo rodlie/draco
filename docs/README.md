@@ -128,6 +128,33 @@ Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (p
  * *qtfm (optional)*
  * *qterminal (optional)*
 
+```
+On Slackware64 Current do the following to setup dependencies:
+
+wget http://www.slackware.com/~alien/slackbuilds/OpenAL/pkg64/current/OpenAL-1.19.1-x86_64-1alien.txz
+sudo upgradepkg --install-new OpenAL-*.txz
+
+wget http://www.slackware.com/~alien/slackbuilds/libxkbcommon/pkg64/current/libxkbcommon-0.8.3-x86_64-1alien.txz
+sudo upgradepkg --install-new libxkbcommon-*.txz
+
+wget http://www.slackware.com/~alien/slackbuilds/openbox/pkg64/current/openbox-3.6.1-x86_64-1alien.tgz
+sudo upgradepkg --install-new openbox-*.tgz
+
+wget http://www.slackware.com/~alien/slackbuilds/qt5/pkg64/current/qt5-5.12.1-x86_64-1alien.txz
+sudo upgradepkg --install-new qt5-*.txz
+
+You will need to build qt5ct from SlackBuilds.org:
+
+wget https://slackbuilds.org/slackbuilds/14.2/desktop/qt5ct.tar.gz
+tar xvf qt5ct.tar.gz
+cd qt5ct.tar.gz
+wget http://prdownloads.sourceforge.net/qt5ct/qt5ct-0.38.tar.bz2
+sudo sh qt5ct.SlackBuild
+sudo upgradepkg --install-new /tmp/qt5ct-*.tgz
+
+
+```
+
  The rest should be available in a standard installation.
 
 A [draco.SlackBuild](https://github.com/rodlie/draco/blob/master/share/slackware/draco.SlackBuild) is available (will build latest from git if run from repo):
