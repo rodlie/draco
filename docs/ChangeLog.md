@@ -1,4 +1,4 @@
-# Draco 0.9.0alpha1 TBA
+# Draco 0.9.0 Beta 1 (TBA)
 
 First public *(pre-release)* version of the Draco Desktop Environment. Forked from Lumina in January 2019, Draco aims to create a small and stable desktop environment that confirms to the XDG and freedesktop.org specifications. Draco is developed on and for Slackware Linux, but should work on any modern distribution.
 
@@ -22,5 +22,6 @@ First public *(pre-release)* version of the Draco Desktop Environment. Forked fr
  - CMake support
  - Internal hotkey support *(does not depend on WM for shortcuts)*
  - Desktop has proper file copy support on drag-and-drop
+ - GTK icon theme and font integration
 
 There is still a lot to do ... some features may still be under development.
