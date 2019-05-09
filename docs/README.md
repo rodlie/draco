@@ -7,7 +7,7 @@
 ![GitHub stars](https://img.shields.io/github/stars/rodlie/draco.svg?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/rodlie/draco.svg?style=social)
 
-**NOT ready for usage, (first) version (``0.9.0``) will be released by the end of May 2019.**
+[![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/draco-promo.gif)
 
 Draco is a simple and lightweight desktop environment. While small still features XDG integration, freedesktop services and integration, power and storage management, desktop, panels, multi-monitor support and much more. Draco does not include any user applications.
 
