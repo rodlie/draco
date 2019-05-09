@@ -180,6 +180,7 @@ sudo make install
 Minimal testing is done on Ubuntu, some features may not work.
 
 Known issues:
+
  * Add your user to the ``power`` group before running Draco (add group if not exists).
  * Hibernate does not work, will add instructions on fixing this
 
@@ -188,6 +189,7 @@ Dependencies (based on a miminal install of Xenial):
 ```
 sudo apt-get install build-essential cmake pkg-config openbox adwaita-icon-theme-full xscreensaver xdg-utils qt5ct qtbase5-dev libqt5x11extras5-dev libx11-dev libxss-dev libxdamage-dev libxrandr-dev libxfixes-dev libxcb1-dev libx11-xcb-dev libxcb-randr0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-util0-dev libxcb-shm0-dev
 ```
+
 Optional:
 
 ```
@@ -199,6 +201,39 @@ Build and install:
 ```
 mkdir build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib64 -DCMAKE_INSTALL_LIBEXECDIR=bin -DCMAKE_BUILD_TYPE=Release ..
+make
+sudo make install
+```
+
+**Note that the install prefix should be the same folder as D-Bus (usually in ``/usr``), else you will need to copy the Draco service files to the proper location manually.**
+
+### Fedora
+
+Minimal testing is done on Fedora, some features may not work.
+
+Known issues:
+
+ * Same as Ubuntu
+ * Adwaita icons are broken, expect missing icons
+
+
+Dependencies:
+
+```
+sudo dnf install qt5-qtbase-devel qt5-qtx11extras-devel cmake gcc-c++ pkg-config libXScrnSaver-devel libXdamage-devel libXrandr-devel libxcb-devel xcb-util-devel xcb-util-wm-devel xcb-util-image-devel xdg-utils shared-mime-info hicolor-icon-theme adwaita-icon-theme openbox xscreensaver qt5ct
+```
+
+Optional:
+
+```
+sudo dnf install qterminal pnmixer
+```
+
+Build and install:
+
+```
+mkdir build && cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib64 -DCMAKE_BUILD_TYPE=Release ..
 make
 sudo make install
 ```
