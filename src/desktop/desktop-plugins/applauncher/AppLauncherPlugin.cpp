@@ -345,6 +345,8 @@ void AppLauncherPlugin::fileRename(){
 }
 
 void AppLauncherPlugin::renameFinished(int result){
+    Q_UNUSED(result)
+    /*
   QString newname = inputDLG->textValue();
   inputDLG->deleteLater();
   inputDLG = 0;
@@ -355,7 +357,7 @@ void AppLauncherPlugin::renameFinished(int result){
   if( QFile::rename(button->whatsThis(), newpath) ){
     //No special actions here yet - TODO
     qDebug() << " - SUCCESS";
-  }
+  }*/
 }
 
 void AppLauncherPlugin::fileDrop(bool copy, QList<QUrl> urls){
