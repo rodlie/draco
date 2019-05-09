@@ -181,7 +181,11 @@ SysTray::SysTray(QObject *parent)
     PowerSettings::getConf();
 
     // setup theme
-    //Theme::setIconTheme();
+    QString cTheme = QIcon::themeName();
+    if (cTheme.isEmpty() || cTheme == "hicolor") {
+        qDebug() << "SET FALLBACK ICON THEME";
+        QIcon::setThemeName("Adwaita");
+    }
     if (tray->icon().isNull()) {
         tray->setIcon(QIcon::fromTheme(DEFAULT_BATTERY_ICON));
     }

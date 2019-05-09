@@ -17,6 +17,14 @@
 
 MainUI::MainUI() : QMainWindow(), ui(new Ui::MainUI){
   ui->setupUi(this);
+
+  // Get the currently-set theme
+  QString cTheme = QIcon::themeName();
+  if (cTheme.isEmpty() || cTheme == "hicolor") {
+      qDebug() << "SET FALLBACK ICON THEME";
+      QIcon::setThemeName("Adwaita");
+  }
+
   loadIcons();
   scaleFactor = 1/15.0; //simple default value
   ui->combo_rotation->clear();

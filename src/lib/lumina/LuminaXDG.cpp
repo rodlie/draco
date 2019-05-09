@@ -911,6 +911,13 @@ QIcon LXDG::findIcon(QString iconName, QString fallback)
         cTheme = "Adwaita";
     }
 
+    // Setup theme path
+    /*if (cTheme == "Adwaita") {
+        QStringList iconPaths = QIcon::themeSearchPaths();
+        iconPaths.prepend(":/icons");
+        QIcon::setThemeSearchPaths(iconPaths);
+    }*/
+
     // filter "bad" icons
     iconName = Draco::filterIconName(iconName);
 

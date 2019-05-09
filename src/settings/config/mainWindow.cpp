@@ -23,6 +23,15 @@
 //=============
 mainWindow::mainWindow() : QMainWindow(), ui(new Ui::mainWindow()){
   ui->setupUi(this);
+
+
+  // Get the currently-set theme
+  QString cTheme = QIcon::themeName();
+  if (cTheme.isEmpty() || cTheme == "hicolor") {
+      qDebug() << "SET FALLBACK ICON THEME";
+      QIcon::setThemeName("Adwaita");
+  }
+
   geomTimer = new QTimer(this);
     geomTimer->setSingleShot(true);
     geomTimer->setInterval(1000); //1 second

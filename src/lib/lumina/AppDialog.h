@@ -29,6 +29,14 @@ private:
 public:
 	AppDialog(QWidget *parent = 0, QString defaultPath = "") : QDialog(parent), ui(new Ui::AppDialog){
 	  ui->setupUi(this); //load the designer file
+
+      // Get the currently-set theme
+      QString cTheme = QIcon::themeName();
+      if (cTheme.isEmpty() || cTheme == "hicolor") {
+          qDebug() << "SET FALLBACK ICON THEME";
+          QIcon::setThemeName("Adwaita");
+      }
+
 	  appreset = false;
 	  ui->listApps->clear();
     QListWidgetItem *defaultItem = 0;
