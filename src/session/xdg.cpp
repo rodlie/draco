@@ -55,21 +55,9 @@ int main(int argc, char *argv[])
             about.setWindowTitle(QString("Draco Desktop Environment"));
             about.setIconPixmap(QIcon(":/defaults/draco-logo.png").pixmap(128, 128));
             about.setWindowIcon(QIcon::fromTheme("user-desktop"));
-            QString osPrettyName, osUname, osCpu = "N/A";
-            if (QFile::exists("/etc/os-release")) {
-                QFile os_release("/etc/os-release");
-                if (os_release.open(QIODevice::ReadOnly|QIODevice::Text)) {
-                    QString tmp = os_release.readAll();
-                    os_release.close();
-                    QStringList lines = tmp.split("\n");
-                    for (int i=0;i<lines.size();++i) {
-                        QString line = lines.at(i);
-                        if (line.startsWith("PRETTY_NAME=")) {
-                            osPrettyName = line.replace("PRETTY_NAME=", "").replace("\"", "").trimmed();
-                        }
-                    }
-                }
-            }
+            QString osPrettyName = Draco::getOSReleaseInfo("PRETTY_NAME");
+            if (osPrettyName.isEmpty()) { osPrettyName = "N/A"; }
+            QString osUname, osCpu = "N/A";
             QProcess uname;
             uname.start("uname -sr");
             uname.waitForFinished();
@@ -87,7 +75,7 @@ int main(int argc, char *argv[])
                                      .arg(osPrettyName)
                                      .arg(osUname).arg(osCpu)
                                      .arg(qVersion()));
-            about.setDetailedText(QString(""));
+            about.setDetailedText(QString("")); // add more stuff here
             return about.exec();
         }
     }
