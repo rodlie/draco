@@ -187,7 +187,7 @@ SysTray::SysTray(QObject *parent)
         QIcon::setThemeName("Adwaita");
     }
     if (tray->icon().isNull()) {
-        tray->setIcon(QIcon::fromTheme(DEFAULT_BATTERY_ICON));
+        tray->setIcon(QIcon::fromTheme(DEFAULT_AC_ICON));
     }
 
     // load settings and register service
@@ -670,6 +670,13 @@ void SysTray::drawBattery(double left)
     if (tray->isSystemTrayAvailable() &&
         !tray->isVisible() &&
         showTray) { tray->show(); }
+
+    // Get the currently-set theme
+    QString cTheme = QIcon::themeName();
+    if (cTheme.isEmpty() || cTheme == "hicolor") {
+        qDebug() << "SET FALLBACK ICON THEME";
+        QIcon::setThemeName("Adwaita");
+    }
 
     QIcon icon = QIcon::fromTheme(DEFAULT_AC_ICON);
     if (left <= 0 || !man->HasBattery()) {
