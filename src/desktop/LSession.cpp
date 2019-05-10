@@ -363,9 +363,10 @@ void LSession::StartLogout()
 void LSession::StartShutdown()
 {
     if (pm->isValid()) {
-        CleanupSession();
-        PowerClient::poweroff(pm);
-        QCoreApplication::exit(0);
+        if (PowerClient::poweroff(pm)) {
+            CleanupSession();
+            QCoreApplication::exit(0);
+        }
     }
 }
 
@@ -381,9 +382,10 @@ void LSession::StartSuspend(bool hibernate)
 void LSession::StartReboot()
 {
     if (pm->isValid()) {
-        CleanupSession();
-        PowerClient::restart(pm);
-        QCoreApplication::exit(0);
+        if (PowerClient::restart(pm)) {
+            CleanupSession();
+            QCoreApplication::exit(0);
+        }
     }
 }
 

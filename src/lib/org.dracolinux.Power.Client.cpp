@@ -128,20 +128,22 @@ void PowerClient::suspend(QDBusInterface *iface)
     qDebug() << "reply" << ok;
 }
 
-void PowerClient::restart(QDBusInterface *iface)
+bool PowerClient::restart(QDBusInterface *iface)
 {
     qDebug() << "restart";
-    if (!iface->isValid()) { return; }
+    if (!iface->isValid()) { return false; }
     QDBusMessage reply = iface->call("Restart");
     bool ok = reply.errorMessage().isEmpty();
     qDebug() << "reply" << ok;
+    return ok;
 }
 
-void PowerClient::poweroff(QDBusInterface *iface)
+bool PowerClient::poweroff(QDBusInterface *iface)
 {
     qDebug() << "poweroff";
-    if (!iface->isValid()) { return; }
+    if (!iface->isValid()) { return false; }
     QDBusMessage reply = iface->call("PowerOff");
     bool ok = reply.errorMessage().isEmpty();
     qDebug() << "reply" << ok;
+    return ok;
 }

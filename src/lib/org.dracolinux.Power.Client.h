@@ -28,8 +28,8 @@ public:
     static void lockScreen(QDBusInterface *iface);
     static void hibernate(QDBusInterface *iface);
     static void suspend(QDBusInterface *iface);
-    static void restart(QDBusInterface *iface);
-    static void poweroff(QDBusInterface *iface);
+    static bool restart(QDBusInterface *iface);
+    static bool poweroff(QDBusInterface *iface);
 };
 
 #endif // POWER_CLIENT_H
