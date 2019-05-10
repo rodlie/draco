@@ -671,6 +671,13 @@ void SysTray::drawBattery(double left)
         !tray->isVisible() &&
         showTray) { tray->show(); }
 
+    // Get the currently-set theme
+    QString cTheme = QIcon::themeName();
+    if (cTheme.isEmpty() || cTheme == "hicolor") {
+        qDebug() << "SET FALLBACK ICON THEME";
+        QIcon::setThemeName("Adwaita");
+    }
+
     QIcon icon = QIcon::fromTheme(DEFAULT_AC_ICON);
     if (left <= 0 || !man->HasBattery()) {
         tray->setIcon(icon);
@@ -743,11 +750,6 @@ void SysTray::timeout()
             break;
         default: break;
         }
-    }
-
-    // fallback icon
-    if (tray->isVisible() && tray->icon().isNull()) {
-        tray->setIcon(QIcon::fromTheme(DEFAULT_AC_ICON));
     }
 }
 
