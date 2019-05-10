@@ -91,8 +91,12 @@ void LAppMenuPlugin::UpdateMenu(){
     }
 
     // Add link to the file manager
-    QAction *tmpact = mainmenu->addAction( LXDG::findIcon("user-home", ""), tr("Browse Files") );
-    tmpact->setWhatsThis("\""+QDir::homePath()+"\"");
+    QString fmPath = LXDG::findDefaultAppForMime("inode/directory");
+    XDGDesktop fm(fmPath);
+    if (fm.isValid()) {
+        QAction *fmAct = mainmenu->addAction( LXDG::findIcon("user-home", ""), tr("Browse Files") );
+        fmAct->setWhatsThis("\""+QDir::homePath()+"\"");
+    }
 
     //--Look for the app store
     /*XDGDesktop store(LOS::AppStoreShortcut());
@@ -163,7 +167,7 @@ void LAppMenuPlugin::UpdateMenu(){
   //Now add any logout options
   mainmenu->addSeparator();
   //QMenu *tmpmenu = mainmenu->addMenu(LXDG::findIcon("system-log-out",""), tr("Leave"));
-    tmpact =mainmenu->addAction(LXDG::findIcon("system-log-out"),tr("Leave"));
+    QAction *tmpact =mainmenu->addAction(LXDG::findIcon("system-log-out"),tr("Leave"));
       tmpact->setWhatsThis("internal::logout");
 
 }
