@@ -82,6 +82,8 @@ public:
                              QString key,
                              QVariant value);
     static bool isBlacklistedApplication(const QString &exec);
+    static const QString getOSReleaseInfo(const QString &type);
+    static bool kernelCanResume();
 };
 
 #endif // DRACO_H

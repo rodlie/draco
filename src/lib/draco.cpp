@@ -568,3 +568,38 @@ bool Draco::isBlacklistedApplication(const QString &exec)
     if (blacklisted.contains(exec)) { return true; }
     return false;
 }
+
+const QString Draco::getOSReleaseInfo(const QString &type)
+{
+    QString result;
+    if (!QFile::exists("/etc/os-release") || type.isEmpty()) { return result; }
+    QFile os_release("/etc/os-release");
+    if (!os_release.open(QIODevice::ReadOnly|QIODevice::Text)) { return result; }
+    QString tmp = os_release.readAll();
+    os_release.close();
+    QStringList lines = tmp.split("\n");
+    for (int i=0;i<lines.size();++i) {
+        QString line = lines.at(i);
+        if (line.startsWith(QString("%1=").arg(type))) {
+            result =  line.replace(QString("%1=").arg(type), "").replace("\"", "").trimmed();
+            break;
+        }
+    }
+    return result;
+}
+
+bool Draco::kernelCanResume()
+{
+    if (getOSReleaseInfo("ID") != "slackware") {
+        // filter out distros that we know don't need this check
+        // for now we only check for slackware.
+        return true;
+    }
+    QFile cmdline("/proc/cmdline");
+    if (cmdline.open(QIODevice::ReadOnly)) {
+        QByteArray result = cmdline.readAll();
+        cmdline.close();
+        if (result.contains("resume=")) { return true; }
+    }
+    return false;
+}
