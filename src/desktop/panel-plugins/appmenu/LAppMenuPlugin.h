@@ -43,6 +43,7 @@ private:
 	QMenu *mainmenu;
 
 	void updateButtonVisuals();
+    bool showMenuText;
 
 private slots:
 	void shortcutActivated();
@@ -66,6 +67,7 @@ public slots:
 	  updateButtonVisuals();
 	}
 	
+    void settingsChange(QSettings *settings, const QString &prefix);
 	void ThemeChange(){
 	  updateButtonVisuals();
 	}

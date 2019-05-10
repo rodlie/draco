@@ -16,6 +16,7 @@
 #include <QString>
 #include <QBoxLayout>
 #include <QApplication>
+#include <QSettings>
 
 class LPPlugin : public QWidget{
 	Q_OBJECT
@@ -65,6 +66,10 @@ public slots:
 	  //This needs to be re-implemented in the subclasses plugin
 	    //This is where all the visuals are set if using Theme-dependant icons.
 	}
+    virtual void settingsChange(QSettings *settings, const QString &prefix) {
+        Q_UNUSED(settings)
+        Q_UNUSED(prefix)
+    }
 	virtual void OrientationChange(){
 	  //This needs to be re-implemented in the subclasses plugin
 	    //This is where any horizontal/vertical orientations can be changed appropriately		

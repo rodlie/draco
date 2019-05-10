@@ -30,6 +30,8 @@ LAppMenuPlugin::LAppMenuPlugin(QWidget *parent, QString id, bool horizontal) : L
     this->layout()->setContentsMargins(0,0,0,0);
     this->layout()->addWidget(button);
 
+    showMenuText = true;
+
   connect(mainmenu, SIGNAL(aboutToHide()), this, SIGNAL(MenuClosed()));
   connect(mainmenu, SIGNAL(triggered(QAction*)), this, SLOT(LaunchItem(QAction*)) );
   connect(LSession::handle()->applicationMenu(), SIGNAL(AppMenuUpdated()), this, SLOT(UpdateMenu()));
@@ -46,7 +48,7 @@ LAppMenuPlugin::~LAppMenuPlugin(){
 
 void LAppMenuPlugin::updateButtonVisuals(){
     button->setToolTip( tr("Quickly launch applications or open files"));
-    button->setText(tr("Applications"));
+    button->setText(showMenuText?tr("Applications"):"");
     button->setIcon(LXDG::findIcon("system-run"));
 }
 
@@ -170,4 +172,12 @@ void LAppMenuPlugin::UpdateMenu(){
     QAction *tmpact =mainmenu->addAction(LXDG::findIcon("system-log-out"),tr("Leave"));
       tmpact->setWhatsThis("internal::logout");
 
+}
+
+void LAppMenuPlugin::settingsChange(QSettings *settings, const QString &prefix)
+{
+    if (!settings) { return; }
+    qWarning() << "settings changed" << prefix;
+    showMenuText = settings->value(QString("%1appmenuText").arg(prefix), true).toBool();
+    updateButtonVisuals();
 }

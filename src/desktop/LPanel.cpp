@@ -343,6 +343,9 @@ void LPanel::UpdatePanel(bool geomonly)
     for (int i=0; i<PLUGINS.length(); i++) {
         QTimer::singleShot(0,PLUGINS[i], SLOT(OrientationChange()));
     }
+    for (int i=0; i<PLUGINS.length(); i++) {
+        PLUGINS[i]->settingsChange(settings, PPREFIX);
+    }
     checkPanelFocus();
     //LSession::processEvents();
 }
