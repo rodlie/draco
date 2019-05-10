@@ -698,6 +698,11 @@ void SysTray::drawBattery(double left)
 // timeouts and xss must be >= user value and service has to be empty before suspend
 void SysTray::timeout()
 {
+    // fallback icon
+    if (tray->icon().isNull()) {
+        tray->setIcon(QIcon::fromTheme(DEFAULT_AC_ICON));
+    }
+
     if (!showTray &&
         tray->isVisible()) { tray->hide(); }
     if (tray->isSystemTrayAvailable() &&
@@ -743,11 +748,6 @@ void SysTray::timeout()
             break;
         default: break;
         }
-    }
-
-    // fallback icon
-    if (tray->isVisible() && tray->icon().isNull()) {
-        tray->setIcon(QIcon::fromTheme(DEFAULT_AC_ICON));
     }
 }
 
