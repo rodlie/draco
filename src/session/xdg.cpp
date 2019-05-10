@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
     if (isLocalFile && !isDesktop) { // handle local file
         QFileInfo localInfo(fileName);
         if (localInfo.isDir()) { // is directory, get default file manager
-            desktopFile = XDGMime::findDefaultAppForMime("application/x-directory");
+            desktopFile = XDGMime::findDefaultAppForMime("inode/directory");
         } else { // is file, try to get default application for mime type
             QString mime = XDGMime::findAppMimeForFile(fileName);
             qDebug() << "FILE MIME" << mime;
