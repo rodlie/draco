@@ -236,6 +236,20 @@ QStringList Draco::applicationLocations(const QString &appPath)
     return result;
 }
 
+const QString Draco::xdgConfigHome()
+{
+    QString path = QString(getenv("XDG_CONFIG_HOME"));
+    if (path.isEmpty()) { path = QString("%1/.config").arg(QDir::homePath()); }
+    return path;
+}
+
+const QString Draco::xdgDataHome()
+{
+    QString path = QString(getenv("XDG_DATA_HOME"));
+    if (path.isEmpty()) { path = QString("%1/.local/share").arg(QDir::homePath()); }
+    return path;
+}
+
 bool Draco::xdgOpenCheck()
 {
     // "replace" xdg-open with our own (since xdg-open does not support us yet)
@@ -262,6 +276,96 @@ bool Draco::xdgOpenCheck()
         }
     }
     return true;
+}
+
+// mimeapps.list is a mess, some apps use XDG_DATA_HOME/applications and some use XDG_CONFIG_HOME and some use both
+// FORCE XDG_CONFIG_HOME/mimeapps.list as default mimeapps.list
+void Draco::xdgMimeCheck()
+{
+    qDebug() << "check for mimeapps";
+    QString configDir = xdgConfigHome();
+    QString localDir = xdgDataHome();
+    QString mimeApps = QString("%1/mimeapps.list").arg(configDir);
+    QString legacyMimeApps = QString("%1/applications/mimeapps.list").arg(localDir);
+
+    bool hasMimeApps = QFile::exists(mimeApps);
+    bool hasLegacyMimeApps = QFile::exists(legacyMimeApps);
+
+    if (!hasMimeApps) { // create a empty XDG_CONFIG_HOME/mimeapps.list
+        qDebug() << "NEED TO CREATE" << mimeApps;
+        if (!QFile::exists(configDir)) {
+            qDebug() << "NEED TO CREATE" << configDir;
+            QDir mkConfigDir(configDir);
+            if (!mkConfigDir.mkpath(configDir)) {
+
+                qWarning() << "FAILED TO CREATE" << configDir;
+            }
+        }
+        QFile mkMimeApps(mimeApps);
+        if (mkMimeApps.open(QIODevice::WriteOnly)) { mkMimeApps.close(); }
+        else {
+            qWarning() << "FAILED TO CREATE" << mimeApps;
+        }
+    }
+    if (!hasLegacyMimeApps) { // symlink XDG_CONFIG_HOME/mimeapps.list to XDG_DATA_HOME/mimeapps.list
+        qDebug() << "NEED TO CREATE" << legacyMimeApps;
+        if (!QFile::exists(localDir)) {
+            qDebug() << "NEED TO CREATE" << localDir;
+            QDir mkLocalDir(localDir);
+            if (!mkLocalDir.mkpath(localDir)) {
+                qWarning() << "FAILED TO CREATE" << localDir;
+            }
+        }
+        QFile mkMimeApps(mimeApps);
+        if (!mkMimeApps.link(legacyMimeApps)) {
+            qWarning() << "FAILED TO SYMLINK" << mimeApps << "TO" << legacyMimeApps;
+        }
+    }
+
+    // check mimeapps.list
+    QFileInfo mimeAppsInfo(mimeApps);
+    if (mimeAppsInfo.isSymLink()) { // mimeapps.list should not be a shortcut!
+        qDebug() << "MIMEAPPS.LIST IS A SYMLINK!" << mimeAppsInfo.symLinkTarget();
+        QFile mimeFile(mimeApps);
+        QByteArray mimeData;
+        if (mimeFile.open(QIODevice::ReadOnly|QIODevice::Text)) {
+            qDebug() << "READ MIMEAPPS.LIST BEFORE REMOVAL";
+            mimeData = mimeFile.readAll();
+            mimeFile.close();
+        }
+        if (mimeFile.remove()) {
+            qDebug() << "REMOVED MIMEAPPS.LIST SYMLINK";
+            if (mimeFile.open(QIODevice::WriteOnly)) {
+                if (mimeData.size()>0) { mimeFile.write(mimeData); }
+                mimeFile.close();
+                qDebug() << "CREATED MIMEAPPS.LIST";
+            }
+        } else {
+            qWarning() << "FAILED TO REMOVE MIMEAPPS.LIST SYMLINK";
+        }
+    }
+
+    // check legacy mimeapps.list
+    QFileInfo legacyMimeAppsInfo(legacyMimeApps);
+    if (legacyMimeAppsInfo.isSymLink()) { // verify symlink
+        if (legacyMimeAppsInfo.symLinkTarget() != mimeApps) {
+            qDebug() << "LEGACY MIMEAPPS.LIST HAS WRONG SYMLINK PATH!" << legacyMimeAppsInfo.symLinkTarget();
+            QFile mkMimeApps(mimeApps);
+            if (!mkMimeApps.link(legacyMimeApps)) {
+                qWarning() << "FAILED TO SYMLINK" << mimeApps << "TO" << legacyMimeApps;
+            }
+        }
+    } else { // if file take backup and restore symlink
+        qDebug() << "LEGACY MIMEAPPS.LIST IS NOT A SYMLINK!";
+        QFile legacyMimeAppsFile(legacyMimeApps);
+        if (legacyMimeAppsFile.copy(QString("%1.orig-%2").arg(legacyMimeApps).arg(QDateTime::currentDateTime().toSecsSinceEpoch()))) {
+            if (legacyMimeAppsFile.remove(legacyMimeApps)) {
+                if (!legacyMimeAppsFile.link(mimeApps, legacyMimeApps)) {
+                    qWarning() << "FAILED TO SYMLINK" << mimeApps << "TO" << legacyMimeApps;
+                }
+            }
+        }
+    }
 }
 
 const QString Draco::windowManager()
@@ -456,6 +560,7 @@ void Draco::checkGtk3Conf(const QString &theme, QFont font)
 void Draco::checkConfigs()
 {
     xdgOpenCheck();
+    xdgMimeCheck();
     themeEngineCheckConf();
     checkGtk2Conf();
     checkGtk3Conf();

@@ -61,7 +61,10 @@ public:
     static QStringList iconLocations(const QString &appPath);
     static QStringList pixmapLocations(const QString &appPath);
     static QStringList applicationLocations(const QString &appPath);
+    static const QString xdgConfigHome();
+    static const QString xdgDataHome();
     static bool xdgOpenCheck();
+    static void xdgMimeCheck();
     static const QString windowManager();
     static const QString windowManagerConf();
     static const QString windowManagerCmdStart();
