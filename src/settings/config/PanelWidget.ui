@@ -224,6 +224,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="check_appmenu_text">
+         <property name="text">
+          <string>Show application menu button text</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="group_customcolor">
          <property name="title">
           <string>Use Custom Color</string>
