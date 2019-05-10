@@ -359,7 +359,7 @@ void Draco::xdgMimeCheck()
     } else { // if file take backup and restore symlink
         qDebug() << "LEGACY MIMEAPPS.LIST IS NOT A SYMLINK!";
         QFile legacyMimeAppsFile(legacyMimeApps);
-        if (legacyMimeAppsFile.copy(QString("%1.orig-%2").arg(legacyMimeApps).arg(QDateTime::currentDateTime().toSecsSinceEpoch()))) {
+        if (legacyMimeAppsFile.copy(QString("%1.orig-%2").arg(legacyMimeApps).arg(QDateTime::currentDateTime().toMSecsSinceEpoch()))) {
             if (legacyMimeAppsFile.remove(legacyMimeApps)) {
                 if (!legacyMimeAppsFile.link(mimeApps, legacyMimeApps)) {
                     qWarning() << "FAILED TO SYMLINK" << mimeApps << "TO" << legacyMimeApps;
