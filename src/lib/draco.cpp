@@ -13,6 +13,7 @@
 #include "LuminaXDG.h"
 #include "LUtils.h"
 #include <QTextStream>
+#include <QDateTime>
 
 Draco::Draco() {}
 
