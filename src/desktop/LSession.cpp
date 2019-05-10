@@ -362,23 +362,29 @@ void LSession::StartLogout()
 
 void LSession::StartShutdown()
 {
-    CleanupSession();
-    //pm->PowerOff();
-    QCoreApplication::exit(0);
+    if (pm->isValid()) {
+        CleanupSession();
+        PowerClient::poweroff(pm);
+        QCoreApplication::exit(0);
+    }
 }
 
 void LSession::StartSuspend(bool hibernate)
 {
-    lockScreen();
-    //if (hibernate) { pm->Hibernate(); }
-    //else { pm->Suspend(); }
+    if (pm->isValid()) {
+        lockScreen();
+        if (hibernate) { PowerClient::hibernate(pm); }
+        else { PowerClient::suspend(pm); }
+    }
 }
 
 void LSession::StartReboot()
 {
-    CleanupSession();
-    //pm->Restart();
-    QCoreApplication::exit(0);
+    if (pm->isValid()) {
+        CleanupSession();
+        PowerClient::restart(pm);
+        QCoreApplication::exit(0);
+    }
 }
 
 void LSession::lockScreen()

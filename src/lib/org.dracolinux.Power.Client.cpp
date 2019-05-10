@@ -107,5 +107,41 @@ void PowerClient::lockScreen(QDBusInterface *iface)
     if (!iface->isValid()) { return; }
     QDBusMessage reply = iface->call("LockScreen");
     bool ok = reply.errorMessage().isEmpty();
-    qDebug() << "locked screen?" << ok;
+    qDebug() << "reply" << ok;
+}
+
+void PowerClient::hibernate(QDBusInterface *iface)
+{
+    qDebug() << "hibernate";
+    if (!iface->isValid()) { return; }
+    QDBusMessage reply = iface->call("Hibernate");
+    bool ok = reply.errorMessage().isEmpty();
+    qDebug() << "reply" << ok;
+}
+
+void PowerClient::suspend(QDBusInterface *iface)
+{
+    qDebug() << "suspend";
+    if (!iface->isValid()) { return; }
+    QDBusMessage reply = iface->call("Suspend");
+    bool ok = reply.errorMessage().isEmpty();
+    qDebug() << "reply" << ok;
+}
+
+void PowerClient::restart(QDBusInterface *iface)
+{
+    qDebug() << "restart";
+    if (!iface->isValid()) { return; }
+    QDBusMessage reply = iface->call("Restart");
+    bool ok = reply.errorMessage().isEmpty();
+    qDebug() << "reply" << ok;
+}
+
+void PowerClient::poweroff(QDBusInterface *iface)
+{
+    qDebug() << "poweroff";
+    if (!iface->isValid()) { return; }
+    QDBusMessage reply = iface->call("PowerOff");
+    bool ok = reply.errorMessage().isEmpty();
+    qDebug() << "reply" << ok;
 }
