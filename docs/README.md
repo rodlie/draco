@@ -46,6 +46,33 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
 
 ...
 
+### Screen saver
+
+Draco depends on [XScreenSaver](https://www.jwz.org/xscreensaver/) to handle the screen session, the default settings may need to be adjusted. You can launch the (XScreenSaver) configuration GUI with the ``xscreensaver-demo`` command or from settings.
+
+Recommended settings are:
+
+* Mode: ``Blank Screen Only``
+* Blank After: ``5 minutes``
+* Lock Screen After: ``enabled + 0 minutes``
+* Display Power Management: ``enabled``
+  * Standby After: ``0 minutes``
+  * Suspend After: ``0 minutes``
+  * Off After: ``0 minutes``
+  * Quick Power-off in Blank Only Mode: ``enabled``
+
+A custom configuration tool will be added in the future.
+
+### Backlight
+
+Backlight is supported through ``/sys/class/backlight``. The current brightness can be adjusted with the mouse wheel on the system tray icon.
+
+### Hibernate
+
+A swap partition (or file) is needed by the kernel to support hibernate/hybrid sleep. Edit the boot loader configuration and add the kernel option ``resume=<swap_partition/swap_file>``, then save and restart.
+
+**Note that some distributions don't require ``resume=``, and some have hibernation disabled. Consult your distribution documentation regarding hibernation.**
+
 ## History
 
 Draco was an alternative GNU/Linux distribution developed between 2005 and 2015. Since then the OS has been dropped in favor of (upstream, and) creating a desktop environment. The distribution started out as a fork of Slackware Linux, while the desktop started out as a fork of [Lumina](https://github.com/lumina-desktop/lumina) aimed at Slackware Linux. *What goes around comes around ...*
