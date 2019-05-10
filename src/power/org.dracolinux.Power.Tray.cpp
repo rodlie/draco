@@ -187,7 +187,7 @@ SysTray::SysTray(QObject *parent)
         QIcon::setThemeName("Adwaita");
     }
     if (tray->icon().isNull()) {
-        tray->setIcon(QIcon::fromTheme(DEFAULT_AC_ICON));
+        tray->setIcon(QIcon::fromTheme(DEFAULT_BATTERY_ICON));
     }
 
     // load settings and register service
