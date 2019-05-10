@@ -71,8 +71,8 @@ private:
     QLabel *acBacklightLabel;
     QCheckBox *backlightMouseWheel;
     QCheckBox *suspendLockScreen;
-    QCheckBox *resumeLockScreen;
-    QCheckBox *bypassKernel;
+    //QCheckBox *resumeLockScreen;
+    //QCheckBox *bypassKernel;
 
 private slots:
     void setupWidgets();
@@ -112,8 +112,8 @@ private slots:
     void enableLid(bool enabled);
     void handleBacklightMouseWheel(bool triggered);
     void handleSuspendLockScreen(bool triggered);
-    void handleResumeLockScreen(bool triggered);
-    void handleKernelBypass(bool triggered);
+    //void handleResumeLockScreen(bool triggered);
+    //void handleKernelBypass(bool triggered);
 };
 
 #endif // POWER_SETTINGS_WIDGET_H

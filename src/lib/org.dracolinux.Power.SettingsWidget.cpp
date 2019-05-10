@@ -50,8 +50,8 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
     , acBacklightLabel(nullptr)
     , backlightMouseWheel(nullptr)
     , suspendLockScreen(nullptr)
-    , resumeLockScreen(nullptr)
-    , bypassKernel(nullptr)
+    //, resumeLockScreen(nullptr)
+    //, bypassKernel(nullptr)
 {
     // setup dbus
     QDBusConnection session = QDBusConnection::sessionBus();
@@ -127,10 +127,10 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
                 this, SLOT(handleBacklightMouseWheel(bool)));
         connect(suspendLockScreen, SIGNAL(toggled(bool)),
                 this, SLOT(handleSuspendLockScreen(bool)));
-        connect(resumeLockScreen, SIGNAL(toggled(bool)),
-                this, SLOT(handleResumeLockScreen(bool)));
-        connect(bypassKernel, SIGNAL(toggled(bool)),
-                this, SLOT(handleKernelBypass(bool)));
+        //connect(resumeLockScreen, SIGNAL(toggled(bool)),
+                //this, SLOT(handleResumeLockScreen(bool)));
+        //connect(bypassKernel, SIGNAL(toggled(bool)),
+                //this, SLOT(handleKernelBypass(bool)));
     }
 }
 
@@ -467,16 +467,16 @@ void PowerSettingsWidget::setupWidgets()
     backlightMouseWheel->setText(tr("Adjust backlight in system tray"));
     backlightMouseWheel->setToolTip(tr("Adjust the display backlight with the mouse wheel on the system tray icon."));
 
-    bypassKernel = new QCheckBox(this);
+    /*bypassKernel = new QCheckBox(this);
     bypassKernel->setIcon(QIcon::fromTheme(DEFAULT_TRAY_ICON));
     bypassKernel->setText(tr("Ignore kernel resume check"));
-    bypassKernel->setToolTip(tr("Don't check /proc/cmdline for a valid resume=<swap_partition> before hibernate."));
+    bypassKernel->setToolTip(tr("Don't check /proc/cmdline for a valid resume=<swap_partition> before hibernate."));*/
 
     daemonContainerLayout->addWidget(showSystemTray);
     daemonContainerLayout->addWidget(showNotifications);
     daemonContainerLayout->addWidget(disableLidAction);
     daemonContainerLayout->addWidget(backlightMouseWheel);
-    daemonContainerLayout->addWidget(bypassKernel);
+    //daemonContainerLayout->addWidget(bypassKernel);
 
     // screensaver
     QGroupBox *ssContainer = new QGroupBox(this);
@@ -488,13 +488,13 @@ void PowerSettingsWidget::setupWidgets()
     suspendLockScreen->setText(tr("Lock screen on suspend"));
     suspendLockScreen->setToolTip(tr("Lock the screen before suspending the computer"));
 
-    resumeLockScreen = new QCheckBox(this);
+    /*resumeLockScreen = new QCheckBox(this);
     resumeLockScreen->setIcon(QIcon::fromTheme(DEFAULT_LOCK_ICON));
     resumeLockScreen->setText(tr("Lock screen on resume"));
-    resumeLockScreen->setToolTip(tr("Lock the screen before resuming the computer."));
+    resumeLockScreen->setToolTip(tr("Lock the screen before resuming the computer."));*/
 
     ssContainerLayout->addWidget(suspendLockScreen);
-    ssContainerLayout->addWidget(resumeLockScreen);
+    //ssContainerLayout->addWidget(resumeLockScreen);
 
     // notify
     QGroupBox *notifyContainer = new QGroupBox(this);
@@ -727,17 +727,17 @@ void PowerSettingsWidget::loadSettings()
     }
     suspendLockScreen->setChecked(defaultSuspendLockScreen);
 
-    bool defaultResumeLockScreen = false;
+    /*bool defaultResumeLockScreen = false;
     if (PowerSettings::isValid(CONF_RESUME_LOCK_SCREEN)) {
         defaultResumeLockScreen = PowerSettings::getValue(CONF_RESUME_LOCK_SCREEN).toBool();
     }
-    resumeLockScreen->setChecked(defaultResumeLockScreen);
+    resumeLockScreen->setChecked(defaultResumeLockScreen);*/
 
-    bool defaultKernelBypass = false;
+    /*bool defaultKernelBypass = false;
     if (PowerSettings::isValid(CONF_KERNEL_BYPASS)) {
         defaultKernelBypass = PowerSettings::getValue(CONF_KERNEL_BYPASS).toBool();
     }
-    bypassKernel->setChecked(defaultKernelBypass);
+    bypassKernel->setChecked(defaultKernelBypass);*/
 
     // check
     checkPerms();
@@ -786,7 +786,7 @@ void PowerSettingsWidget::loadSettings()
     }
     backlightMouseWheel->setChecked(defaultBacklightMouseWheel);
 
-    enableBacklight(true);
+    enableBacklight(backlightDevice.isEmpty()?false:true);
     enableLid(PowerClient::lidIsPresent(dbus));
 }
 
@@ -844,8 +844,8 @@ void PowerSettingsWidget::saveSettings()
                               backlightMouseWheel->isChecked());
     PowerSettings::setValue(CONF_SUSPEND_LOCK_SCREEN,
                               suspendLockScreen->isChecked());
-    PowerSettings::setValue(CONF_RESUME_LOCK_SCREEN,
-                              resumeLockScreen->isChecked());
+    //PowerSettings::setValue(CONF_RESUME_LOCK_SCREEN,
+                              //resumeLockScreen->isChecked());
 }
 
 // set default action in combobox
@@ -1108,7 +1108,7 @@ void PowerSettingsWidget::handleSuspendLockScreen(bool triggered)
     PowerSettings::setValue(CONF_SUSPEND_LOCK_SCREEN, triggered);
 }
 
-void PowerSettingsWidget::handleResumeLockScreen(bool triggered)
+/*void PowerSettingsWidget::handleResumeLockScreen(bool triggered)
 {
     PowerSettings::setValue(CONF_RESUME_LOCK_SCREEN, triggered);
 }
@@ -1116,4 +1116,4 @@ void PowerSettingsWidget::handleResumeLockScreen(bool triggered)
 void PowerSettingsWidget::handleKernelBypass(bool triggered)
 {
     PowerSettings::setValue(CONF_KERNEL_BYPASS, triggered);
-}
+}*/

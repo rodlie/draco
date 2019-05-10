@@ -31,7 +31,7 @@ Power::Power(QObject *parent) : QObject(parent)
   , suspendWakeupBattery(0)
   , suspendWakeupAC(0)
   , lockScreenOnSuspend(true)
-  , lockScreenOnResume(false)
+  //, lockScreenOnResume(false)
 {
     setup();
     timer.setInterval(TIMEOUT_CHECK);
@@ -413,14 +413,13 @@ void Power::handleSuspend()
 void Power::handlePrepareForSuspend(bool prepare)
 {
     qDebug() << "handle prepare for suspend/resume from consolekit/logind" << prepare;
+    if (lockScreenOnSuspend) { LockScreen(); }
     if (prepare) {
-        if (lockScreenOnSuspend) { LockScreen(); }
         emit PrepareForSuspend();
         releaseSuspendLock(); // we are ready for suspend
     }
     else { // resume
         UpdateDevices();
-        if (lockScreenOnResume) { LockScreen(); }
         if (hasWakeAlarm() &&
              wakeAlarmDate.isValid() &&
              CanHibernate())
@@ -600,6 +599,10 @@ bool Power::CanSuspend()
 bool Power::CanHibernate()
 {
     qDebug() << "PK CHECK FOR HIBERNATE SUPPORT";
+    if (!Draco::kernelCanResume()) {
+        qWarning() << "hibernate is not activated in kernel (add resume=<swap> to kernel cmdline)";
+        return false;
+    }
     if (HasLogind()) {
         return availableAction(PKCanHibernate, PKLogind);
     } else if (HasConsoleKit()) {
@@ -868,7 +871,7 @@ const QDateTime Power::getWakeAlarm()
 void Power::releaseSuspendLock()
 {
     qDebug() << "release suspend lock";
-    suspendLock.reset(NULL);
+    suspendLock.reset(nullptr);
 }
 
 void Power::setSuspendWakeAlarmOnBattery(int value)
@@ -889,11 +892,11 @@ void Power::setLockScreenOnSuspend(bool lock)
     lockScreenOnSuspend = lock;
 }
 
-void Power::setLockScreenOnResume(bool lock)
+/*void Power::setLockScreenOnResume(bool lock)
 {
     qDebug() << "set lock screen on resume" << lock;
     lockScreenOnResume = lock;
-}
+}*/
 
 bool Power::setDisplayBacklight(const QString &device, int value)
 {

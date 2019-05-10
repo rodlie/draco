@@ -136,7 +136,7 @@ private:
     int suspendWakeupAC;
 
     bool lockScreenOnSuspend;
-    bool lockScreenOnResume;
+    //bool lockScreenOnResume;
 
 signals:
     void Update();
@@ -227,7 +227,7 @@ public slots:
     void setSuspendWakeAlarmOnBattery(int value);
     void setSuspendWakeAlarmOnAC(int value);
     void setLockScreenOnSuspend(bool lock);
-    void setLockScreenOnResume(bool lock);
+    //void setLockScreenOnResume(bool lock);
 
     bool setDisplayBacklight(QString const &device, int value);
 };

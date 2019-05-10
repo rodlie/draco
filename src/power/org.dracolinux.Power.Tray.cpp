@@ -501,9 +501,9 @@ void SysTray::loadSettings()
     if (PowerSettings::isValid(CONF_SUSPEND_LOCK_SCREEN)) {
         man->setLockScreenOnSuspend(PowerSettings::getValue(CONF_SUSPEND_LOCK_SCREEN).toBool());
     }
-    if (PowerSettings::isValid(CONF_RESUME_LOCK_SCREEN)) {
+    /*if (PowerSettings::isValid(CONF_RESUME_LOCK_SCREEN)) {
         man->setLockScreenOnResume(PowerSettings::getValue(CONF_RESUME_LOCK_SCREEN).toBool());
-    }
+    }*/
     if (PowerSettings::isValid(CONF_SUSPEND_WAKEUP_HIBERNATE_BATTERY)) {
         man->setSuspendWakeAlarmOnBattery(PowerSettings::getValue(CONF_SUSPEND_WAKEUP_HIBERNATE_BATTERY).toInt());
     }
@@ -511,23 +511,19 @@ void SysTray::loadSettings()
         man->setSuspendWakeAlarmOnAC(PowerSettings::getValue(CONF_SUSPEND_WAKEUP_HIBERNATE_AC).toInt());
     }
 
-    if (PowerSettings::isValid(CONF_KERNEL_BYPASS)) {
+    /*if (PowerSettings::isValid(CONF_KERNEL_BYPASS)) {
         ignoreKernelResume = PowerSettings::getValue(CONF_KERNEL_BYPASS).toBool();
     } else {
         ignoreKernelResume = false;
-    }
+    }*/
 
     // verify
-    /*if (!Common::kernelCanResume(ignoreKernelResume)) {
-        qDebug() << "hibernate is not activated in kernel (add resume=...)";
-        disableHibernate();
-    }*/
     if (!man->CanHibernate()) {
-        qDebug() << "hibernate is not supported";
+        qWarning() << "hibernate is not supported";
         disableHibernate();
     }
     if (!man->CanSuspend()) {
-        qDebug() << "suspend not supported";
+        qWarning() << "suspend not supported";
         disableSuspend();
     }
 
@@ -647,7 +643,7 @@ void SysTray::handleVeryLow(double left)
 // handle critical battery
 void SysTray::handleCritical(double left)
 {
-    qDebug() << "HANDLE CRITICAL BATTERY" << left;
+    qDebug() << "HANDLE CRITICAL BATTERY?" << left;
     if (left<=0 ||
         left>(double)critBatteryValue ||
         !man->OnBattery()) { return; }
@@ -975,27 +971,16 @@ void SysTray::switchInternalMonitor(bool toggle)
 // adjust backlight on wheel event (on systray)
 void SysTray::handleTrayWheel(TrayIcon::WheelAction action)
 {
-    if (/*!hasBacklight ||*/ !backlightMouseWheel) { return; }
+    if (backlightDevice.isEmpty() || !backlightMouseWheel) { return; }
     switch (action) {
     case TrayIcon::WheelUp:
-        /*if (hasBacklight) {
-            Common::adjustBacklight(backlightDevice,
-                                    Common::backlightValue(backlightDevice)+BACKLIGHT_MOVE_VALUE);
-        } else {*/
-            man->setDisplayBacklight(backlightDevice,
-                                     PowerBacklight::getCurrentBrightness(backlightDevice)+BACKLIGHT_MOVE_VALUE);
-        //}
+        man->setDisplayBacklight(backlightDevice,
+                                 PowerBacklight::getCurrentBrightness(backlightDevice)+BACKLIGHT_MOVE_VALUE);
         break;
     case TrayIcon::WheelDown:
-        /*if (hasBacklight) {
-            Common::adjustBacklight(backlightDevice,
-                                    Common::backlightValue(backlightDevice)-BACKLIGHT_MOVE_VALUE);
-        } else {*/
-            man->setDisplayBacklight(backlightDevice,
-                                     PowerBacklight::getCurrentBrightness(backlightDevice)-BACKLIGHT_MOVE_VALUE);
-        //}
+        man->setDisplayBacklight(backlightDevice,
+                                 PowerBacklight::getCurrentBrightness(backlightDevice)-BACKLIGHT_MOVE_VALUE);
         break;
-    default:;
     }
 }
 
