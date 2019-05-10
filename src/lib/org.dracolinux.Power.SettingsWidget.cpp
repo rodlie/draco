@@ -472,6 +472,12 @@ void PowerSettingsWidget::setupWidgets()
     bypassKernel->setText(tr("Ignore kernel resume check"));
     bypassKernel->setToolTip(tr("Don't check /proc/cmdline for a valid resume=<swap_partition> before hibernate."));*/
 
+    suspendLockScreen = new QCheckBox(this);
+    suspendLockScreen->setIcon(QIcon::fromTheme(DEFAULT_LOCK_ICON));
+    suspendLockScreen->setText(tr("Lock screen on suspend"));
+    suspendLockScreen->setToolTip(tr("Lock the screen before suspending the computer"));
+
+    daemonContainerLayout->addWidget(suspendLockScreen);
     daemonContainerLayout->addWidget(showSystemTray);
     daemonContainerLayout->addWidget(showNotifications);
     daemonContainerLayout->addWidget(disableLidAction);
@@ -479,21 +485,18 @@ void PowerSettingsWidget::setupWidgets()
     //daemonContainerLayout->addWidget(bypassKernel);
 
     // screensaver
-    QGroupBox *ssContainer = new QGroupBox(this);
+    /*QGroupBox *ssContainer = new QGroupBox(this);
     ssContainer->setTitle(tr("Screensaver"));
-    QVBoxLayout *ssContainerLayout = new QVBoxLayout(ssContainer);
+    QVBoxLayout *ssContainerLayout = new QVBoxLayout(ssContainer);*/
 
-    suspendLockScreen = new QCheckBox(this);
-    suspendLockScreen->setIcon(QIcon::fromTheme(DEFAULT_LOCK_ICON));
-    suspendLockScreen->setText(tr("Lock screen on suspend"));
-    suspendLockScreen->setToolTip(tr("Lock the screen before suspending the computer"));
+
 
     /*resumeLockScreen = new QCheckBox(this);
     resumeLockScreen->setIcon(QIcon::fromTheme(DEFAULT_LOCK_ICON));
     resumeLockScreen->setText(tr("Lock screen on resume"));
     resumeLockScreen->setToolTip(tr("Lock the screen before resuming the computer."));*/
 
-    ssContainerLayout->addWidget(suspendLockScreen);
+    //ssContainerLayout->addWidget(suspendLockScreen);
     //ssContainerLayout->addWidget(resumeLockScreen);
 
     // notify
@@ -540,7 +543,7 @@ void PowerSettingsWidget::setupWidgets()
     settingsLayout->addWidget(batteryContainer);
     settingsLayout->addWidget(acContainer);
     settingsLayout->addWidget(daemonContainer);
-    settingsLayout->addWidget(ssContainer);
+    //settingsLayout->addWidget(ssContainer);
     settingsLayout->addWidget(notifyContainer);
     settingsLayout->addWidget(advContainer);
     settingsLayout->addStretch();
@@ -788,6 +791,7 @@ void PowerSettingsWidget::loadSettings()
 
     enableBacklight(backlightDevice.isEmpty()?false:true);
     enableLid(PowerClient::lidIsPresent(dbus));
+    enableBattery(PowerClient::hasBattery(dbus));
 }
 
 void PowerSettingsWidget::saveSettings()
@@ -1106,6 +1110,23 @@ void PowerSettingsWidget::handleBacklightMouseWheel(bool triggered)
 void PowerSettingsWidget::handleSuspendLockScreen(bool triggered)
 {
     PowerSettings::setValue(CONF_SUSPEND_LOCK_SCREEN, triggered);
+}
+
+void PowerSettingsWidget::enableBattery(bool enabled)
+{
+    lidActionBattery->setEnabled(enabled);
+    lidActionBatteryLabel->setEnabled(enabled);
+
+    criticalBattery->setEnabled(enabled);
+    criticalActionBattery->setEnabled(enabled);
+
+    autoSleepBattery->setEnabled(enabled);
+    autoSleepBatteryAction->setEnabled(enabled);
+
+    backlightSliderBattery->setEnabled(enabled);
+    backlightBatteryCheck->setEnabled(enabled);
+    backlightBatteryLowerCheck->setEnabled(enabled);
+    batteryBacklightLabel->setEnabled(enabled);
 }
 
 /*void PowerSettingsWidget::handleResumeLockScreen(bool triggered)

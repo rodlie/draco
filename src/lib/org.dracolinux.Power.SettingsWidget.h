@@ -114,6 +114,7 @@ private slots:
     void handleSuspendLockScreen(bool triggered);
     //void handleResumeLockScreen(bool triggered);
     //void handleKernelBypass(bool triggered);
+    void enableBattery(bool enabled);
 };
 
 #endif // POWER_SETTINGS_WIDGET_H
