@@ -143,6 +143,17 @@ int main(int argc, char *argv[])
     if (!scheme.isEmpty() && !openInBrowser) { // open misc urls
         if (scheme == "tg" && LUtils::isValidBinary("Telegram")) { // telegram
             cmd = QString("Telegram -- %1").arg(fileName);
+        } else if (scheme == "magnet") { // magnet (torrent)
+            desktopFile = XDGMime::findDefaultAppForMime("x-scheme-handler/magnet");
+            XDGDesktop desktop(desktopFile);
+            if (!desktop.getDesktopExec().isEmpty()) {
+                cmd = desktop.getDesktopExec();
+                cmd.replace("%u","");
+                cmd.replace("%U","");
+                cmd.replace("%f","");
+                cmd.replace("%F","");
+                cmd.append(QString(" \"%1\"").arg(fileName));
+            }
         }
     }
 
