@@ -175,6 +175,14 @@ void LTaskButton::UpdateMenus(){
   }
 }
 
+void LTaskButton::setShowText(bool show)
+{
+    qDebug() << "button text changed" << show;
+    showText = show;
+    setToolButtonStyle(showText?Qt::ToolButtonTextBesideIcon:Qt::ToolButtonIconOnly);
+    UpdateButton();
+}
+
 //=============
 //   PRIVATE SLOTS
 //=============

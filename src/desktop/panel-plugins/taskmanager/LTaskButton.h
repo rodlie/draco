@@ -65,6 +65,7 @@ private:
 public slots:
 	void UpdateButton(); //re-sync the current window infomation
 	void UpdateMenus(); //re-create the menus (text + icons)
+    void setShowText(bool show);
 
 private slots:
 

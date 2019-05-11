@@ -47,6 +47,7 @@ private:
 	QTimer *timer;
 	QDateTime updating; //quick flag for if it is currently working
 	bool usegroups;
+    bool showText;
 
 private slots:
 	void UpdateButtons();
@@ -57,6 +58,7 @@ public slots:
 	void LocaleChange(){
 	  UpdateButtons();
 	}
+    void settingsChange(QSettings *settings, const QString &prefix);
 	void ThemeChange(){
 	  UpdateButtons();
 	}

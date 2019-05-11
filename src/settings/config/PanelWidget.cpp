@@ -34,6 +34,7 @@ PanelWidget::PanelWidget(QWidget *parent, QWidget *Main, LPlugins *Pinfo) : QWid
   connect(ui->spin_pxthick, SIGNAL(valueChanged(int)), this, SLOT(ItemChanged()) );
   connect(ui->check_autohide, SIGNAL(stateChanged(int)), this, SLOT(ItemChanged()) );
   connect(ui->check_appmenu_text, SIGNAL(stateChanged(int)), this, SLOT(ItemChanged()) );
+  connect(ui->check_taskmanager_text, SIGNAL(stateChanged(int)), this, SLOT(ItemChanged()) );
   connect(ui->group_customcolor, SIGNAL(toggled(bool)), this, SLOT(ItemChanged()) );
 
 }
@@ -57,6 +58,7 @@ void PanelWidget::LoadSettings(QSettings *settings, int Dnum, int Pnum){
   ui->spin_pxthick->setValue( qRound(settings->value( prefix+"height",30).toDouble()) );
   ui->check_autohide->setChecked( settings->value(prefix+"hidepanel", false).toBool() );
   ui->check_appmenu_text->setChecked( settings->value(prefix+"appmenuText", true).toBool() );
+  ui->check_taskmanager_text->setChecked( settings->value(prefix+"taskmanagerText", true).toBool() );
   ui->group_customcolor->setChecked( settings->value(prefix+"customColor",false).toBool() );
   ui->label_color_sample->setWhatsThis( settings->value(prefix+"color","rgba(255,255,255,160)").toString());
   ui->list_plugins->clear();
@@ -104,6 +106,7 @@ void PanelWidget::SaveSettings(QSettings *settings, QString screenID){//save the
   settings->setValue(prefix+"height", ui->spin_pxthick->value() );
   settings->setValue(prefix+"hidepanel", ui->check_autohide->isChecked() );
   settings->setValue(prefix+"appmenuText", ui->check_appmenu_text->isChecked() );
+  settings->setValue(prefix+"taskmanagerText", ui->check_taskmanager_text->isChecked() );
   settings->setValue(prefix+"customColor", ui->group_customcolor->isChecked() );
   settings->setValue(prefix+"color", ui->label_color_sample->whatsThis() );
   QStringList plugs;

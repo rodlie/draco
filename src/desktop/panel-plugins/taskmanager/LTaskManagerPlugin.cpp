@@ -23,6 +23,7 @@ LTaskManagerPlugin::LTaskManagerPlugin(QWidget *parent, QString id, bool horizon
 	timer->setInterval(10); // 1/100 second
 	connect(timer, SIGNAL(timeout()), this, SLOT(UpdateButtons()) ); 
   usegroups = true; //backwards-compatible default value
+  showText = true;
   if(id.contains("-nogroups")){ usegroups = false; }
   connect(LSession::handle(), SIGNAL(WindowListEvent()), this, SLOT(checkWindows()) );
   connect(LSession::handle(), SIGNAL(WindowListEvent(WId)), this, SLOT(UpdateButton(WId)) );
@@ -39,6 +40,7 @@ LTaskManagerPlugin::~LTaskManagerPlugin(){
 //    PRIVATE SLOTS
 //==============
 void LTaskManagerPlugin::UpdateButtons(){
+    qDebug() << "update task buttons";
   updating = QDateTime::currentDateTime(); //global time stamp
   QDateTime ctime = updating; //current thread time stamp
 
@@ -63,6 +65,9 @@ void LTaskManagerPlugin::UpdateButtons(){
   if(updating > ctime){ return; } //another thread kicked off already - stop this one
   //Now go through all the current buttons first
   for(int i=0; i<BUTTONS.length(); i++){
+
+      // show/hide text
+      BUTTONS[i]->setShowText(showText);
     //Get the windows managed in this button
     QList<WId> WI = BUTTONS[i]->windows();
     bool updated=false;
@@ -126,7 +131,7 @@ void LTaskManagerPlugin::UpdateButtons(){
         but->addWindow( winlist[i] );
 	if(this->layout()->direction()==QBoxLayout::LeftToRight){
 	    but->setIconSize(QSize(this->height(), this->height()));
-	    but->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        but->setToolButtonStyle(showText?Qt::ToolButtonTextBesideIcon:Qt::ToolButtonIconOnly);
 	}else{
 	    but->setIconSize(QSize(this->width(), this->width()));
 	    but->setToolButtonStyle(Qt::ToolButtonIconOnly);
@@ -149,5 +154,13 @@ void LTaskManagerPlugin::UpdateButton(WId win){
 }
 
 void LTaskManagerPlugin::checkWindows(){
-  timer->start();
+    timer->start();
+}
+
+void LTaskManagerPlugin::settingsChange(QSettings *settings, const QString &prefix)
+{
+    if (!settings) { return; }
+    qWarning() << "TASK! settings changed" << prefix;
+    showText = settings->value(QString("%1taskmanagerText").arg(prefix), true).toBool();
+    UpdateButtons();
 }
