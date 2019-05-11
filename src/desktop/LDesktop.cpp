@@ -384,7 +384,7 @@ void LDesktop::UpdateMenu(bool fast)
     // Put a label at the top
     int num = LSession::handle()->XCB->CurrentWorkspace(); //LX11::GetCurrentDesktop();
     qDebug() << "Found workspace number:" << num;
-    workspacelabel->setText(QString("%1 Workspace %2").arg(DESKTOP_APP_NAME).arg(num));
+    workspacelabel->setText(QString("%1 Desktop").arg(DESKTOP_APP_NAME));
 
     if (fast && usewinmenu) { UpdateWinMenu(); }
     if (fast) { return; } // already done

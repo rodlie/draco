@@ -46,6 +46,29 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
 
 ...
 
+### Default shortcuts
+
+| Shortcut | Action |
+| -------- | ------ |
+| ``Alt+F1`` | Default terminal |
+| ``Alt+F2`` | Application launcher |
+| ``Ctrl+Alt+Left`` | Switch desktop/workspace |
+| ``Ctrl+Alt+Right`` | Switch desktop/workspace |
+| ``Ctrl+Alt+Up`` | Switch desktop/workspace |
+| ``Ctrl+Alt+Down`` | Switch desktop/workspace |
+| ``Shift+Alt+Left`` | Move window to desktop/workspace |
+| ``Shift+Alt+Right`` | Move window to desktop/workspace |
+| ``Shift+Alt+Up`` | Move window to desktop/workspace |
+| ``Shift+Alt+Down`` | Move window to desktop/workspace |
+| ``Win+F1`` | Switch to desktop/workspace 1 |
+| ``Win+F2`` | Switch to desktop/workspace 2 |
+| ``Win+F3`` | Switch to desktop/workspace 3 |
+| ``Win+F4`` | Switch to desktop/workspace 4 |
+| ``Win+D`` | Toggle show desktop |
+| ``Alt+Tab`` | Next window |
+| ``Alt+Shift+Tab`` | Previous window |
+| ``wheel/touchpad up/down on desktop`` | Switch desktop/workspace |
+
 ### Screen saver
 
 Draco depends on [XScreenSaver](https://www.jwz.org/xscreensaver/) to handle the screen session, the default settings may need to be adjusted. You can launch the (XScreenSaver) configuration GUI with the ``xscreensaver-demo`` command or from settings.
