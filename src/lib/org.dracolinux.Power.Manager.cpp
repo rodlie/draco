@@ -413,8 +413,8 @@ void Power::handleSuspend()
 void Power::handlePrepareForSuspend(bool prepare)
 {
     qDebug() << "handle prepare for suspend/resume from consolekit/logind" << prepare;
-    if (lockScreenOnSuspend) { LockScreen(); }
     if (prepare) {
+        if (lockScreenOnSuspend) { LockScreen(); }
         emit PrepareForSuspend();
         releaseSuspendLock(); // we are ready for suspend
     }
