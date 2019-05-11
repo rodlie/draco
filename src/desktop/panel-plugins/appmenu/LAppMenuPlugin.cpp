@@ -48,8 +48,9 @@ LAppMenuPlugin::~LAppMenuPlugin(){
 
 void LAppMenuPlugin::updateButtonVisuals(){
     button->setToolTip( tr("Quickly launch applications or open files"));
-    button->setText(showMenuText?tr("Applications"):"");
     button->setIcon(LXDG::findIcon("system-run"));
+    button->setText(showMenuText?tr("Applications"):"");
+    button->setToolButtonStyle(showMenuText?Qt::ToolButtonTextBesideIcon:Qt::ToolButtonIconOnly);
 }
 
 // ========================
