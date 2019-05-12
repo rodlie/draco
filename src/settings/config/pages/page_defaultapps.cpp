@@ -21,6 +21,9 @@ page_defaultapps::page_defaultapps(QWidget *parent) : PageWidget(parent), ui(new
   connect(ui->tool_default_terminal, SIGNAL(clicked()), this, SLOT(changeDefaultTerminal()) );
   connect(ui->tool_default_webbrowser, SIGNAL(clicked()), this, SLOT(changeDefaultBrowser()) );
   connect(ui->tool_default_email, SIGNAL(clicked()), this, SLOT(changeDefaultEmail()) );
+  connect(ui->tool_default_cd, SIGNAL(clicked()), this, SLOT(changeDefaultCDPlayer()) );
+  connect(ui->tool_default_dvd, SIGNAL(clicked()), this, SLOT(changeDefaultDVDPlayer()) );
+
   connect(ui->tool_defaults_clear, SIGNAL(clicked()), this, SLOT(cleardefaultitem()) );
   connect(ui->tool_defaults_set, SIGNAL(clicked()), this, SLOT(setdefaultitem()) );
   connect(ui->tool_defaults_setbin, SIGNAL(clicked()), this, SLOT(setdefaultbinary()) );
@@ -61,6 +64,12 @@ void page_defaultapps::LoadSettings(int){
   // - Default Email Client
   defaultEmail = LXDG::findDefaultAppForMime("application/email"); //appsettings->value("default/email", "").toString();
   updateDefaultButton(ui->tool_default_email, defaultEmail);
+
+  // - Default CD/DVD
+  defaultCDPlayer = LXDG::findDefaultAppForMime("x-content/audio-cdda");
+  updateDefaultButton(ui->tool_default_cd, defaultCDPlayer);
+  defaultDVDPlayer = LXDG::findDefaultAppForMime("x-content/video-dvd");
+  updateDefaultButton(ui->tool_default_dvd, defaultDVDPlayer);
   
   //Now load the XDG mime defaults
   ui->tree_defaults->clear();
@@ -213,6 +222,31 @@ void page_defaultapps::changeDefaultTerminal(){
   defaultTerminal = app;
   LXDG::setDefaultAppForMime("application/terminal", app.section("/",-1) );
   updateDefaultButton(ui->tool_default_terminal, app);
+}
+
+void page_defaultapps::changeDefaultCDPlayer()
+{
+    //Prompt for the new app
+    QString app = getSysApp(true, defaultCDPlayer);
+    if(app.isEmpty()){ return; }//nothing selected
+    if(app=="reset"){ app.clear(); }
+    //save the new app setting and adjust the button appearance
+    defaultFileManager = app;
+    LXDG::setDefaultAppForMime("x-content/audio-cdda", app.section("/",-1));
+    updateDefaultButton(ui->tool_default_cd, app);
+}
+
+void page_defaultapps::changeDefaultDVDPlayer()
+{
+    //Prompt for the new app
+    QString app = getSysApp(true, defaultDVDPlayer);
+    if(app.isEmpty()){ return; }//nothing selected
+    if(app=="reset"){ app.clear(); }
+    //save the new app setting and adjust the button appearance
+    defaultFileManager = app;
+    LXDG::setDefaultAppForMime("x-content/video-dvd", app.section("/",-1));
+    LXDG::setDefaultAppForMime("x-content/audio-dvd", app.section("/",-1));
+    updateDefaultButton(ui->tool_default_dvd, app);
 }
 
 void page_defaultapps::cleardefaultitem(){

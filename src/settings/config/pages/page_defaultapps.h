@@ -32,6 +32,8 @@ private:
   QString defaultEmail;
   QString defaultFileManager;
   QString defaultTerminal;
+  QString defaultCDPlayer;
+  QString defaultDVDPlayer;
 
 	QString getSysApp(bool allowreset, QString defaultPath = "");
 
@@ -43,6 +45,8 @@ private slots:
 	void changeDefaultEmail();
 	void changeDefaultFileManager();
 	void changeDefaultTerminal();
+    void changeDefaultCDPlayer();
+    void changeDefaultDVDPlayer();
 	//Advanced defaults tab
 	void cleardefaultitem();
 	void setdefaultitem();

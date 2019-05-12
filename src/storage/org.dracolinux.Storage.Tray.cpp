@@ -73,8 +73,8 @@ SysTray::SysTray(QObject *parent)
 
 void SysTray::loadSettings()
 {
-    showNotifications = Draco::readSetting(Draco::storageSettingsFile(), "trayNotify", true).toBool();
-    autoMount = Draco::readSetting(Draco::storageSettingsFile(), "trayAutoMount", false).toBool();
+    showNotifications = Draco::readSetting(Draco::sessionSettingsFile(), "trayNotify", true).toBool();
+    autoMount = Draco::readSetting(Draco::sessionSettingsFile(), "trayAutoMount", false).toBool();
 }
 
 void SysTray::generateContextMenu()
@@ -196,13 +196,13 @@ void SysTray::handleDeviceMediaChanged(QString path,
 
         bool openMedia = false;
         // auto mount if enabled
-        if (Draco::readSetting(Draco::storageSettingsFile(), "trayAutoMount", false).toBool() && isData) {
+        if (Draco::readSetting(Draco::sessionSettingsFile(), "trayAutoMount", false).toBool() && isData) {
             qDebug() << "auto mount optical";
             man->devices[path]->mount();
             openMedia = true;
         }
         // auto play CD if enabled
-        if (Draco::readSetting(Draco::storageSettingsFile(), "autoPlayAudioCD", false).toBool() && isAudio) {
+        if (Draco::readSetting(Draco::sessionSettingsFile(), "autoPlayAudioCD", false).toBool() && isAudio) {
             openMedia = false;
             /*QStringList apps = mimeUtilsPtr->getDefault("x-content/audio-cdda");
             QString desktop = Common::findApplication(qApp->applicationFilePath(), apps.at(0));
@@ -216,7 +216,7 @@ void SysTray::handleDeviceMediaChanged(QString path,
                                     .arg(man->devices[path]->mountpoint));
         }
         // auto play DVD if enabled
-        if (Draco::readSetting(Draco::storageSettingsFile(), "autoPlayDVD", false).toBool() && isData) {
+        if (Draco::readSetting(Draco::sessionSettingsFile(), "autoPlayDVD", false).toBool() && isData) {
             if (man->devices[path]->mountpoint.isEmpty()) {
                 man->devices[path]->mount();
             }
@@ -234,20 +234,20 @@ void SysTray::handleDeviceMediaChanged(QString path,
                                 .arg(man->devices[path]->mountpoint));
             }
             QString mime;
-            if (tsVideo.exists()) {
+            if (tsVideo.exists() || tsAudio.exists()) {
                 mime  = XDGMime::findDefaultAppForMime("x-content/video-dvd");
                 //QStringList apps = mimeUtilsPtr->getDefault("x-content/video-dvd");
                 //qDebug() << "video dvd apps" << apps;
                 //desktop = Common::findApplication(qApp->applicationFilePath(),
                   //                                apps.at(0));
 
-            } else if (!tsVideo.exists() && tsAudio.exists()) {
+            } /*else if (!tsVideo.exists() && tsAudio.exists()) {
                 mime  = XDGMime::findDefaultAppForMime("x-content/audio-dvd");
                 //QStringList apps = mimeUtilsPtr->getDefault("x-content/audio-dvd");
                 //qDebug() << "audio dvd apps" << apps;
                 //desktop = Common::findApplication(qApp->applicationFilePath(),
                   //                                apps.at(0));
-            }
+            }*/
             if (mime.isEmpty()) { return; }
             //DesktopFile df(desktop);
             XDGDesktop desktop(mime);
