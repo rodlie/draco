@@ -289,3 +289,8 @@ sudo make install
 ```
 
 **Note that the install prefix should be the same folder as D-Bus (usually in ``/usr``), else you will need to copy the Draco service files to the proper location manually.**
+
+
+## License
+
+This project has source files licensed under ``BSD-3``, ``LGPL-2.1`` and ``GPL-2``.
