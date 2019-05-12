@@ -22,7 +22,7 @@
 LHomeButtonPlugin::LHomeButtonPlugin(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, id, horizontal){
   button = new QToolButton(this);
     button->setAutoRaise(true);
-    button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    button->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
     connect(button, SIGNAL(clicked()), this, SLOT(showDesktop()));
     this->layout()->setContentsMargins(0,0,0,0);
