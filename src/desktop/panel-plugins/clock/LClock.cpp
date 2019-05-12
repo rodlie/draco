@@ -33,12 +33,12 @@ LClock::LClock(QWidget *parent, QString id, bool horizontal) : LPPlugin(parent, 
   calendar = new QCalendarWidget(this);
   calAct = new QWidgetAction(this);
 	calAct->setDefaultWidget(calendar);
-  TZMenu = new QMenu(this);
-    connect(TZMenu, SIGNAL(triggered(QAction*)), this, SLOT(ChangeTZ(QAction*)) );
+//  TZMenu = new QMenu(this);
+    //connect(TZMenu, SIGNAL(triggered(QAction*)), this, SLOT(ChangeTZ(QAction*)) );
 
   //Now assemble the menu
   button->menu()->addAction(calAct);
-  button->menu()->addMenu(TZMenu);
+  //button->menu()->addMenu(TZMenu);
 
   //button->setStyleSheet("background-color:red;");
 
@@ -102,8 +102,33 @@ void LClock::updateTime(bool adjustformat){
     label.replace("\n",", ");
   }
   if(adjustformat){
+      qDebug() << "adjust clock format";
     QFont font = LSession::handle()->font();
       font.setBold(true);
+
+
+    bool foundOkSize = false;
+    int fontSize = font.pointSize();
+    bool isHoriz = this->layout()->direction()==QBoxLayout::LeftToRight;
+    while (!foundOkSize) {
+        qDebug() << "testing clock font size";
+        QFontMetrics metrics(font);
+        int metricValue = metrics.height();
+        int panelValue = height()-5/* padding */;
+        int dateLines = label.contains("\n")?label.count("\n"):0;
+        if (dateLines==1) { dateLines++; }
+        if (!isHoriz) {
+            panelValue = width();
+            metricValue = metrics.width(label)+10/* padding */;
+        }
+
+        if (dateLines>0) { panelValue = panelValue/dateLines; }
+        if (metricValue<panelValue) { font.setPointSize(fontSize); }
+        else { foundOkSize = true;break; }
+        fontSize++;
+    }
+
+
     button->setFont(font);
    //Check the font/spacing for the display and adjust as necessary
    /* QStringList lines = label.split("\n");
@@ -149,7 +174,7 @@ void LClock::updateFormats(){
 
 void LClock::updateMenu(){
   QDateTime cdt = QDateTime::currentDateTime();
-  TZMenu->setTitle(QString(tr("Time Zone (%1)")).arg(cdt.timeZoneAbbreviation()) );
+  //TZMenu->setTitle(QString(tr("Time Zone (%1)")).arg(cdt.timeZoneAbbreviation()) );
   calendar->showToday(); //make sure the current month is visible
   calendar->setSelectedDate(QDate::currentDate()); //select the actual date for today
 }
@@ -163,12 +188,12 @@ void LClock::closeMenu(){
   button->menu()->hide();
 }
 	
-void LClock::ChangeTZ(QAction *act){
+/*void LClock::ChangeTZ(QAction *act){
   //LTHEME::setCustomEnvSetting("TZ",act->whatsThis());
   //QTimer::singleShot(500, this, SLOT(updateTime()) );
-}
+}*/
 
-void LClock::LocaleChange(){
+/*void LClock::LocaleChange(){
   //Refresh all the time zone information
   TZMenu->clear();
     TZMenu->addAction(tr("Use System Time"));
@@ -229,8 +254,9 @@ void LClock::LocaleChange(){
 }
 
 void LClock::ThemeChange(){
-  TZMenu->setIcon(LXDG::findIcon("clock",""));
-}
+  //TZMenu->setIcon(LXDG::findIcon("clock",""));
+
+}*/
 
 void LClock::OrientationChange(){
   if(this->layout()->direction()==QBoxLayout::LeftToRight){ //horizontal panel

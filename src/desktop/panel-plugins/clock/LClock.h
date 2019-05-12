@@ -45,7 +45,7 @@ private:
 	QToolButton *button; //RotateToolButton
 	QString timefmt, datefmt, datetimeorder;
 	bool deftime, defdate;
-	QMenu *TZMenu;
+    //QMenu *TZMenu;
 	QCalendarWidget *calendar;
 	QWidgetAction *calAct;
 	
@@ -57,11 +57,11 @@ private slots:
 	void openMenu();
 	void closeMenu();
 
-	void ChangeTZ(QAction*);
+    //void ChangeTZ(QAction*);
 
 public slots:
-	void LocaleChange();
-	void ThemeChange();
+    //void LocaleChange();
+    //void ThemeChange();
 	void OrientationChange();
 };
 
