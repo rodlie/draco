@@ -137,6 +137,9 @@ Build and runtime requirements.
   * **``hicolor-icon-theme``**
   * **``adwaita-icon-theme``** *(3.18 recommended)*
   * **``openbox``**
+    * ``obrender`` *(3.5)*
+    * ``obt`` *(3.5)*
+  * **``glib2``**
   * **``UDisks2``** *(or compatible service)*
   * **``UPower``** *(>= 0.9.23 or compatible service)*
   * **``ConsoleKit``**/**``logind``** *(or compatible service)*

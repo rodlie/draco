@@ -53,12 +53,23 @@ add_definitions(-DSTORAGE_SERVICE_NAME="${STORAGE_SERVICE_NAME}")
 add_definitions(-DDAEMON_APP_NAME="${PUBLISHER}.Powerd")
 add_definitions(-DPUBLISHER="${PUBLISHER}")
 add_definitions(-DXDG_OPEN="${XDG_OPEN}")
+add_definitions(-DOPENBOX_THEME_DIR="${CMAKE_INSTALL_FULL_DATAROOTDIR}/openbox/themes")
 
 if(CMAKE_BUILD_TYPE MATCHES "^(release|Release|RELEASE)$")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
 else()
     message("-- DRACO DEBUG BUILD")
 endif()
+
+# openbox/glib (needed by obconf)
+find_package(PkgConfig)
+pkg_search_module(GLIB REQUIRED glib-2.0)
+pkg_check_modules(
+    OPENBOX
+    REQUIRED
+    obrender-3.5
+    obt-3.5
+)
 
 # qt
 find_package(Qt5Core REQUIRED)
@@ -434,6 +445,40 @@ target_link_libraries(
     ${LIB_NAME}
 )
 
+# draco-settings-wm
+add_executable(
+    ${PROJECT_NAME}-settings-wm
+    src/settings/obconf/src/obconf-qt.cpp
+    src/settings/obconf/src/maindialog.cpp
+    src/settings/obconf/src/appearance.cpp
+    src/settings/obconf/src/windows.cpp
+    src/settings/obconf/src/mouse.cpp
+    src/settings/obconf/src/moveresize.cpp
+    src/settings/obconf/src/margins.cpp
+    src/settings/obconf/src/desktops.cpp
+    src/settings/obconf/src/tree.cpp
+    src/settings/obconf/src/archive.cpp
+    src/settings/obconf/src/theme.cpp
+    src/settings/obconf/src/fontbutton.cpp
+    src/settings/obconf/src/obconf.ui
+)
+target_include_directories(
+    ${PROJECT_NAME}-settings-wm
+    PRIVATE
+    src/settings/obconf/src
+    ${GLIB_INCLUDE_DIRS}
+    ${OPENBOX_INCLUDE_DIRS}
+)
+target_link_libraries(
+    ${PROJECT_NAME}-settings-wm
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::X11Extras
+    ${GLIB_LIBRARIES}
+    ${OPENBOX_LDFLAGS}
+)
+
 # docs
 install(
     FILES
@@ -474,6 +519,11 @@ configure_file(
 configure_file(
     share/applications/settings-x11.desktop.in
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-x11.desktop
+    @ONLY
+)
+configure_file(
+    share/applications/settings-wm.desktop.in
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-wm.desktop
     @ONLY
 )
 configure_file(
@@ -536,6 +586,12 @@ install(
     ${CMAKE_INSTALL_BINDIR}
 )
 install(
+    TARGETS
+    ${PROJECT_NAME}-settings-wm
+    DESTINATION
+    ${CMAKE_INSTALL_BINDIR}
+)
+install(
     FILES
     share/xsessions/${PROJECT_NAME}.desktop
     DESTINATION
@@ -551,6 +607,12 @@ install(
 install(
     FILES
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-x11.desktop
+    DESTINATION
+    ${CMAKE_INSTALL_DATAROOTDIR}/applications
+)
+install(
+    FILES
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-wm.desktop
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )

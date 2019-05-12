@@ -1,0 +1,9 @@
+[Desktop Entry]
+Exec=@PROJECT_NAME@-settings-wm
+Icon=preferences-system-windows
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Settings;
+Name=Window Manager Configuration
+OnlyShowIn=Draco;
