@@ -107,7 +107,7 @@ void TrayIcon::paintEvent(QPaintEvent *event){
 	//qDebug() << " - Geom:" << this->geometry().x() << this->geometry().y() << this->geometry().width() << this->geometry().height();
 	if(!pix.isNull()){
 	  if((this->size()*scalefactor) != pix.size()){ QTimer::singleShot(10, this, SLOT(updateIcon())); return; }
-	  painter.drawPixmap(0,0,this->width(), this->height(), pix.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation) );
+      painter.drawPixmap(2,2,this->width()-4, this->height()-4, pix.scaled(this->size().width()-4, this->size().height()-4, Qt::KeepAspectRatio, Qt::SmoothTransformation) );
 	  badpaints = 0; //good paint
 	}else{
 	  badpaints++;
