@@ -127,7 +127,6 @@ set(
     src/lib/org.dracolinux.Power.Manager.cpp
     src/lib/org.dracolinux.Power.ScreenX11.cpp
     src/lib/org.dracolinux.Power.Settings.cpp
-    src/lib/org.dracolinux.Power.SettingsWidget.cpp
     src/lib/org.dracolinux.Powerd.Manager.Backlight.cpp
     src/lib/org.dracolinux.Powerd.Manager.CPU.cpp
     src/lib/org.dracolinux.Powerd.Manager.RTC.cpp
@@ -149,6 +148,11 @@ set(
     src/lib/lumina/ResizeMenu.cpp
     src/lib/lumina/XDGMime.cpp
     src/lib/keyboard_common.h
+    src/lib/qtcopydialog/qtcopydialog.cpp
+    src/lib/qtcopydialog/qtfilecopier.cpp
+    src/lib/qtcopydialog/qtcopydialog.ui
+    src/lib/qtcopydialog/qtoverwritedialog.ui
+    src/lib/qtcopydialog/qtotherdialog.ui
     )
 #if(USE_XINPUT)
 #    set(LIB_SOURCES "${LIB_SOURCES};src/lib/lumina/LInputDevice.cpp")
@@ -252,12 +256,7 @@ add_executable(
     src/desktop/panel-plugins/spacer/LSpacer.h
     src/desktop/panel-plugins/line/LLine.h
     src/desktop/SystemWindow.cpp
-    src/lib/qtcopydialog/qtcopydialog.cpp
-    src/lib/qtcopydialog/qtfilecopier.cpp
     src/desktop/SystemWindow.ui
-    src/lib/qtcopydialog/qtcopydialog.ui
-    src/lib/qtcopydialog/qtoverwritedialog.ui
-    src/lib/qtcopydialog/qtotherdialog.ui
     src/desktop/desktop.qrc
 )
 target_include_directories(
@@ -426,6 +425,7 @@ add_executable(
     #src/settings/config/pages/page_session_locale.cpp
     src/settings/config/pages/page_session_options.cpp
     src/settings/config/pages/page_wallpaper.cpp
+    src/lib/org.dracolinux.Power.SettingsWidget.cpp
     src/lib/lumina/AppDialog.h
     src/lib/lumina/AppDialog.ui
     src/settings/config/pages/page_keyboard.ui
@@ -494,8 +494,8 @@ target_link_libraries(
 install(
     FILES
     docs/LICENSE
-    docs/LICENSE.LGPL
-    docs/LICENSE.GPL
+    docs/COPYING
+    docs/COPYING.LIB
     docs/ChangeLog.md
     docs/README.md
     DESTINATION
