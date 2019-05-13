@@ -3,8 +3,18 @@
 # Draco Desktop Environment <https://dracolinux.org>
 # Copyright (c) 2019, Ole-André Rodlie <ole.andre.rodlie@gmail.com> All rights reserved.
 #
-# Available under the 3-clause BSD license
-# See the LICENSE file for full details
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 */
 
@@ -68,7 +78,7 @@ int main(int argc, char *argv[])
             about.setInformativeText(QString("<h1 style=\"font-weight:normal;\">Draco Desktop Environment</h1>"
                                              "<h3 style=\"font-weight:normal;\">Version %1</h3>"
                                              "<p><b>Framework:</b> Qt %5<br><b>System:</b> %2<br><b>Kernel:</b> %3<br><b>CPU:</b> %4</p>"
-                                             "<p>Copyright &copy;2019 Ole-André Rodlie. All rights reserved.</p>"
+                                             "<p>Copyright &copy;2019 Ole-André Rodlie. All rights reserved.<br>Copyright &copy;2012-2017 Ken Moore. All rights reserved.</p>"
                                              "<p><a href=\"https://dracolinux.org\">https://dracolinux.org</a>"
                                              "<br><a href=\"https://github.com/rodlie/draco\">https://github.com/rodlie/draco</a></p>")
                                      .arg(QString("%1%2").arg(DESKTOP_APP_VERSION).arg(DESKTOP_APP_VERSION_EXTRA))
