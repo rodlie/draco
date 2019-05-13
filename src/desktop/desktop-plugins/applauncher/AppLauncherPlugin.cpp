@@ -319,7 +319,11 @@ void AppLauncherPlugin::actionTriggered(QAction *act){
   if(act->whatsThis().isEmpty()){ return; }
   QString path = button->whatsThis();
   if(path.isEmpty() || !QFile::exists(path)){ return; } //invalid file
-  LSession::LaunchApplication("lumina-open -action \""+act->whatsThis()+"\" \""+path+"\"");
+  //LSession::LaunchApplication("lumina-open -action \""+act->whatsThis()+"\" \""+path+"\"");
+  LSession::LaunchApplication(QString("%1 -action \"%2\" \"%3\"")
+                              .arg(Draco::launcherApp())
+                              .arg(act->whatsThis())
+                              .arg(path));
 }
 
 void AppLauncherPlugin::openWith(){

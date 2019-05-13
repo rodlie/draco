@@ -45,11 +45,16 @@ int main(int argc, char *argv[])
     Draco::xdgOpenCheck();
 
     QString fileName;
+    QString desktopAction;
     if (argc<=1) { // do nothing
         std::cout << DESKTOP_APP_NAME << " xdg-open version " << DESKTOP_APP_VERSION << std::endl;
         return 0;
     } else if (argc>1) { // get "filename"
         fileName = argv[1];
+        if (fileName == "-action" && argc==4) {
+            fileName = argv[3];
+            desktopAction = argv[2];
+        }
         if (fileName.isEmpty()) {
             std::cout << "invalid input" << std::endl;
             return  1;
@@ -145,7 +150,7 @@ int main(int argc, char *argv[])
 
     if (!desktopFile.isEmpty() && !runFile) { // get cmd from .desktop
         XDGDesktop desktop(desktopFile);
-        if (!desktop.getDesktopExec().isEmpty()) { cmd = desktop.getDesktopExec(); }
+        if (!desktop.getDesktopExec(desktopAction).isEmpty()) { cmd = desktop.getDesktopExec(desktopAction); }
     }
 
     if (runFile) { cmd = fileName; } // run file directly
@@ -156,8 +161,8 @@ int main(int argc, char *argv[])
         } else if (scheme == "magnet") { // magnet (torrent)
             desktopFile = XDGMime::findDefaultAppForMime("x-scheme-handler/magnet");
             XDGDesktop desktop(desktopFile);
-            if (!desktop.getDesktopExec().isEmpty()) {
-                cmd = desktop.getDesktopExec();
+            if (!desktop.getDesktopExec(desktopAction).isEmpty()) {
+                cmd = desktop.getDesktopExec(desktopAction);
                 cmd.replace("%u","");
                 cmd.replace("%U","");
                 cmd.replace("%f","");

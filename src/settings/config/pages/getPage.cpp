@@ -104,7 +104,7 @@ QList<PAGEINFO> Pages::KnownPages(){
                           QStringList(),
                           QStringList() << "background" << "wallpaper" << "color" << "image");
   list << Pages::PageInfo("autostart",
-                          QObject::tr("Services"),
+                          QObject::tr("Autostart"),
                           QObject::tr("Startup Settings"),
                           "applications-other",
                           QObject::tr("Automatically start applications or services"),
