@@ -167,7 +167,7 @@ void AppMenu::updateAppList()
                     QAction *sact = new QAction( appL[a]->actions[sa].name, this);
                     //if (ICONS->exists(appL[a]->actions[sa].icon)) { ICONS->loadIcon(sact, appL[a]->actions[sa].icon); }
                     //else { ICONS->loadIcon(sact, appL[a]->icon); }
-                    sact->setIcon(LXDG::findIcon(appL[a]->icon, ""));
+                    sact->setIcon(LXDG::findIcon(appL[a]->actions[sa].icon, ""));
                     sact->setToolTip(appL[a]->comment);
                     sact->setWhatsThis("-action \""+appL[a]->actions[sa].ID+"\" \""+appL[a]->filePath+"\"");
                     submenu->addAction(sact);

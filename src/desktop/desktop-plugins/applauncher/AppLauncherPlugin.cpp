@@ -118,10 +118,12 @@ void AppLauncherPlugin::loadButton(){
       txt = tr("Click to Set");
       if(!watcher->files().isEmpty()){ watcher->removePaths(watcher->files()); }
     }else{
+        qDebug() << "DESKTOP ICON?" << file.icon;
       button->setWhatsThis(file.filePath);
       if(ICONS->exists(file.icon)){ iconID = file.icon; }
       else if(ICONS->exists(file.icon.section("-",0,-2)) ){ iconID = file.icon.section("-",0,-2); } //some icons get very specific with "-" delimiters, look for a more generic icon if possible
-      else{ iconID = "system-run"; }
+      //else{ iconID = "system-run"; }
+      else { iconID = file.icon; } // just go with it ...
       //button->setIcon( QIcon(LXDG::findIcon(file.icon,"system-run").pixmap(QSize(icosize,icosize)).scaledToHeight(icosize, Qt::SmoothTransformation) ) );
       if(!file.comment.isEmpty()){button->setToolTip(file.comment); }
       txt = file.name;
@@ -182,7 +184,7 @@ void AppLauncherPlugin::loadButton(){
     }else{
       //Not loaded yet - verify that the icon exists first
       if(!ICONS->exists(iconID) && iconID.contains("/") ){ iconID = iconID.replace("/","-"); } //quick mimetype->icon replacement just in case
-      if(!ICONS->exists(iconID)){ iconID = "unknown"; }
+      //if(!ICONS->exists(iconID)){ iconID = "unknown"; }
       //Now load the icon
       ICONS->loadIcon(button, iconID);
     }

@@ -170,8 +170,10 @@ QString LIconCache::findFile(QString icon){
 
 
 void LIconCache::loadIcon(QAbstractButton *button, QString icon, bool noThumb){
+    qDebug() << "CACHE LOAD ICON" << icon;
   if(icon.isEmpty()){ return; }
   if(isThemeIcon(icon)){
+      qDebug() << "IS THEME ICON" << icon;
     button->setIcon( iconFromTheme(icon));
     return ;
   }
@@ -182,6 +184,7 @@ void LIconCache::loadIcon(QAbstractButton *button, QString icon, bool noThumb){
     else if(!HASH[icon].icon.isNull()){ button->setIcon( HASH[icon].icon ); return; }
   }
   //Need to load the icon
+  qDebug() << "CACHE NEEDS TO LOAD ICON" << icon;
   icon_data idata;
   if(HASH.contains(icon)){ idata = HASH.value(icon); }
   else { idata = createData(icon); }
@@ -385,7 +388,9 @@ QIcon LIconCache::iconFromTheme(QString id){
   QIcon ico = QIcon::fromTheme(id);
   if(ico.isNull()){
     //icon missing in theme? run the old icon-finder system
-    ico = QIcon(findFile(id));
+    //ico = QIcon(findFile(id));
+      qDebug() << "CACHE FIND ICON" << id;
+    ico = LXDG::findIcon(id);
   }
   return ico;
 }
