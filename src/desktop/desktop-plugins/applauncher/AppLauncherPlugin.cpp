@@ -101,7 +101,7 @@ void AppLauncherPlugin::loadButton(){
   if(!ok){ ok = QFile::exists(path); } //do it this way to ensure the file existance check never runs for /net/ files
   if(!ok){ emit RemovePlugin(this->ID()); return;}
   this->setAcceptDrops( info.isDir() );
-  icosize = this->height()-4 - 2.2*button->fontMetrics().height();
+  icosize = this->height()-4 - 2.2*(button->fontMetrics().height()+4);
   button->setFixedSize( this->width()-4, this->height()-4);
   button->setIconSize( QSize(icosize,icosize) );
   button->setToolTip("");
