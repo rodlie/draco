@@ -1,9 +1,9 @@
 # Draco Desktop Environment
-![GitHub last commit](https://img.shields.io/github/last-commit/rodlie/draco.svg)
+[![GitHub last commit](https://img.shields.io/github/last-commit/rodlie/draco.svg)](https://github.com/rodlie/draco/commits/master)
 [![Build Status](https://travis-ci.com/rodlie/draco.svg?branch=master)](https://travis-ci.com/rodlie/draco)
-![GitHub issues](https://img.shields.io/github/issues/rodlie/draco.svg)
+[![GitHub issues](https://img.shields.io/github/issues/rodlie/draco.svg)](https://github.com/rodlie/draco/issues)
 [![GitHub release](https://img.shields.io/github/release/rodlie/draco.svg)](https://github.com/rodlie/draco/releases)
-
+[![Telegram chat](https://img.shields.io/badge/Telegram-Chat-blue.svg)](https://t.me/dracolinuxorg)
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/draco-promo.gif)
 
 Draco is a simple and lightweight desktop environment. While small still features XDG integration, freedesktop services and integration, power and storage management, desktop, panels, multi-monitor support and much more. Draco does not include any user applications.
