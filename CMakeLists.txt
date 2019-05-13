@@ -530,16 +530,6 @@ configure_file(
     @ONLY
 )
 configure_file(
-    share/applications/settings-x11.desktop.in
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-x11.desktop
-    @ONLY
-)
-configure_file(
-    share/applications/settings-wm.desktop.in
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-wm.desktop
-    @ONLY
-)
-configure_file(
     share/applications/settings.desktop.in
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings.desktop
     @ONLY
@@ -616,18 +606,6 @@ install(
     ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
     DESTINATION
     ${DEFAULT_SYSCONFDIR}/xdg/autostart
-)
-install(
-    FILES
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-x11.desktop
-    DESTINATION
-    ${CMAKE_INSTALL_DATAROOTDIR}/applications
-)
-install(
-    FILES
-    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-wm.desktop
-    DESTINATION
-    ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
 install(
     FILES

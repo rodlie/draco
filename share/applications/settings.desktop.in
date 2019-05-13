@@ -5,5 +5,56 @@ Terminal=false
 Type=Application
 StartupNotify=false
 Categories=Settings;
-Name=Desktop Configuration
+Name=Desktop
 OnlyShowIn=Draco;
+
+[Desktop Action applications]
+Name=Default Applications
+Icon=preferences-desktop-default-applications
+Exec=@PROJECT_NAME@-settings --page defaultapps
+
+[Desktop Action session]
+Name=General Settings
+Icon=preferences-system
+Exec=@PROJECT_NAME@-settings --page session-options
+
+[Desktop Action panels]
+Name=Panels Settings
+Icon=preferences-desktop-display
+Exec=@PROJECT_NAME@-settings --page interface-panel
+
+[Desktop Action wallpaper]
+Name=Wallpaper Settings
+Icon=preferences-desktop-wallpaper
+Exec=@PROJECT_NAME@-settings --page wallpaper
+
+[Desktop Action autostart]
+Name=Autostart Settings
+Icon=applications-other
+Exec=@PROJECT_NAME@-settings --page autostart
+
+[Desktop Action keyboard]
+Name=Keyboard Settings
+Icon=input-keyboard
+Exec=@PROJECT_NAME@-settings --page keyboard
+
+[Desktop Action power]
+Name=Power Settings
+Icon=ac-adapter
+Exec=@PROJECT_NAME@-settings --page power
+
+[Desktop Action window-manager]
+Name=Windows Settings
+Icon=preferences-system-windows
+Exec=@PROJECT_NAME@-settings-wm
+
+[Desktop Action monitors]
+Name=Monitor Settings
+Icon=video-display
+Exec=@PROJECT_NAME@-settings-x11
+
+[Desktop Action theme]
+Name=Theme Settings
+Icon=preferences-desktop-theme
+Exec=qt5ct
+
