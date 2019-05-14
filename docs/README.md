@@ -26,7 +26,7 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
 
   * Show available storage/optical devices in system tray
   * Auto mount (and open) storage/optical devices when added *(not default)*
-  * Auto play CD/DVD *(not default)*
+  * Auto play audio/video CD/DVD *(not default)*
 
 ### Power management
 
@@ -39,7 +39,7 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
   * Enables applications to inhibit display and suspend
   * Display backlight support
   * Display hotplug support **(WIP)**
-  * RTC support **(WIP)**
+  * RTC wake alarm support
   * CPU support **(WIP)**
 
 ## Usage

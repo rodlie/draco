@@ -204,6 +204,7 @@ bool PowerCpu::hasPState()
 bool PowerCpu::hasPStateTurbo()
 {
     bool result = false;
+    if (!hasPState()) { return result; }
     QFile turbo(QString("%1/%2/%3")
                 .arg(LINUX_CPU_SYS)
                 .arg(LINUX_CPU_PSTATE)
