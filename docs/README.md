@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/rodlie/draco.svg?branch=master)](https://travis-ci.com/rodlie/draco)
 [![GitHub issues](https://img.shields.io/github/issues/rodlie/draco.svg)](https://github.com/rodlie/draco/issues)
 [![GitHub release](https://img.shields.io/github/release/rodlie/draco.svg)](https://github.com/rodlie/draco/releases)
-[![Telegram chat](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/dracolinuxorg)
+[![Telegram chat](https://img.shields.io/badge/public_chat-Telegram-blue.svg)](https://t.me/dracolinuxorg)
 
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/screenshot.jpg)
 
@@ -138,9 +138,6 @@ Build and runtime requirements.
   * **``hicolor-icon-theme``**
   * **``adwaita-icon-theme``** *(3.18 recommended)*
   * **``openbox``**
-    * ``obrender`` *(3.5)*
-    * ``obt`` *(3.5)*
-  * **``glib2``**
   * **``UDisks2``** *(or compatible service)*
   * **``UPower``** *(>= 0.9.23 or compatible service)*
   * **``ConsoleKit``**/**``logind``** *(or compatible service)*
@@ -151,6 +148,7 @@ Optional recommended applications.
   * **``qterminal``** *(terminal emulator)*
   * **``qtfm``** *(file manager)*
   * **``pnmixer``** *(audio system tray)*
+  * **``obconf``** *(window manager config)*
 
 ## Build
 
@@ -175,6 +173,7 @@ Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (p
  * qt5 *(5.9.7/5.12.x recommended)*
  * qt5ct
  * openbox
+ * *obconf (optional)*
  * *pnmixer (optional)*
  * *qtfm (optional)*
  * *qterminal (optional)*
@@ -244,7 +243,7 @@ sudo apt-get install build-essential cmake pkg-config openbox adwaita-icon-theme
 Optional:
 
 ```
-sudo apt-get install qterminal pnmixer
+sudo apt-get install qterminal pnmixer obconf
 ```
 
 Build and install:
@@ -277,7 +276,7 @@ sudo dnf install qt5-qtbase-devel qt5-qtx11extras-devel cmake gcc-c++ pkg-config
 Optional:
 
 ```
-sudo dnf install qterminal pnmixer
+sudo dnf install qterminal pnmixer obconf
 ```
 
 Build and install:

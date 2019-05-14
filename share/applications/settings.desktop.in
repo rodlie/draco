@@ -43,11 +43,6 @@ Name=Power Settings
 Icon=ac-adapter
 Exec=@PROJECT_NAME@-settings --page power
 
-[Desktop Action window-manager]
-Name=Windows Settings
-Icon=preferences-system-windows
-Exec=@PROJECT_NAME@-settings-wm
-
 [Desktop Action monitors]
 Name=Monitor Settings
 Icon=video-display
