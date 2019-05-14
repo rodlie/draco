@@ -40,7 +40,7 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
   * Enables applications to inhibit display and suspend
   * Display backlight support
   * Display hotplug support **(WIP)**
-  * RTC support **(WIP)**
+  * RTC wake support
   * CPU support **(WIP)**
 
 ## Usage
