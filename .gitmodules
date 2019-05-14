@@ -1,3 +1,0 @@
-[submodule "src/settings/obconf"]
-	path = src/settings/obconf
-	url = https://github.com/rodlie/obconf-qt
