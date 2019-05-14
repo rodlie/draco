@@ -93,8 +93,6 @@ void PowerSettings::saveDefault()
                       true);
     setValue(CONF_SUSPEND_LOCK_SCREEN,
                       true);
-    //setValue(CONF_RESUME_LOCK_SCREEN,
-                      //false);
 }
 
 const QString PowerSettings::getConf()

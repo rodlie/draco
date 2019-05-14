@@ -44,7 +44,6 @@ Power::Power(QObject *parent) : QObject(parent)
   , suspendWakeupBattery(0)
   , suspendWakeupAC(0)
   , lockScreenOnSuspend(true)
-  //, lockScreenOnResume(false)
 {
     setup();
     timer.setInterval(TIMEOUT_CHECK);
@@ -196,7 +195,7 @@ QStringList Power::find()
                                                        "Introspect");
     QDBusPendingReply<QString> reply = QDBusConnection::systemBus().call(call);
     if (reply.isError()) {
-        qWarning() << "powerkit find devices failed, check the upower service!!!";
+        qWarning() << "power manager find devices failed, check the upower service!!!";
         return result;
     }
     QList<QDBusObjectPath> objects;
@@ -436,7 +435,7 @@ void Power::handlePrepareForSuspend(bool prepare)
         if (hasWakeAlarm() &&
              wakeAlarmDate.isValid() &&
              CanHibernate())
-        {
+        { // this is a wake action, hibernate
             qDebug() << "we may have a wake alarm" << wakeAlarmDate;
             QDateTime currentDate = QDateTime::currentDateTime();
             if (currentDate>=wakeAlarmDate && wakeAlarmDate.secsTo(currentDate)<300) {
@@ -503,13 +502,13 @@ bool Power::registerSuspendLock()
     if (HasLogind() && logind->isValid()) {
         reply = ckit->call("Inhibit",
                            "sleep",
-                           "powerkit",
+                           DESKTOP_APP_NAME,
                            "Lock screen etc",
                            "delay");
     } else if (HasConsoleKit() && ckit->isValid()) {
         reply = ckit->call("Inhibit",
                            "sleep",
-                           "powerkit",
+                           DESKTOP_APP_NAME,
                            "Lock screen etc",
                            "delay");
     }
@@ -904,12 +903,6 @@ void Power::setLockScreenOnSuspend(bool lock)
     qDebug() << "set lock screen on suspend" << lock;
     lockScreenOnSuspend = lock;
 }
-
-/*void Power::setLockScreenOnResume(bool lock)
-{
-    qDebug() << "set lock screen on resume" << lock;
-    lockScreenOnResume = lock;
-}*/
 
 bool Power::setDisplayBacklight(const QString &device, int value)
 {

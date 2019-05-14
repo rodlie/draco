@@ -20,7 +20,6 @@
 */
 
 #include "draco.h"
-//#include "XDGMime.h"
 #include "LuminaXDG.h"
 #include "LUtils.h"
 #include <QTextStream>

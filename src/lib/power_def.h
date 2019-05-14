@@ -19,8 +19,8 @@
 #
 */
 
-#ifndef DEF_H
-#define DEF_H
+#ifndef POWER_DEF_H
+#define POWER_DEF_H
 
 enum randrAction
 {
@@ -103,14 +103,6 @@ enum criticalAction
 #define DEFAULT_SUSPEND_BATTERY_ACTION suspendSleep
 #define DEFAULT_SUSPEND_AC_ACTION suspendNone
 
-//#define POWERKIT_SERVICE "org.freedesktop.PowerKit"
-//#define POWERKIT_PATH "/PowerKit"
-//#define POWERKIT_FULL_PATH "/org/freedesktop/PowerKit"
-
-//#define PMD_SERVICE "org.freedesktop.PowerKit"
-//#define PMD_PATH "/org/freedesktop/PowerKit"
-//#define PMD_MANAGER "org.freedesktop.PowerKit.Manager"
-
 #define PM_SERVICE "org.freedesktop.PowerManagement"
 #define PM_PATH "/PowerManagement"
 #define PM_FULL_PATH "/org/freedesktop/PowerManagement"
@@ -157,8 +149,6 @@ enum criticalAction
 #define CONF_NOTIFY_ON_BATTERY "notify_on_battery"
 #define CONF_NOTIFY_ON_AC "notify_on_ac"
 #define CONF_SUSPEND_LOCK_SCREEN "lock_screen_on_suspend"
-//#define CONF_RESUME_LOCK_SCREEN "lock_screen_on_resume"
 #define CONF_ICON_THEME "icon_theme"
-//#define CONF_KERNEL_BYPASS "kernel_cmd_bypass"
 
-#endif // DEF_H
+#endif // POWER_DEF_H

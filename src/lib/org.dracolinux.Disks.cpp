@@ -35,7 +35,7 @@ StorageDevice::StorageDevice(const QString block, QObject *parent)
     , opticalAudioTracks(0)
     , isBlankDisc(false)
     , hasPartition(false)
-    , dbus(0)
+    , dbus(nullptr)
 {
     QDBusConnection system = QDBusConnection::systemBus();
     dbus = new QDBusInterface(DBUS_SERVICE, path, QString("%1.Block").arg(DBUS_SERVICE), system, parent);

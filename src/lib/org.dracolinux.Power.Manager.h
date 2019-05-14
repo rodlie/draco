@@ -19,8 +19,8 @@
 #
 */
 
-#ifndef POWERKIT_H
-#define POWERKIT_H
+#ifndef POWER_MANAGER_H
+#define POWER_MANAGER_H
 
 #include <QObject>
 #include <QStringList>
@@ -32,10 +32,6 @@
 #include <QDBusUnixFileDescriptor>
 
 #include "org.dracolinux.Power.Device.h"
-
-//#define POWERKIT_SERVICE "org.freedesktop.PowerKit"
-//#define POWERKIT_PATH "/PowerKit"
-//#define POWERKIT_FULL_PATH "/org/freedesktop/PowerKit"
 
 #define CONSOLEKIT_SERVICE "org.freedesktop.ConsoleKit"
 #define CONSOLEKIT_PATH "/org/freedesktop/ConsoleKit/Manager"
@@ -120,7 +116,7 @@ public:
         PKHibernateAllowed
     };
 
-    explicit Power(QObject *parent = 0);
+    explicit Power(QObject *parent = nullptr);
     ~Power();
     QMap<QString, Device*> getDevices();
 
@@ -149,7 +145,6 @@ private:
     int suspendWakeupAC;
 
     bool lockScreenOnSuspend;
-    //bool lockScreenOnResume;
 
 signals:
     void Update();
@@ -240,9 +235,7 @@ public slots:
     void setSuspendWakeAlarmOnBattery(int value);
     void setSuspendWakeAlarmOnAC(int value);
     void setLockScreenOnSuspend(bool lock);
-    //void setLockScreenOnResume(bool lock);
-
     bool setDisplayBacklight(QString const &device, int value);
 };
 
-#endif // POWERKIT_H
+#endif // POWER_MANAGER_H
