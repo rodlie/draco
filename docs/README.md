@@ -3,8 +3,9 @@
 [![Build Status](https://travis-ci.com/rodlie/draco.svg?branch=master)](https://travis-ci.com/rodlie/draco)
 [![GitHub issues](https://img.shields.io/github/issues/rodlie/draco.svg)](https://github.com/rodlie/draco/issues)
 [![GitHub release](https://img.shields.io/github/release/rodlie/draco.svg)](https://github.com/rodlie/draco/releases)
-[![Telegram chat](https://img.shields.io/badge/Telegram-Chat-blue.svg)](https://t.me/dracolinuxorg)
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/draco-promo.gif)
+[![Telegram chat](https://img.shields.io/badge/Chat-Telegram-blue.svg)](https://t.me/dracolinuxorg)
+
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/screenshot.jpg)
 
 Draco is a simple and lightweight desktop environment. While small still features XDG integration, freedesktop services and integration, power and storage management, desktop, panels, multi-monitor support and much more. Draco does not include any user applications.
 
@@ -26,7 +27,7 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
 
   * Show available storage/optical devices in system tray
   * Auto mount (and open) storage/optical devices when added *(not default)*
-  * Auto play audio/video CD/DVD *(not default)*
+  * Auto play CD/DVD *(not default)*
 
 ### Power management
 
@@ -39,7 +40,7 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
   * Enables applications to inhibit display and suspend
   * Display backlight support
   * Display hotplug support **(WIP)**
-  * RTC wake alarm support
+  * RTC support **(WIP)**
   * CPU support **(WIP)**
 
 ## Usage
@@ -293,4 +294,4 @@ sudo make install
 
 ## License
 
-This project has source files licensed under ``BSD-3``, ``LGPL-2.1`` and ``GPL-2``.
+This project has source files licensed under ``BSD-3``, ``LGPL-2.1`` and ``GPL-2``. The complete project is licenced under ``
