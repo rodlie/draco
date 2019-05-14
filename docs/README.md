@@ -294,4 +294,4 @@ sudo make install
 
 ## License
 
-This project has source files licensed under ``BSD-3``, ``LGPL-2.1`` and ``GPL-2``. The complete project is licenced under ``
+This project has source files licensed under ``BSD-3``, ``LGPL-2.1`` and ``GPL-2``.
