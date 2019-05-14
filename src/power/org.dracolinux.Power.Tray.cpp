@@ -259,7 +259,7 @@ void SysTray::checkDevices()
 
     // get battery left and add tooltip
     double batteryLeft = man->BatteryLeft();
-    qDebug() << "battery at" << batteryLeft;
+    //qDebug() << "battery at" << batteryLeft;
     if (batteryLeft > 0 && man->HasBattery()) {
         tray->setToolTip(QString("%1 %2%").arg(tr("Battery at")).arg(batteryLeft));
         if (man->TimeToEmpty()>0 && man->OnBattery()) {
@@ -652,7 +652,6 @@ void SysTray::handleVeryLow(double left)
 // handle critical battery
 void SysTray::handleCritical(double left)
 {
-    qDebug() << "HANDLE CRITICAL BATTERY?" << left;
     if (left<=0 ||
         left>(double)critBatteryValue ||
         !man->OnBattery()) { return; }
