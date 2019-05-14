@@ -1,7 +1,7 @@
 theme: jekyll-theme-slate
 title: Draco
 description: Desktop Environment
-show_downloads: true
+show_downloads: false
 github:
   zip_url: https://github.com/rodlie/draco/releases
   tar_url: https://github.com/rodlie/draco/releases
