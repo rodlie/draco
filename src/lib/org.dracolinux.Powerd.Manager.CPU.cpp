@@ -193,3 +193,70 @@ bool PowerCpu::setFrequency(const QString &freq)
     if (failed) { return false; }
     return true;
 }
+
+bool PowerCpu::hasPState()
+{
+    return QFile::exists(QString("%1/%1")
+                         .arg(LINUX_CPU_SYS)
+                         .arg(LINUX_CPU_PSTATE));
+}
+
+bool PowerCpu::hasPStateTurbo()
+{
+    bool result = false;
+    QFile turbo(QString("%1/%2/%3")
+                .arg(LINUX_CPU_SYS)
+                .arg(LINUX_CPU_PSTATE)
+                .arg(LINUX_CPU_PSTATE_NOTURBO));
+    if (!turbo.exists()) { return result; }
+    if (turbo.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        QString value = turbo.readAll().trimmed();
+        turbo.close();
+        if (value=="1") { result = false; }
+        else if (value=="0") { result = true; }
+    }
+    return result;
+}
+
+bool PowerCpu::setPStateTurbo(bool turbo)
+{
+    if (!hasPState()) { return false; }
+    QFile file(QString("%1/%2/%3")
+              .arg(LINUX_CPU_SYS)
+              .arg(LINUX_CPU_PSTATE)
+              .arg(LINUX_CPU_PSTATE_NOTURBO));
+    if (file.open(QIODevice::WriteOnly|QIODevice::Truncate)) {
+        QTextStream out(&file);
+        if (turbo) { out << "0"; }
+        else { out << "1"; }
+        file.close();
+        if (turbo == hasPStateTurbo()) { return true; }
+    }
+    return false;
+}
+
+// TODO
+int PowerCpu::getPStateMax()
+{
+    return 0;
+}
+
+// TODO
+int PowerCpu::getPStateMin()
+{
+    return 0;
+}
+
+// TODO
+bool PowerCpu::setPStateMax(int maxState)
+{
+    Q_UNUSED(maxState)
+    return false;
+}
+
+// TODO
+bool PowerCpu::setPStateMin(int minState)
+{
+    Q_UNUSED(minState)
+    return false;
+}
