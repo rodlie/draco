@@ -81,8 +81,11 @@ private:
     QLabel *acBacklightLabel;
     QCheckBox *backlightMouseWheel;
     QCheckBox *suspendLockScreen;
-    //QCheckBox *resumeLockScreen;
-    //QCheckBox *bypassKernel;
+
+    QSpinBox *suspendBatteryWakeTimer;
+    QLabel *suspendBatteryWakeTimerLabel;
+    QSpinBox *suspendACWakeTimer;
+    QLabel *suspendACWakeTimerLabel;
 
 private slots:
     void setupWidgets();
@@ -122,9 +125,9 @@ private slots:
     void enableLid(bool enabled);
     void handleBacklightMouseWheel(bool triggered);
     void handleSuspendLockScreen(bool triggered);
-    //void handleResumeLockScreen(bool triggered);
-    //void handleKernelBypass(bool triggered);
     void enableBattery(bool enabled);
+    void handleSuspendWakeBatteryTimer(int value);
+    void handleSuspendWakeACTimer(int value);
 };
 
 #endif // POWER_SETTINGS_WIDGET_H

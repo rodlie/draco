@@ -60,8 +60,10 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
     , acBacklightLabel(nullptr)
     , backlightMouseWheel(nullptr)
     , suspendLockScreen(nullptr)
-    //, resumeLockScreen(nullptr)
-    //, bypassKernel(nullptr)
+    , suspendBatteryWakeTimer(nullptr)
+    , suspendBatteryWakeTimerLabel(nullptr)
+    , suspendACWakeTimer(nullptr)
+    , suspendACWakeTimerLabel(nullptr)
 {
     // setup dbus
     QDBusConnection session = QDBusConnection::sessionBus();
@@ -75,12 +77,8 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
                              tr("Power manager is not running, please make sure it's running before using settings."));
     } else {
 
-        // trigger generation of powerkit.conf if not exists
+        // trigger generation of conf if not exists
         PowerSettings::getConf();
-
-        // setup theme
-        //Theme::setIconTheme();
-        //setWindowIcon(QIcon::fromTheme(DEFAULT_AC_ICON));
 
         setupWidgets(); // setup widgets
         populate(); // populate boxes
@@ -137,10 +135,10 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
                 this, SLOT(handleBacklightMouseWheel(bool)));
         connect(suspendLockScreen, SIGNAL(toggled(bool)),
                 this, SLOT(handleSuspendLockScreen(bool)));
-        //connect(resumeLockScreen, SIGNAL(toggled(bool)),
-                //this, SLOT(handleResumeLockScreen(bool)));
-        //connect(bypassKernel, SIGNAL(toggled(bool)),
-                //this, SLOT(handleKernelBypass(bool)));
+        connect(suspendBatteryWakeTimer, SIGNAL(valueChanged(int)),
+                this, SLOT(handleSuspendWakeBatteryTimer(int)));
+        connect(suspendACWakeTimer, SIGNAL(valueChanged(int)),
+                this, SLOT(handleSuspendWakeACTimer(int)));
     }
 }
 
@@ -253,6 +251,21 @@ void PowerSettingsWidget::setupWidgets()
     sleepBatteryContainerLayout->addWidget(sleepBatteryLabel);
     sleepBatteryContainerLayout->addStretch();
     sleepBatteryContainerLayout->addWidget(sleepActionBatteryContainer);
+
+    // wake on battery
+    suspendBatteryWakeTimer = new QSpinBox(this);
+    suspendBatteryWakeTimer->setMaximumWidth(MAX_WIDTH);
+    suspendBatteryWakeTimer->setMinimumWidth(MAX_WIDTH);
+    suspendBatteryWakeTimer->setMinimum(0);
+    suspendBatteryWakeTimer->setMaximum(1000);
+    suspendBatteryWakeTimer->setSuffix(QString(" %1").arg(tr("min")));
+    suspendBatteryWakeTimerLabel = new QLabel(this);
+    suspendBatteryWakeTimerLabel->setMaximumWidth(MAX_WIDTH);
+    suspendBatteryWakeTimerLabel->setWordWrap(true);
+    suspendBatteryWakeTimerLabel->setText(tr("Wake device during suspend to <b>hibernate</b> after"));
+    sleepActionBatteryContainerLayout->addSpacing(5);
+    sleepActionBatteryContainerLayout->addWidget(suspendBatteryWakeTimerLabel);
+    sleepActionBatteryContainerLayout->addWidget(suspendBatteryWakeTimer);
 
     // backlight battery
     backlightSliderBattery = new QSlider(this);
@@ -374,6 +387,21 @@ void PowerSettingsWidget::setupWidgets()
     sleepACContainerLayout->addStretch();
     sleepACContainerLayout->addWidget(sleepActionACContainer);
 
+    // wake on ac
+    suspendACWakeTimer = new QSpinBox(this);
+    suspendACWakeTimer->setMaximumWidth(MAX_WIDTH);
+    suspendACWakeTimer->setMinimumWidth(MAX_WIDTH);
+    suspendACWakeTimer->setMinimum(0);
+    suspendACWakeTimer->setMaximum(1000);
+    suspendACWakeTimer->setSuffix(QString(" %1").arg(tr("min")));
+    suspendACWakeTimerLabel = new QLabel(this);
+    suspendACWakeTimerLabel->setMaximumWidth(MAX_WIDTH);
+    suspendACWakeTimerLabel->setWordWrap(true);
+    suspendACWakeTimerLabel->setText(tr("Wake device during suspend to <b>hibernate</b> after"));
+    sleepActionACContainerLayout->addSpacing(5);
+    sleepActionACContainerLayout->addWidget(suspendACWakeTimerLabel);
+    sleepActionACContainerLayout->addWidget(suspendACWakeTimer);
+
     // backlight ac
     backlightSliderAC = new QSlider(this);
     backlightSliderAC->setOrientation(Qt::Horizontal);
@@ -476,11 +504,6 @@ void PowerSettingsWidget::setupWidgets()
     backlightMouseWheel->setIcon(QIcon::fromTheme(DEFAULT_TRAY_ICON));
     backlightMouseWheel->setText(tr("Adjust backlight in system tray"));
     backlightMouseWheel->setToolTip(tr("Adjust the display backlight with the mouse wheel on the system tray icon."));
-
-    /*bypassKernel = new QCheckBox(this);
-    bypassKernel->setIcon(QIcon::fromTheme(DEFAULT_TRAY_ICON));
-    bypassKernel->setText(tr("Ignore kernel resume check"));
-    bypassKernel->setToolTip(tr("Don't check /proc/cmdline for a valid resume=<swap_partition> before hibernate."));*/
 
     suspendLockScreen = new QCheckBox(this);
     suspendLockScreen->setIcon(QIcon::fromTheme(DEFAULT_LOCK_ICON));
@@ -740,17 +763,17 @@ void PowerSettingsWidget::loadSettings()
     }
     suspendLockScreen->setChecked(defaultSuspendLockScreen);
 
-    /*bool defaultResumeLockScreen = false;
-    if (PowerSettings::isValid(CONF_RESUME_LOCK_SCREEN)) {
-        defaultResumeLockScreen = PowerSettings::getValue(CONF_RESUME_LOCK_SCREEN).toBool();
+    int defaultSuspendBatteryWakeTimer = 0;
+    if (PowerSettings::isValid(CONF_SUSPEND_WAKEUP_HIBERNATE_BATTERY)) {
+        defaultSuspendBatteryWakeTimer = PowerSettings::getValue(CONF_SUSPEND_WAKEUP_HIBERNATE_BATTERY).toInt();
     }
-    resumeLockScreen->setChecked(defaultResumeLockScreen);*/
+    setDefaultAction(suspendBatteryWakeTimer, defaultSuspendBatteryWakeTimer);
 
-    /*bool defaultKernelBypass = false;
-    if (PowerSettings::isValid(CONF_KERNEL_BYPASS)) {
-        defaultKernelBypass = PowerSettings::getValue(CONF_KERNEL_BYPASS).toBool();
+    int defaultSuspendACWakeTimer = 0;
+    if (PowerSettings::isValid(CONF_SUSPEND_WAKEUP_HIBERNATE_AC)) {
+        defaultSuspendACWakeTimer = PowerSettings::getValue(CONF_SUSPEND_WAKEUP_HIBERNATE_AC).toInt();
     }
-    bypassKernel->setChecked(defaultKernelBypass);*/
+    setDefaultAction(suspendACWakeTimer, defaultSuspendACWakeTimer);
 
     // check
     checkPerms();
@@ -858,8 +881,10 @@ void PowerSettingsWidget::saveSettings()
                               backlightMouseWheel->isChecked());
     PowerSettings::setValue(CONF_SUSPEND_LOCK_SCREEN,
                               suspendLockScreen->isChecked());
-    //PowerSettings::setValue(CONF_RESUME_LOCK_SCREEN,
-                              //resumeLockScreen->isChecked());
+    PowerSettings::setValue(CONF_SUSPEND_WAKEUP_HIBERNATE_BATTERY,
+                            suspendBatteryWakeTimer->value());
+    PowerSettings::setValue(CONF_SUSPEND_WAKEUP_HIBERNATE_AC,
+                            suspendACWakeTimer->value());
 }
 
 // set default action in combobox
@@ -969,7 +994,13 @@ void PowerSettingsWidget::handleAutoSleepACAction(int index)
 
 void PowerSettingsWidget::checkPerms()
 {
-    if (!PowerClient::canHibernate(dbus)) {
+    bool weCanHibernate = PowerClient::canHibernate(dbus);
+    suspendACWakeTimer->setEnabled(weCanHibernate);
+    suspendACWakeTimerLabel->setEnabled(weCanHibernate);
+    suspendBatteryWakeTimer->setEnabled(weCanHibernate);
+    suspendBatteryWakeTimerLabel->setEnabled(weCanHibernate);
+
+    if (!weCanHibernate) {
         bool warnCantHibernate = false;
         if (criticalActionBattery->currentIndex() == criticalHibernate) {
             warnCantHibernate = true;
@@ -1137,14 +1168,17 @@ void PowerSettingsWidget::enableBattery(bool enabled)
     backlightBatteryCheck->setEnabled(enabled);
     backlightBatteryLowerCheck->setEnabled(enabled);
     batteryBacklightLabel->setEnabled(enabled);
+
+    suspendBatteryWakeTimer->setEnabled(enabled);
+    suspendBatteryWakeTimerLabel->setEnabled(enabled);
 }
 
-/*void PowerSettingsWidget::handleResumeLockScreen(bool triggered)
+void PowerSettingsWidget::handleSuspendWakeBatteryTimer(int value)
 {
-    PowerSettings::setValue(CONF_RESUME_LOCK_SCREEN, triggered);
+    PowerSettings::setValue(CONF_SUSPEND_WAKEUP_HIBERNATE_BATTERY, value);
 }
 
-void PowerSettingsWidget::handleKernelBypass(bool triggered)
+void PowerSettingsWidget::handleSuspendWakeACTimer(int value)
 {
-    PowerSettings::setValue(CONF_KERNEL_BYPASS, triggered);
-}*/
+    PowerSettings::setValue(CONF_SUSPEND_WAKEUP_HIBERNATE_AC, value);
+}

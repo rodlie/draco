@@ -427,6 +427,7 @@ void Power::handlePrepareForSuspend(bool prepare)
     qDebug() << "handle prepare for suspend/resume from consolekit/logind" << prepare;
     if (prepare) {
         if (lockScreenOnSuspend) { LockScreen(); }
+        setWakeAlarmFromSettings();
         emit PrepareForSuspend();
         releaseSuspendLock(); // we are ready for suspend
     }
@@ -663,10 +664,10 @@ QString Power::Suspend()
     qDebug() << "try to suspend";
     if (lockScreenOnSuspend) { LockScreen(); }
     if (HasLogind()) {
-        setWakeAlarmFromSettings();
+        //setWakeAlarmFromSettings();
         return executeAction(PKSuspendAction, PKLogind);
     } else if (HasConsoleKit()) {
-        setWakeAlarmFromSettings();
+        //setWakeAlarmFromSettings();
         return executeAction(PKSuspendAction, PKConsoleKit);
     } else if (HasUPower()) {
         return executeAction(PKSuspendAction, PKUPower);
