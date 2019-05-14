@@ -22,7 +22,7 @@ if(NOT XCB_FIND_COMPONENTS)
 #        set(XCB_FIND_COMPONENTS "${XCB_FIND_COMPONENTS};xcb-xinput")
 #    endif()
 endif()
-message("-- Find XCB Components: ${XCB_FIND_COMPONENTS}")
+#message("-- Find XCB Components: ${XCB_FIND_COMPONENTS}")
 
 include(FindPackageHandleStandardArgs)
 set(XCB_FOUND true)
