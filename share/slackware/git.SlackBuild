@@ -23,9 +23,9 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=draco
-VERSION=${VERSION:-0.9.0_rc1}
+VERSION=${VERSION:-`git rev-parse --short HEAD`}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_SBo}
+TAG=${TAG:-}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -62,7 +62,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xf $CWD/$PRGNAM-$VERSION.tar.gz
+git clone "$CWD/../.." $PRGNAM-$VERSION
 cd $PRGNAM-$VERSION
 chown -R root:root .
 find -L . \
@@ -95,12 +95,6 @@ chmod +x $PKG/etc/X11/xinit/xinitrc.draco
 # Strip
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
-# Add SlackBuild
-if [ ! -d "$PKG/usr/doc/$PRGNAM-$VERSION" ]; then
-  mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-fi
-cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 # Make package
 mkdir -p $PKG/install

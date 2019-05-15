@@ -169,52 +169,16 @@ You can also change the ``/etc/dbus-1/system.d/org.dracolinux.Powerd.conf`` file
 
 ### Slackware Linux (14.2+)
 
-Install the following packages from [SlackBuilds.org](http://slackbuilds.org) (packages may be available [here](http://www.slackware.com/~alien/slackbuilds/)):
+Install the following packages from [SlackBuilds.org](http://slackbuilds.org) or [slackware.com/~alien](http://www.slackware.com/~alien/slackbuilds/):
  * qt5 *(5.9.7/5.12.x recommended)*
  * qt5ct
  * openbox
- * *obconf (optional)*
- * *pnmixer (optional)*
- * *qtfm (optional)*
- * *qterminal (optional)*
-
-```
-On Slackware64 Current do the following to setup dependencies:
-
-wget http://www.slackware.com/~alien/slackbuilds/OpenAL/pkg64/current/OpenAL-1.19.1-x86_64-1alien.txz
-sudo upgradepkg --install-new OpenAL-*.txz
-
-wget http://www.slackware.com/~alien/slackbuilds/libxkbcommon/pkg64/current/libxkbcommon-0.8.3-x86_64-1alien.txz
-sudo upgradepkg --install-new libxkbcommon-*.txz
-
-wget http://www.slackware.com/~alien/slackbuilds/openbox/pkg64/current/openbox-3.6.1-x86_64-1alien.tgz
-sudo upgradepkg --install-new openbox-*.tgz
-
-wget http://www.slackware.com/~alien/slackbuilds/qt5/pkg64/current/qt5-5.12.1-x86_64-1alien.txz
-sudo upgradepkg --install-new qt5-*.txz
-
-You will need to build qt5ct from SlackBuilds.org:
-
-wget https://slackbuilds.org/slackbuilds/14.2/desktop/qt5ct.tar.gz
-tar xvf qt5ct.tar.gz
-cd qt5ct.tar.gz
-wget http://prdownloads.sourceforge.net/qt5ct/qt5ct-0.38.tar.bz2
-sudo sh qt5ct.SlackBuild
-sudo upgradepkg --install-new /tmp/qt5ct-*.tgz
-
-
-```
 
  The rest should be available in a standard installation.
 
-A [draco.SlackBuild](https://github.com/rodlie/draco/blob/master/share/slackware/draco.SlackBuild) is available (will build latest from git if run from repo):
-```
-git clone https://github.com/rodlie/draco
-cd draco/share/slackware
-sudo sh draco.SlackBuild
-```
+A [draco.SlackBuild](https://github.com/rodlie/draco/blob/master/share/slackware/draco.SlackBuild) is available.
 
-Install the package and off you go. Or you can of course build it manually:
+You can of course build it manually:
 
 ```
 mkdir build && cd build
@@ -238,12 +202,6 @@ Dependencies (based on a miminal install of Xenial):
 
 ```
 sudo apt-get install build-essential cmake pkg-config openbox adwaita-icon-theme-full xscreensaver xdg-utils qt5ct qtbase5-dev libqt5x11extras5-dev libx11-dev libxss-dev libxdamage-dev libxrandr-dev libxfixes-dev libxcb1-dev libx11-xcb-dev libxcb-randr0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-util0-dev libxcb-shm0-dev openbox-dev
-```
-
-Optional:
-
-```
-sudo apt-get install qterminal pnmixer obconf
 ```
 
 Build and install:
@@ -271,12 +229,6 @@ Dependencies:
 
 ```
 sudo dnf install qt5-qtbase-devel qt5-qtx11extras-devel cmake gcc-c++ pkg-config libXScrnSaver-devel libXdamage-devel libXrandr-devel libxcb-devel xcb-util-devel xcb-util-wm-devel xcb-util-image-devel xdg-utils shared-mime-info hicolor-icon-theme adwaita-icon-theme openbox xscreensaver qt5ct openbox-devel
-```
-
-Optional:
-
-```
-sudo dnf install qterminal pnmixer obconf
 ```
 
 Build and install:
