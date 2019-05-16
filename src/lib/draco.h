@@ -53,6 +53,9 @@ public:
     static const QString powerSessionName();
     static const QString powerSessionPath();
     static const QString powerSessionFullPath();
+    static const QString settingsSessionName();
+    static const QString settingsSessionPath();
+    static const QString settingsSessionFullPath();
     static const QString xconfig();
     static const QString storageApp();
     static const QString powerApp();
