@@ -97,6 +97,30 @@ A swap partition (or file) is needed by the kernel to support hibernate/hybrid s
 
 **Note that some distributions don't require ``resume=``, and some have hibernation disabled. Consult your distribution documentation regarding hibernation.**
 
+## Components
+
+Draco is divided into the following components:
+
+ * **libDraco**
+   * Common functions.
+ * **start-draco**
+   * Takes care of starting and running the desktop environment.
+ * **draco-settings**
+   * Manage settings.
+ * **draco-settings-x11**
+   * Manage monitors. *You can use this component outside of Draco.*
+ * **org.dracolinux.Desktop**
+   * The desktop session. Takes care of anything related to desktop, panels, clipboard and auto started applications/services. *You can use this component outside of Draco.*
+ * **org.dracolinux.Power**
+   * Takes care of anything related to power. This includes, but not limited to screensaver, freedesktop services, suspend, hibernate, monitors, backlight, keyboard, CPU. *You can use this component outside of Draco.*
+ * **org.dracolinux.Powerd**
+   * D-Bus system service for Draco. Used to modify backlight, cpufreq/pstate and RTC wake alarm.
+ * **org.dracolinux.Storage**
+   * Takes care of removable storage devices. *You can use this component outside of Draco.*
+ * **org.dracolinux.XDG**
+   * ``xdg-open`` replacement. Takes care of anything XDG related when running Draco. *You can use this component outside of Draco.*
+
+
 ## History
 
 Draco was an alternative GNU/Linux distribution developed between 2005 and 2015. Since then the OS has been dropped in favor of (upstream, and) creating a desktop environment. The distribution started out as a fork of Slackware Linux, while the desktop started out as a fork of [Lumina](https://github.com/lumina-desktop/lumina) aimed at Slackware Linux. *What goes around comes around ...*
