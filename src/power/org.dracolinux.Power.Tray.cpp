@@ -238,14 +238,17 @@ SysTray::~SysTray()
 // what to do when user clicks systray
 void SysTray::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    switch (reason) {
+    /*switch (reason) {
     case QSystemTrayIcon::Trigger:
     case QSystemTrayIcon::Context:
     case QSystemTrayIcon::DoubleClick:
     case QSystemTrayIcon::MiddleClick:
         break;
     default:;
-    }
+    }*/
+    Q_UNUSED(reason)
+    // may add a fancy menu here, for now just show settings:
+    QProcess::startDetached(QString("%1-settings --page power").arg(DESKTOP_APP));
 }
 
 void SysTray::checkDevices()
