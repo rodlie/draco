@@ -74,6 +74,21 @@ const QString Draco::powerSessionFullPath()
     return QString("/%1").arg(POWER_SERVICE_NAME).replace(".", "/");
 }
 
+const QString Draco::settingsSessionName()
+{
+    return SETTINGS_SERVICE_NAME;
+}
+
+const QString Draco::settingsSessionPath()
+{
+    return QString("/Settings");
+}
+
+const QString Draco::settingsSessionFullPath()
+{
+    return QString("/%1").arg(SETTINGS_SERVICE_NAME).replace(".", "/");
+}
+
 const QString Draco::xconfig()
 {
     return QString("%1-settings-x11").arg(DESKTOP_APP);
