@@ -543,7 +543,7 @@ void SysTray::loadSettings()
             monitors.clear();
         } else if (!wasHotplugOn && monitorHotplugSupport) { // turn on hotplug
             qDebug() << "turn on monitor hotplug";
-            ht->requestSetScan(true);
+            ht->requestSetScan(false);
             ht->requestScan();
             handleFoundDisplays(Screens::outputs());
         }
@@ -822,6 +822,8 @@ void SysTray::handleDisplay(const QString &display, bool connected)
 
     bool wasConnected = monitors[display];
     monitors[display] = connected;
+    bool turnOn = false;
+
     if (wasConnected && !connected) {
         // Turn off monitor using xrandr when disconnected.
         qDebug() << "turn off monitor" << display;
@@ -834,9 +836,22 @@ void SysTray::handleDisplay(const QString &display, bool connected)
         QProcess proc;
         proc.start(QString(TURN_ON_MONITOR).arg(display));
         proc.waitForFinished();
+        turnOn = true;
     }
     // load monitor settings
-    QProcess::startDetached(DRACO_XCONFIG);
+    QSettings xconfig(Draco::xconfigSettingsFile(), QSettings::IniFormat);
+    if (xconfig.allKeys().isEmpty()) {
+        QString cmd = "xrandr";
+        if (display != internalMonitor && turnOn) {
+            cmd.append(QString(" --output %1 --left-of %2")
+                       .arg(display)
+                       .arg(internalMonitor));
+        } else {
+            cmd.append(" --auto");
+        }
+        QProcess::startDetached(cmd);
+    }
+    else { QProcess::startDetached(DRACO_XCONFIG_RESET); }
 }
 
 void SysTray::handleFoundDisplays(QMap<QString, bool> displays)
