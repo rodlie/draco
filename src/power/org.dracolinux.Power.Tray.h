@@ -44,6 +44,7 @@
 #include "org.dracolinux.Power.Manager.h"
 
 #include <X11/extensions/scrnsaver.h>
+#include "org.dracolinux.Power.HotPlugX11.h"
 #undef CursorShape
 #undef Bool
 #undef None
@@ -94,6 +95,7 @@ private:
     Power *man;
     PowerManagement *pm;
     ScreenSaver *ss;
+    HotPlug *ht;
     bool wasLowBattery;
     bool wasVeryLowBattery;
     int lowBatteryValue;
@@ -119,7 +121,6 @@ private:
     QMap<quint32,QString> pmInhibitors;
     QString internalMonitor;
     QFileSystemWatcher *watcher;
-    bool lidXrandr;
     bool lidWasClosed;
     QString backlightDevice;
     bool hasBacklight;
@@ -135,6 +136,8 @@ private:
     bool notifyOnAC;
     bool backlightMouseWheel;
     bool ignoreKernelResume;
+    QMap<QString, bool> monitors;
+    bool monitorHotplugSupport;
 
 private slots:
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
@@ -153,6 +156,8 @@ private slots:
     void timeout();
     int xIdle();
     void resetTimer();
+    void handleDisplay(const QString &display, bool connected);
+    void handleFoundDisplays(QMap<QString,bool> displays);
     void setInternalMonitor();
     bool internalMonitorIsConnected();
     bool externalMonitorIsConnected();

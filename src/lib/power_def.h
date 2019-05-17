@@ -150,7 +150,6 @@ enum criticalAction
 #define CONF_NOTIFY_ON_AC "notify_on_ac"
 #define CONF_SUSPEND_LOCK_SCREEN "lock_screen_on_suspend"
 #define CONF_ICON_THEME "icon_theme"
-
 #define CONF_CPU_BATTERY_GOV "cpu_battery_gov"
 #define CONF_CPU_AC_GOV "cpu_ac_gov"
 #define CONF_CPU_BATTERY_FREQ "cpu_battery_freq"
@@ -161,5 +160,6 @@ enum criticalAction
 #define CONF_CPU_AC_PSTATE_MIN "cpu_ac_pstate_min"
 #define CONF_CPU_BATTERY_PSTATE_MAX "cpu_battery_pstate_max"
 #define CONF_CPU_AC_PSTATE_MAX "cpu_ac_pstate_min"
+#define CONF_MONITOR_HOTPLUG "monitor_hotplug"
 
 #endif // POWER_DEF_H

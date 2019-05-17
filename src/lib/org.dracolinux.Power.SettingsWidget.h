@@ -87,6 +87,8 @@ private:
     QSpinBox *suspendACWakeTimer;
     QLabel *suspendACWakeTimerLabel;
 
+    QCheckBox *monitorHotplug;
+
 private slots:
     void setupWidgets();
     void populate();
@@ -128,6 +130,7 @@ private slots:
     void enableBattery(bool enabled);
     void handleSuspendWakeBatteryTimer(int value);
     void handleSuspendWakeACTimer(int value);
+    void handleMonitorHotplug(bool triggered);
 };
 
 #endif // POWER_SETTINGS_WIDGET_H

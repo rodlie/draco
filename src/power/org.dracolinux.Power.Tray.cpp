@@ -32,6 +32,7 @@ SysTray::SysTray(QObject *parent)
     , man(nullptr)
     , pm(nullptr)
     , ss(nullptr)
+    , ht(nullptr)
     , wasLowBattery(false)
     , wasVeryLowBattery(false)
     , lowBatteryValue(LOW_BATTERY)
@@ -54,7 +55,6 @@ SysTray::SysTray(QObject *parent)
     , xscreensaver(nullptr)
     , startupScreensaver(true)
     , watcher(nullptr)
-    , lidXrandr(false)
     , lidWasClosed(false)
     , hasBacklight(false)
     , backlightOnBattery(false)
@@ -69,6 +69,7 @@ SysTray::SysTray(QObject *parent)
     , notifyOnAC(true)
     , backlightMouseWheel(true)
     , ignoreKernelResume(false)
+    , monitorHotplugSupport(false)
 {
     // setup tray
     tray = new TrayIcon(this);
@@ -170,6 +171,18 @@ SysTray::SysTray(QObject *parent)
             man,
             SLOT(handleDelInhibitScreenSaver(quint32)));
 
+    // setup monitor hotplug watcher
+    ht = new HotPlug();
+    qRegisterMetaType<QMap<QString,bool> >("QMap<QString,bool>");
+    connect(ht,
+            SIGNAL(status(QString,bool)),
+            this,
+            SLOT(handleDisplay(QString,bool)));
+    connect(ht,
+            SIGNAL(found(QMap<QString,bool>)),
+            this,
+            SLOT(handleFoundDisplays(QMap<QString,bool>)));
+
     // setup xscreensaver
     xscreensaver = new QProcess(this);
     connect(xscreensaver,
@@ -232,6 +245,7 @@ SysTray::SysTray(QObject *parent)
 
 SysTray::~SysTray()
 {
+    ht->deleteLater();
     if (xscreensaver->isOpen()) { xscreensaver->close(); }
 }
 
@@ -475,9 +489,6 @@ void SysTray::loadSettings()
     if (PowerSettings::isValid(CONF_LID_DISABLE_IF_EXTERNAL)) {
         disableLidOnExternalMonitors = PowerSettings::getValue(CONF_LID_DISABLE_IF_EXTERNAL).toBool();
     }
-    if (PowerSettings::isValid(CONF_LID_XRANDR)) {
-        lidXrandr = PowerSettings::getValue(CONF_LID_XRANDR).toBool();
-    }
     if (PowerSettings::isValid(CONF_BACKLIGHT_AC_ENABLE)) {
         backlightOnAC = PowerSettings::getValue(CONF_BACKLIGHT_AC_ENABLE).toBool();
     }
@@ -521,6 +532,21 @@ void SysTray::loadSettings()
     }
     if (PowerSettings::isValid(CONF_SUSPEND_WAKEUP_HIBERNATE_AC)) {
         man->setSuspendWakeAlarmOnAC(PowerSettings::getValue(CONF_SUSPEND_WAKEUP_HIBERNATE_AC).toInt());
+    }
+
+    if (PowerSettings::isValid(CONF_MONITOR_HOTPLUG)) {
+        bool wasHotplugOn = monitorHotplugSupport;
+        monitorHotplugSupport = PowerSettings::getValue(CONF_MONITOR_HOTPLUG).toBool();
+        if (wasHotplugOn && !monitorHotplugSupport) { // turn off hotplug
+            qDebug() << "turn off monitor hotplug";
+            ht->requestSetScan(false);
+            monitors.clear();
+        } else if (!wasHotplugOn && monitorHotplugSupport) { // turn on hotplug
+            qDebug() << "turn on monitor hotplug";
+            ht->requestSetScan(true);
+            ht->requestScan();
+            handleFoundDisplays(Screens::outputs());
+        }
     }
 
     /*if (PowerSettings::isValid(CONF_KERNEL_BYPASS)) {
@@ -788,6 +814,38 @@ void SysTray::resetTimer()
     timeouts = 0;
 }
 
+void SysTray::handleDisplay(const QString &display, bool connected)
+{
+    if (!monitorHotplugSupport) { return; }
+    qDebug() << "handle display" << display << connected;
+    if (monitors[display] == connected) { return; }
+
+    bool wasConnected = monitors[display];
+    monitors[display] = connected;
+    if (wasConnected && !connected) {
+        // Turn off monitor using xrandr when disconnected.
+        qDebug() << "turn off monitor" << display;
+        QProcess proc;
+        proc.start(QString(TURN_OFF_MONITOR).arg(display));
+        proc.waitForFinished();
+    } else if (!wasConnected && connected) {
+        // Turn "on" monitor using xrandr when connected.
+        qDebug() << "turn on monitor" << display;
+        QProcess proc;
+        proc.start(QString(TURN_ON_MONITOR).arg(display));
+        proc.waitForFinished();
+    }
+    // load monitor settings
+    QProcess::startDetached(DRACO_XCONFIG);
+}
+
+void SysTray::handleFoundDisplays(QMap<QString, bool> displays)
+{
+    if (!monitorHotplugSupport) { return; }
+    qDebug() << "handle found displays" << displays;
+    monitors = displays;
+}
+
 // set "internal" monitor
 void SysTray::setInternalMonitor()
 {
@@ -974,16 +1032,11 @@ void SysTray::handlePrepareForResume()
     ss->SimulateUserActivity();
 }
 
-// turn off/on monitor using xrandr
-// optional "hidden" feature (should be handled by a display manager)
+// turn off/on  internal monitor using xrandr
 void SysTray::switchInternalMonitor(bool toggle)
 {
-    if (!lidXrandr) { return; }
-    qDebug() << "using xrandr to turn on/off internal monitor" << toggle;
-    QProcess xrandr;
-    xrandr.start(QString(toggle?TURN_ON_MONITOR:TURN_OFF_MONITOR).arg(internalMonitor));
-    xrandr.waitForFinished();
-    xrandr.close();
+    if (!monitorHotplugSupport) { return; }
+    handleDisplay(internalMonitor, toggle);
 }
 
 // adjust backlight on wheel event (on systray)

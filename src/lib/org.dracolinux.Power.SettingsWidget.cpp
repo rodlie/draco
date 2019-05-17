@@ -64,6 +64,7 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
     , suspendBatteryWakeTimerLabel(nullptr)
     , suspendACWakeTimer(nullptr)
     , suspendACWakeTimerLabel(nullptr)
+    , monitorHotplug(nullptr)
 {
     // setup dbus
     QDBusConnection session = QDBusConnection::sessionBus();
@@ -139,6 +140,8 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
                 this, SLOT(handleSuspendWakeBatteryTimer(int)));
         connect(suspendACWakeTimer, SIGNAL(valueChanged(int)),
                 this, SLOT(handleSuspendWakeACTimer(int)));
+        connect(monitorHotplug, SIGNAL(toggled(bool)),
+                this, SLOT(handleMonitorHotplug(bool)));
     }
 }
 
@@ -510,12 +513,17 @@ void PowerSettingsWidget::setupWidgets()
     suspendLockScreen->setText(tr("Lock screen on suspend"));
     suspendLockScreen->setToolTip(tr("Lock the screen before suspending the computer"));
 
+    monitorHotplug = new QCheckBox(this);
+    monitorHotplug->setIcon(QIcon::fromTheme(DEFAULT_VIDEO_ICON));
+    monitorHotplug->setText(tr("Display hotplug support"));
+    monitorHotplug->setToolTip(tr("Detect and turn on/off external displays."));
+
     daemonContainerLayout->addWidget(suspendLockScreen);
     daemonContainerLayout->addWidget(showSystemTray);
     daemonContainerLayout->addWidget(showNotifications);
     daemonContainerLayout->addWidget(disableLidAction);
     daemonContainerLayout->addWidget(backlightMouseWheel);
-    //daemonContainerLayout->addWidget(bypassKernel);
+    daemonContainerLayout->addWidget(monitorHotplug);
 
     // screensaver
     /*QGroupBox *ssContainer = new QGroupBox(this);
@@ -775,6 +783,12 @@ void PowerSettingsWidget::loadSettings()
     }
     setDefaultAction(suspendACWakeTimer, defaultSuspendACWakeTimer);
 
+    bool defaultMonitorHotplug = false;
+    if (PowerSettings::isValid(CONF_MONITOR_HOTPLUG)) {
+        defaultMonitorHotplug = PowerSettings::getValue(CONF_MONITOR_HOTPLUG).toBool();
+    }
+    monitorHotplug->setChecked(defaultMonitorHotplug);
+
     // check
     checkPerms();
 
@@ -885,6 +899,8 @@ void PowerSettingsWidget::saveSettings()
                             suspendBatteryWakeTimer->value());
     PowerSettings::setValue(CONF_SUSPEND_WAKEUP_HIBERNATE_AC,
                             suspendACWakeTimer->value());
+    PowerSettings::setValue(CONF_MONITOR_HOTPLUG,
+                            monitorHotplug->isChecked());
 }
 
 // set default action in combobox
@@ -1181,4 +1197,9 @@ void PowerSettingsWidget::handleSuspendWakeBatteryTimer(int value)
 void PowerSettingsWidget::handleSuspendWakeACTimer(int value)
 {
     PowerSettings::setValue(CONF_SUSPEND_WAKEUP_HIBERNATE_AC, value);
+}
+
+void PowerSettingsWidget::handleMonitorHotplug(bool triggered)
+{
+    PowerSettings::setValue(CONF_MONITOR_HOTPLUG, triggered);
 }
