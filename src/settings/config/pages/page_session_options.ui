@@ -37,12 +37,18 @@
         <property name="text">
          <string>Show icons on the desktop</string>
         </property>
+        <property name="icon">
+         <iconset theme="user-desktop"/>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="check_media_icons">
         <property name="text">
          <string>Show storage devices on desktop</string>
+        </property>
+        <property name="icon">
+         <iconset theme="drive-removable-media"/>
         </property>
        </widget>
       </item>
@@ -53,6 +59,9 @@
         </property>
         <property name="text">
          <string>Add shortcut on the desktop for new applications</string>
+        </property>
+        <property name="icon">
+         <iconset theme="user-desktop"/>
         </property>
        </widget>
       </item>
@@ -72,12 +81,18 @@
           <property name="text">
            <string>Show storage notifications</string>
           </property>
+          <property name="icon">
+           <iconset theme="user-available"/>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QCheckBox" name="check_automount_storage">
           <property name="text">
            <string>Auto mount removable devices</string>
+          </property>
+          <property name="icon">
+           <iconset theme="drive-removable-media"/>
           </property>
          </widget>
         </item>
@@ -90,12 +105,18 @@
           <property name="text">
            <string>Auto play audio CD's</string>
           </property>
+          <property name="icon">
+           <iconset theme="drive-optical"/>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QCheckBox" name="check_autoplay_storage_dvd">
           <property name="text">
            <string>Auto play media DVD's</string>
+          </property>
+          <property name="icon">
+           <iconset theme="drive-optical"/>
           </property>
          </widget>
         </item>

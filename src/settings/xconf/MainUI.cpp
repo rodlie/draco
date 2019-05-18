@@ -80,7 +80,11 @@ void MainUI::loadIcons(){
   ui->push_close->setIcon( LXDG::findIcon("window-close","") );
   ui->tabWidget->setTabIcon(0, LXDG::findIcon("preferences-desktop-display","") );
   ui->tabWidget->setTabIcon(1, LXDG::findIcon("list-add","") );
-  ui->tool_applyconfig->setIcon( LXDG::findIcon("dialog-ok-apply","") );
+  ui->tool_applyconfig->setIcon( LXDG::findIcon("preferences-desktop-display","") );
+  ui->tool_tileX->setIcon(LXDG::findIcon("object-flip-horizontal"));
+  ui->tool_tileY->setIcon(LXDG::findIcon("object-flip-vertical"));
+  ui->tool_tile->setIcon(LXDG::findIcon("preferences-system-windows"));
+  ui->tool_save->setIcon(LXDG::findIcon("document-save"));
 }
 
 QString MainUI::currentSelection(){
@@ -444,7 +448,7 @@ void MainUI::updateProfiles(){
     profilesMenu->addAction(profiles[i])->setWhatsThis(profiles[i]);
   }
   if(!profiles.isEmpty()){ profilesMenu->addSeparator(); }
-  profilesMenu->addAction(tr("New Profile") );
+  profilesMenu->addAction(QIcon::fromTheme("document-new"), tr("New Profile") );
 
   //Now update the tab as needed
   ui->tabWidget->setTabEnabled(2,!profiles.isEmpty());
