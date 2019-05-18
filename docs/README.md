@@ -133,29 +133,35 @@ Main settings:
 
 
 Draco XDG/mime settings:
+
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-03.jpg)
 
-
 Applications and services that are launched during desktop startup:
+
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-04.jpg)
 
-
 Basic keyboard configuration:
+
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-05.jpg)
 
 Panels configuration:
+
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-06.jpg)
 
 Power configuration:
+
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-07.jpg)
 
 Wallpaper configuration:
+
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-08.jpg)
 
 General desktop configuration:
+
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-09.jpg)
 
 Monitor configuration:
+
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-10.jpg)
 
 
