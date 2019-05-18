@@ -1,9 +1,10 @@
-# Draco 0.9.0 (TBA)
+# Draco 0.9.0 RC 2 (20190518)
 
-First stable version from the 0.9 branch.
+Second release candidate from the 0.9 branch.
 
 ## Changes since RC 1
 
+ - Build on Slackware 14.2 
  - Power had wrong default setting for disableLidOnExternalMonitors
  - Show power settings from system tray
  - Allow only one instance of settings
