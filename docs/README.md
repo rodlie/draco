@@ -39,9 +39,9 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
   * Inhibit actions if external monitor(s) is connected
   * Enables applications to inhibit display and suspend
   * Display backlight support
-  * Display hotplug support **(WIP)**
+  * Display hotplug support
   * RTC wake support
-  * CPU support **(WIP)**
+  * cpufreq/pstate support **(WIP)**
 
 ## Usage
 
@@ -194,7 +194,7 @@ You can also change the ``/etc/dbus-1/system.d/org.dracolinux.Powerd.conf`` file
 ### Slackware Linux (14.2+)
 
 Install the following packages from [SlackBuilds.org](http://slackbuilds.org) or [slackware.com/~alien](http://www.slackware.com/~alien/slackbuilds/):
- * qt5 *(5.9.7/5.12.x recommended)*
+ * qt5 *(5.9.7+/5.12.x recommended)*
  * qt5ct
  * openbox
 
