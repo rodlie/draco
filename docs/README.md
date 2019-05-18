@@ -120,6 +120,44 @@ Draco is divided into the following components:
  * **org.dracolinux.XDG**
    * ``xdg-open`` replacement. Takes care of anything XDG related when running Draco. *You can use this component outside of Draco.*
 
+## Screenshots
+
+Various screenshots.
+
+
+### Settings
+
+Main settings:
+
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-02.jpg)
+
+
+Draco XDG/mime settings:
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-03.jpg)
+
+
+Applications and services that are launched during desktop startup:
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-04.jpg)
+
+
+Basic keyboard configuration:
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-05.jpg)
+
+Panels configuration:
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-06.jpg)
+
+Power configuration:
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-07.jpg)
+
+Wallpaper configuration:
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-08.jpg)
+
+General desktop configuration:
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-09.jpg)
+
+Monitor configuration:
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-10.jpg)
+
 
 ## History
 
