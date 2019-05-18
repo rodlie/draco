@@ -1,3 +1,22 @@
+# Draco 0.9.0 (20190522)
+
+First stable release.
+
+## Changes since RC2
+
+ - Added support for display hotplug *(not enabled as default)*
+
+# Draco 0.9.0 RC 2 (20190518)
+
+Second release candidate from the 0.9 branch.
+
+## Changes since RC 1
+
+ - Build on Slackware 14.2 
+ - Power had wrong default setting for disableLidOnExternalMonitors
+ - Show power settings from system tray
+ - Allow only one instance of settings
+
 # Draco 0.9.0 RC 1 (20190515)
 
 First public *(pre-release)* version of the Draco Desktop Environment. Forked from Lumina in January 2019, Draco aims to create a small and stable desktop environment that confirms to the XDG and freedesktop.org specifications. Draco is developed on and for Slackware Linux, but should work on any modern distribution.

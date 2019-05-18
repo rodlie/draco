@@ -20,14 +20,15 @@
 cmake_minimum_required(VERSION 3.0)
 include(GNUInstallDirs)
 
-project(draco VERSION 0.9.1)
-set(PROJECT_VERSION_EXTRA _beta)
+project(draco VERSION 0.9.0)
+#set(PROJECT_VERSION_EXTRA)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/share/cmake")
+include_directories(${CMAKE_BINARY_DIR})
 
 set(LIB_NAME Draco)
 set(PUBLISHER dracolinux)
