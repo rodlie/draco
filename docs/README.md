@@ -3,7 +3,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/rodlie/draco.svg)](https://github.com/rodlie/draco/issues)
 [![GitHub release](https://img.shields.io/github/release/rodlie/draco.svg)](https://github.com/rodlie/draco/releases)
 [![Telegram chat](https://img.shields.io/badge/public_chat-Telegram-blue.svg)](https://t.me/dracolinuxorg)
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/screenshot.jpg)
+![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-01.jpg)
 
 # Draco Desktop Environment
 
