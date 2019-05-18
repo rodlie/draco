@@ -131,6 +131,7 @@ void LDesktopPluginSpace::setDesktopArea(QRect area)
 
 void LDesktopPluginSpace::UpdateGeom(int oldgrid)
 {
+    Q_UNUSED(oldgrid)
     qDebug() << "Updated Desktop Geom:" << desktopRect.size() << GRIDSIZE << desktopRect.size()/GRIDSIZE;
     // Go through and check the locations/sizes of all items (particularly the ones on the bottom/right edges)
     //bool reload = false;

@@ -73,6 +73,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^(release|Release|RELEASE)$")
 else()
     message("-- DRACO DEBUG BUILD")
 endif()
+add_compile_options(-Wall -Wextra)
 
 # qt
 find_package(Qt5Core REQUIRED)

@@ -424,9 +424,9 @@ QStringList LUtils::imageExtensions(bool wildcards){
   return imgExtensions;
 }
 
- QTranslator* LUtils::LoadTranslation(QApplication *app, QString appname, QString locale, QTranslator *cTrans){
+/* QTranslator* LUtils::LoadTranslation(QApplication *app, QString appname, QString locale, QTranslator *cTrans){
 return new QTranslator();
-}
+}*/
 
 QStringList LUtils::knownLocales(){
   QDir i18n;// = QDir(LOS::LuminaShare()+"i18n");

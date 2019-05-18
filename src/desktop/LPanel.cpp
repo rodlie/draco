@@ -293,8 +293,8 @@ void LPanel::UpdatePanel(bool geomonly)
     // Now update the appearance of the toolbar
     if (settings->value(PPREFIX+"customColor", true).toBool()) {
         QString color = settings->value(PPREFIX+"color", "rgba(0,0,0,160)").toString();
-        int borderRadius = 3;
-        if (panelPercent>99) { borderRadius=0; }
+        //int borderRadius = 3;
+        //if (panelPercent>99) { borderRadius=0; }
         //QString style = "QWidget#LuminaPanelColor{ background: %1; border: 1px solid %1; }";
 
         QString style;
