@@ -108,8 +108,9 @@ else()
 endif()
 
 # libDraco
-set(
-    LIB_SOURCES
+add_library(
+    ${LIB_NAME}
+    SHARED
     src/lib/draco.cpp
     src/lib/power_def.h
     src/lib/org.dracolinux.Disks.cpp
@@ -145,16 +146,6 @@ set(
     src/lib/qtcopydialog/qtcopydialog.ui
     src/lib/qtcopydialog/qtoverwritedialog.ui
     src/lib/qtcopydialog/qtotherdialog.ui
-    )
-#if(USE_XINPUT)
-#    set(LIB_SOURCES "${LIB_SOURCES};src/lib/lumina/LInputDevice.cpp")
-#else()
-#    add_definitions(-DNO_XINPUT)
-#endif()
-add_library(
-    ${LIB_NAME}
-    SHARED
-    ${LIB_SOURCES}
     share/share.qrc
 )
 set_target_properties(
@@ -492,6 +483,11 @@ configure_file(
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings.desktop
     @ONLY
 )
+configure_file(
+    share/applications/settings-x11.desktop.in
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-x11.desktop
+    @ONLY
+)
 install(
     TARGETS
     ${LIB_NAME}
@@ -562,6 +558,7 @@ install(
 install(
     FILES
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings.desktop
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings-x11.desktop
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
