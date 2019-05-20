@@ -1,6 +1,6 @@
 ![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-01.jpg)
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/rodlie/draco.svg)(https://github.com/rodlie/draco/commits/master)
+[![GitHub last commit](https://img.shields.io/github/last-commit/rodlie/draco.svg)](https://github.com/rodlie/draco/commits/master)
 [![Build Status](https://travis-ci.com/rodlie/draco.svg?branch=master)](https://travis-ci.com/rodlie/draco)
 [![GitHub issues](https://img.shields.io/github/issues/rodlie/draco.svg)](https://github.com/rodlie/draco/issues)
 [![Telegram chat](https://img.shields.io/badge/public_chat-Telegram-blue.svg)](https://t.me/dracolinuxorg)
