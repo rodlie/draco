@@ -837,9 +837,9 @@ void PowerSettingsWidget::loadSettings()
     backlightMouseWheel->setChecked(defaultBacklightMouseWheel);
 
     enableBacklight(backlightDevice.isEmpty()?false:true);
+    enableWakeTimer(PowerClient::canHibernate(dbus));
     enableLid(PowerClient::lidIsPresent(dbus));
     enableBattery(PowerClient::hasBattery(dbus));
-    enableWakeTimer(PowerClient::canHibernate(dbus));
 }
 
 void PowerSettingsWidget::saveSettings()
