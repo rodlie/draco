@@ -839,6 +839,7 @@ void PowerSettingsWidget::loadSettings()
     enableBacklight(backlightDevice.isEmpty()?false:true);
     enableLid(PowerClient::lidIsPresent(dbus));
     enableBattery(PowerClient::hasBattery(dbus));
+    enableWakeTimer(PowerClient::canHibernate(dbus));
 }
 
 void PowerSettingsWidget::saveSettings()
@@ -1011,10 +1012,7 @@ void PowerSettingsWidget::handleAutoSleepACAction(int index)
 void PowerSettingsWidget::checkPerms()
 {
     bool weCanHibernate = PowerClient::canHibernate(dbus);
-    suspendACWakeTimer->setEnabled(weCanHibernate);
-    suspendACWakeTimerLabel->setEnabled(weCanHibernate);
-    suspendBatteryWakeTimer->setEnabled(weCanHibernate);
-    suspendBatteryWakeTimerLabel->setEnabled(weCanHibernate);
+    enableWakeTimer(weCanHibernate);
 
     if (!weCanHibernate) {
         bool warnCantHibernate = false;
@@ -1202,4 +1200,12 @@ void PowerSettingsWidget::handleSuspendWakeACTimer(int value)
 void PowerSettingsWidget::handleMonitorHotplug(bool triggered)
 {
     PowerSettings::setValue(CONF_MONITOR_HOTPLUG, triggered);
+}
+
+void PowerSettingsWidget::enableWakeTimer(bool enabled)
+{
+    suspendACWakeTimer->setEnabled(enabled);
+    suspendACWakeTimerLabel->setEnabled(enabled);
+    suspendBatteryWakeTimer->setEnabled(enabled);
+    suspendBatteryWakeTimerLabel->setEnabled(enabled);
 }

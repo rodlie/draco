@@ -131,6 +131,7 @@ private slots:
     void handleSuspendWakeBatteryTimer(int value);
     void handleSuspendWakeACTimer(int value);
     void handleMonitorHotplug(bool triggered);
+    void enableWakeTimer(bool enabled);
 };
 
 #endif // POWER_SETTINGS_WIDGET_H
