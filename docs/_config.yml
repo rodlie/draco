@@ -3,5 +3,5 @@ title: Draco
 description: Desktop Environment
 show_downloads: true
 github:
-  zip_url: https://sourceforge.net/projects/draco/files/live/draco-live-20190520.iso/download
-  tar_url: https://github.com/rodlie/draco/releases
+  zip_url: https://sourceforge.net/projects/draco/files/live/draco-live-20190522.iso/download
+  tar_url: https://github.com/rodlie/draco/archive/0.9.0/draco-0.9.0.tar.gz
