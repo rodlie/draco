@@ -1178,13 +1178,17 @@ void PowerSettingsWidget::enableBattery(bool enabled)
     autoSleepBattery->setEnabled(enabled);
     autoSleepBatteryAction->setEnabled(enabled);
 
-    backlightSliderBattery->setEnabled(enabled);
-    backlightBatteryCheck->setEnabled(enabled);
-    backlightBatteryLowerCheck->setEnabled(enabled);
-    batteryBacklightLabel->setEnabled(enabled);
+    bool enableBL = false;
+    if (enabled && !backlightDevice.isEmpty()) { enableBL = true; }
+    backlightSliderBattery->setEnabled(enableBL);
+    backlightBatteryCheck->setEnabled(enableBL);
+    backlightBatteryLowerCheck->setEnabled(enableBL);
+    batteryBacklightLabel->setEnabled(enableBL);
 
-    suspendBatteryWakeTimer->setEnabled(enabled);
-    suspendBatteryWakeTimerLabel->setEnabled(enabled);
+    bool enableWake = false;
+    if (enabled && PowerClient::canHibernate(dbus)) { enableWake = true; }
+    suspendBatteryWakeTimer->setEnabled(enableWake);
+    suspendBatteryWakeTimerLabel->setEnabled(enableWake);
 }
 
 void PowerSettingsWidget::handleSuspendWakeBatteryTimer(int value)
