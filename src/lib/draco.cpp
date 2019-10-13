@@ -690,6 +690,7 @@ void Draco::writeSetting(QString conf, QString key, QVariant value)
 
 bool Draco::isBlacklistedApplication(const QString &exec)
 {
+    if (exec.isEmpty()) { return false; }
     QStringList blacklisted;
     blacklisted << "qtfm-tray" << "powerkit" << "xfce" << "xfdesktop";
     blacklisted << "thunar-settings" << "thunar-volman-settings" << "thunar-volman";
@@ -697,7 +698,10 @@ bool Draco::isBlacklistedApplication(const QString &exec)
     blacklisted << "xfce4-appfinder" << "hp-uiscan" << LUtils::isValidBinaryWithPath("hp-uiscan");
     blacklisted << "obconf-qt" << "xfce4-terminal --preferences" << "powerkit --config";
 
-    if (blacklisted.contains(exec)) { return true; }
+    if (blacklisted.contains(exec)) {
+        qDebug() << exec << "is a blacklisted application!";
+        return true;
+    }
     return false;
 }
 

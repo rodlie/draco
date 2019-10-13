@@ -1522,11 +1522,15 @@ QStringList LXDG::loadMimeFileGlobs2(){
 }
 
 //Find all the autostart *.desktop files
-QList<XDGDesktop*> LXDG::findAutoStartFiles(bool includeInvalid){
-	
+QList<XDGDesktop*> LXDG::findAutoStartFiles(bool includeInvalid)
+{
+    // make sure we have the required XDG variables available
+    setEnvironmentVars();
+
   //First get the list of directories to search (system first, user-provided files come later and overwrite sys files as needed)
   QStringList paths = QString(getenv("XDG_CONFIG_DIRS")).split(":");
   paths << QString(getenv("XDG_CONFIG_HOME")).split(":");
+  qDebug() << "autostart path:" << paths;
   //Now go through them and find any valid *.desktop files
   QList<XDGDesktop*> files;
   QStringList filenames; //make it easy to see if this filename is an override
@@ -1536,28 +1540,31 @@ QList<XDGDesktop*> LXDG::findAutoStartFiles(bool includeInvalid){
     dir.cd(paths[i]+"/autostart");
     QStringList tmp = dir.entryList(QStringList() << "*.desktop", QDir::Files, QDir::Name);
     for(int t=0; t<tmp.length(); t++){
-        qDebug() << "AUTOSTART DESKTOP?" << tmp[t];
+        qDebug() << "AUTOSTART DESKTOP?" << tmp[t] << dir.absoluteFilePath(tmp[t]);
       XDGDesktop *desk = new XDGDesktop(dir.absoluteFilePath(tmp[t]));
-      if(desk->type == XDGDesktop::BAD){ continue; } //could not read file
+      if(desk->type == XDGDesktop::BAD){
+          qDebug() << "bad desktop" << dir.absoluteFilePath(tmp[t]);
+          continue;
+      } //could not read file
       //Now figure out what to do with it
       if(filenames.contains(tmp[t])){
-	//This is an overwrite of a lower-priority (system?) autostart file
+          qDebug() << "This is an overwrite of a lower-priority (system?) autostart file" << dir.absoluteFilePath(tmp[t]);
 	// find the other file
 	int old = -1;
 	for(int o=0; o<files.length(); o++){
 	  if(files[o]->filePath.endsWith("/"+tmp[t])){ old = o; break; } //found it
 	}
 	if(desk->isValid(false)){
-	  //Full override of the lower-priority file (might be replacing exec/tryexec fields)
+        qDebug() << "Full override of the lower-priority file (might be replacing exec/tryexec fields)" << dir.absoluteFilePath(tmp[t]);
           files.takeAt(old)->deleteLater();
 	  files.insert(old,desk);
 	}else{
-	  //Small override file (only the "Hidden" field listed in spec)
+        qDebug() << "Small override file (only the Hidden field listed in spec)" << dir.absoluteFilePath(tmp[t]);
 	  files[old]->isHidden = desk->isHidden; //replace this value with the override
 	  //files << desk; //still add this to the array (will be ignored/skipped later)
 	}
       }else{
-        //This is a new autostart file
+          qDebug() << "this is a new autostart file" << dir.absoluteFilePath(tmp[t]);
 	files << desk;
 	filenames << tmp[t];
       }
@@ -1567,13 +1574,16 @@ QList<XDGDesktop*> LXDG::findAutoStartFiles(bool includeInvalid){
   //Now filter the results by validity if desired
   if(!includeInvalid){
     for(int i=0; i<files.length(); i++){
+        qDebug() << "checking autostart desktop file" << files[i]->name;
       if( !files[i]->isValid(false) || files[i]->isHidden ){
+          qDebug() << "autostart is invalid or hidden" << files[i]->name;
         //Invalid file - go ahead and remove it from the output list
 	files.takeAt(i)->deleteLater();
 	i--;
       }
     }
   }
+  qDebug() << "found" << files.size() << "desktop files";
   return files;
 }
 
