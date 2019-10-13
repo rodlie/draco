@@ -7,6 +7,8 @@
 #include <LUtils.h>
 
 #include "ScreenSettings.h"
+#include "LuminaXDG.h"
+
 int main(int argc, char ** argv)
 {
     bool CLIdone = false;
@@ -31,6 +33,8 @@ int main(int argc, char ** argv)
     }
     if(CLIdone){ return 0; }
    //LTHEME::LoadCustomEnvSettings();
+
+    LXDG::setEnvironmentVars();
     QApplication a(argc, argv);
       //if( !a.isPrimaryProcess()){ return 0; }
     //qDebug() << "Loaded QApplication";

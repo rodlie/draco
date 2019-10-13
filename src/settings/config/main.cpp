@@ -10,7 +10,7 @@
 #include <LUtils.h>
 //#include <LuminaThemes.h>
 //#include <LuminaSingleApplication.h>
-#include <LuminaXDG.h>
+#include "LuminaXDG.h"
 #include "draco.h"
 #include <QDBusConnection>
 #include <QDBusInterface>
@@ -19,6 +19,9 @@ XDGDesktopList *APPSLIST = nullptr;
 
 int main(int argc, char ** argv)
 {
+    // XDG
+    LXDG::setEnvironmentVars();
+
     // Check for dbus
     if (!QDBusConnection::sessionBus().isConnected()) {
         qWarning("Cannot connect to the D-Bus session bus.");
