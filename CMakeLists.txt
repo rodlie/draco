@@ -20,7 +20,7 @@
 cmake_minimum_required(VERSION 3.0)
 include(GNUInstallDirs)
 
-project(draco VERSION 0.9.0)
+project(draco VERSION 0.9.1)
 #set(PROJECT_VERSION_EXTRA)
 
 set(CMAKE_CXX_STANDARD 11)

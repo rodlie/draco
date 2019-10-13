@@ -1,3 +1,10 @@
+# Draco 0.9.1 (TBA)
+
+Patch release.
+
+ - Fixed keyboard layout detection
+ - Fixed autostart settings/launcher
+ 
 # Draco 0.9.0 (20190522)
 
 First stable release.
