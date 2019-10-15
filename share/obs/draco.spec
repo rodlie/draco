@@ -9,7 +9,7 @@ License: GPL-2.0
 URL: https://dracolinux.org
 Source0: %{name}-%{version}.tar.gz
 
-BuildRequires: qt5-qtbase-devel qt5-qtx11extras-devel cmake3 gcc-c++ pkg-config libXScrnSaver-devel libXdamage-devel libXrandr-devel libxcb-devel xcb-util-devel xcb-util-wm-devel xcb-util-image-devel openbox-devel
+BuildRequires: qt5-qtbase-devel qt5-qtx11extras-devel cmake3 gcc-c++ pkg-config libXScrnSaver-devel libXdamage-devel libXrandr-devel libxcb-devel xcb-util-devel xcb-util-wm-devel xcb-util-image-devel
 Requires: xdg-utils shared-mime-info hicolor-icon-theme adwaita-icon-theme openbox xscreensaver qt5ct xorg-x11-xinit upower udisks udisks2 xorg-x11-xkb-utils xorg-x11-server-utils
 
 %description

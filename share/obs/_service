@@ -4,7 +4,7 @@
         <param name="url">git://github.com/rodlie/draco.git</param>
         <param name="versionformat">@PARENT_TAG@.@TAG_OFFSET@</param>
         <param name="revision">master</param>
-        <param name="filename">cyan</param>
+        <param name="filename">draco</param>
         <param name="extract">share/obs/draco.spec</param>
     </service>
     <service name="extract_file">
