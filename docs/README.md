@@ -1,7 +1,7 @@
 ![screenshot](images/screenshot-01.jpg)
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/rodlie/draco)](https://github.com/rodlie/draco/releases/latest)
-[![GitHub last commit](https://img.shields.io/github/last-commit/rodlie/draco.svg)](https://github.com/rodlie/draco/commits/master)
+[![Packages from master branch](https://img.shields.io/badge/Packages-master-blue)](https://software.opensuse.org//download.html?project=home%3Arodlie%3Adraco-master&package=draco)
 [![Build Status](https://travis-ci.com/rodlie/draco.svg?branch=master)](https://travis-ci.com/rodlie/draco)
 
 # Draco Desktop Environment
@@ -44,7 +44,15 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com), but i
 
 ## Download
 
-...
+### Generic (Linux)
+
+Latest release can be found on [GitHub](https://github.com/rodlie/draco/releases/latest).
+
+### RHEL/CentOS/Fedora
+
+Packages from the [master]((https://software.opensuse.org//download.html?project=home%3Arodlie%3Adraco-master&package=draco)) branch is available through OBS (Open Build Service).
+
+**Notice! The EPEL repository must be available on RHEL/CentOS before installing Draco.**
 
 ## Usage
 
