@@ -29,14 +29,14 @@ make DESTDIR=%{buildroot} install
 %files
 %defattr(-,root,root,-)
 %{_sysconfdir}/X11/xinit/xinitrc.draco
-%{_sysconfdir}/etc/dbus-1/system.d/org.dracolinux.Powerd.conf
+%{_sysconfdir}/dbus-1/system.d/org.dracolinux.Powerd.conf
 %{_sysconfdir}/xdg/autostart/org.dracolinux.Power.desktop
 %{_sysconfdir}/xdg/autostart/org.dracolinux.Storage.desktop
 %{_bindir}/draco-settings
 %{_bindir}/draco-settings-x11
 %{_bindir}/start-draco
-%{_docdir}/%{name}-%{version}
-%{_libdir}/libDraco.so.%{version}
+%{_docdir}/%{name}-*
+%{_libdir}/libDraco.so*
 %{_libexecdir}/org.dracolinux.Desktop
 %{_libexecdir}/org.dracolinux.Power
 %{_libexecdir}/org.dracolinux.Powerd

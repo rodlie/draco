@@ -1,15 +1,14 @@
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-01.jpg)
+![screenshot](images/screenshot-01.jpg)
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/rodlie/draco.svg)](https://github.com/rodlie/draco/commits/master)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/rodlie/draco)](https://github.com/rodlie/draco/releases/latest)
+[![Packages from master branch](https://img.shields.io/badge/Packages-master-blue)](https://software.opensuse.org//download.html?project=home%3Arodlie%3Adraco-master&package=draco)
 [![Build Status](https://travis-ci.com/rodlie/draco.svg?branch=master)](https://travis-ci.com/rodlie/draco)
-[![GitHub issues](https://img.shields.io/github/issues/rodlie/draco.svg)](https://github.com/rodlie/draco/issues)
-[![Telegram chat](https://img.shields.io/badge/public_chat-Telegram-blue.svg)](https://t.me/dracolinuxorg)
 
 # Draco Desktop Environment
 
 Draco is a simple and lightweight desktop environment. While small still features XDG integration, freedesktop services and integration, power and storage management, desktop, panels, multi-monitor support and much more. Draco does not include any user applications.
 
-Draco is developed for and on [Slackware Linux](http://www.slackware.com).
+Draco is developed for and on [Slackware Linux](http://www.slackware.com), but is also compatible with RHEL/CentOS/Fedora and others.
 
 ## Features
 
@@ -42,6 +41,18 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com).
   * Display hotplug support
   * RTC wake support
   * cpufreq/pstate support **(WIP)**
+
+## Download
+
+### Generic (Linux)
+
+Latest release can be found on [GitHub](https://github.com/rodlie/draco/releases/latest).
+
+### RHEL/CentOS/Fedora
+
+Packages from the [master]((https://software.opensuse.org//download.html?project=home%3Arodlie%3Adraco-master&package=draco)) branch is available through OBS (Open Build Service).
+
+**Notice! The EPEL repository must be available on RHEL/CentOS before installing Draco.**
 
 ## Usage
 
@@ -129,40 +140,40 @@ Various screenshots.
 
 Main settings:
 
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-02.jpg)
+![screenshot](images/screenshot-02.jpg)
 
 
 Draco XDG/mime settings:
 
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-03.jpg)
+![screenshot](images/screenshot-03.jpg)
 
 Applications and services that are launched during desktop startup:
 
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-04.jpg)
+![screenshot](images/screenshot-04.jpg)
 
 Basic keyboard configuration:
 
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-05.jpg)
+![screenshot](images/screenshot-05.jpg)
 
 Panels configuration:
 
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-06.jpg)
+![screenshot](images/screenshot-06.jpg)
 
 Power configuration:
 
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-07.jpg)
+![screenshot](images/screenshot-07.jpg)
 
 Wallpaper configuration:
 
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-08.jpg)
+![screenshot](images/screenshot-08.jpg)
 
 General desktop configuration:
 
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-09.jpg)
+![screenshot](images/screenshot-09.jpg)
 
 Monitor configuration:
 
-![screenshot](https://raw.githubusercontent.com/rodlie/draco/master/docs/images/screenshot-10.jpg)
+![screenshot](images/screenshot-10.jpg)
 
 
 ## History
@@ -283,9 +294,9 @@ sudo make install
 
 **Note that the install prefix should be the same folder as D-Bus (usually in ``/usr``), else you will need to copy the Draco service files to the proper location manually.**
 
-### Fedora
+### RHEL/CentOS/Fedora
 
-Minimal testing is done on Fedora, some features may not work.
+Minimal testing is done, some features may not work.
 
 Known issues:
 
@@ -293,22 +304,7 @@ Known issues:
  * Adwaita icons are broken, expect missing icons
 
 
-Dependencies:
-
-```
-sudo dnf install qt5-qtbase-devel qt5-qtx11extras-devel cmake gcc-c++ pkg-config libXScrnSaver-devel libXdamage-devel libXrandr-devel libxcb-devel xcb-util-devel xcb-util-wm-devel xcb-util-image-devel xdg-utils shared-mime-info hicolor-icon-theme adwaita-icon-theme openbox xscreensaver qt5ct openbox-devel
-```
-
-Build and install:
-
-```
-mkdir build && cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib64 -DCMAKE_BUILD_TYPE=Release ..
-make
-sudo make install
-```
-
-**Note that the install prefix should be the same folder as D-Bus (usually in ``/usr``), else you will need to copy the Draco service files to the proper location manually.**
+See RPM [spec](../share/obs/draco.spec) file for build instructions.
 
 
 ## License

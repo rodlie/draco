@@ -63,14 +63,14 @@ public:
         }
         if (findType.isEmpty()) { return result; }
 
-        QString xkbRules = QString("%1/../share/X11/xkb/rules/xfree86.lst").arg(QCoreApplication::applicationDirPath());
+        QString xkbRules = QString("%1/../share/X11/xkb/rules/xorg.lst").arg(QCoreApplication::applicationDirPath());
         QFileInfo xkbRulesFile;
         xkbRulesFile.setFile(xkbRules);
         if (!xkbRulesFile.exists()) {
             QStringList fallback;
-            fallback << "/usr/share/X11/xkb/rules/xfree86.lst" << "/usr/local/share/X11/xkb/rules/xfree86.lst";
-            fallback << "/usr/pkg/X11/xkb/rules/xfree86.lst" << "/usr/X11R7/share/X11/xkb/rules/xfree86.lst";
-            fallback << "/usr/X11R6/share/X11/xkb/rules/xfree86.lst";
+            fallback << "/usr/share/X11/xkb/rules/xorg.lst" << "/usr/local/share/X11/xkb/rules/xorg.lst";
+            fallback << "/usr/pkg/X11/xkb/rules/xorg.lst" << "/usr/X11R7/share/X11/xkb/rules/xorg.lst";
+            fallback << "/usr/X11R6/share/X11/xkb/rules/xorg.lst";
             for (int i=0;i<fallback.size();++i) {
                 xkbRulesFile.setFile(fallback.at(i));
                 if (!xkbRulesFile.exists()) { continue; }
@@ -80,7 +80,7 @@ public:
                 }
             }
             if (!xkbRulesFile.exists()) {
-                qDebug() << "unable to find xfree86.lst!";
+                qDebug() << "unable to find xorg.lst!";
                 return result;
             }
         }

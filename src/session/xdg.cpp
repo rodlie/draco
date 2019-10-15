@@ -82,13 +82,13 @@ int main(int argc, char *argv[])
             osCpu = uname.readAll().trimmed();
             about.setInformativeText(QString("<h1 style=\"font-weight:normal;\">Draco Desktop Environment</h1>"
                                              "<h3 style=\"font-weight:normal;\">Version %1</h3>"
-                                             "<p><b>Framework:</b> Qt %5<br><b>System:</b> %2<br><b>Kernel:</b> %3<br><b>CPU:</b> %4</p>"
-                                             "<p>Copyright &copy;2019 Ole-André Rodlie. All rights reserved.<br>Copyright &copy;2012-2017 Ken Moore. All rights reserved.</p>"
+                                             "<p><b>Framework:</b> Qt %4<br><b>System:</b> %2<br><b>Kernel:</b> %3</p>"
+                                             "<p>Copyright &copy;2019 Ole-André Rodlie. All rights reserved.</p><p>Based on Lumina<br>Copyright &copy;2012-2017 Ken Moore. All rights reserved.</p>"
                                              "<p><a href=\"https://dracolinux.org\">https://dracolinux.org</a>"
                                              "<br><a href=\"https://github.com/rodlie/draco\">https://github.com/rodlie/draco</a></p>")
                                      .arg(QString("%1%2").arg(DESKTOP_APP_VERSION).arg(DESKTOP_APP_VERSION_EXTRA))
                                      .arg(osPrettyName)
-                                     .arg(osUname).arg(osCpu)
+                                     .arg(osUname)
                                      .arg(qVersion()));
             about.setDetailedText(QString("")); // add more stuff here
             return about.exec();

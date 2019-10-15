@@ -362,7 +362,7 @@ void LSession::NewCommunication(QStringList list)
 void LSession::launchStartupApps()
 {
     if (!startupApps) { return; }
-    QList<XDGDesktop*> xdgapps = LXDG::findAutoStartFiles(true);
+    QList<XDGDesktop*> xdgapps = LXDG::findAutoStartFiles(false);
     qDebug() << " - launch startup apps";
     for(int i=0; i<xdgapps.length(); i++){
         if (xdgapps[i]->isHidden) {
