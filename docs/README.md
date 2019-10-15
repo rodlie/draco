@@ -1,8 +1,8 @@
 ![screenshot](images/screenshot-01.jpg)
 
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/rodlie/draco)](https://github.com/rodlie/draco/releases/latest)
 [![GitHub last commit](https://img.shields.io/github/last-commit/rodlie/draco.svg)](https://github.com/rodlie/draco/commits/master)
 [![Build Status](https://travis-ci.com/rodlie/draco.svg?branch=master)](https://travis-ci.com/rodlie/draco)
-[![GitHub issues](https://img.shields.io/github/issues/rodlie/draco.svg)](https://github.com/rodlie/draco/issues)
 
 # Draco Desktop Environment
 
@@ -41,6 +41,10 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com), but i
   * Display hotplug support
   * RTC wake support
   * cpufreq/pstate support **(WIP)**
+
+## Download
+
+...
 
 ## Usage
 
