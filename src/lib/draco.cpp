@@ -692,11 +692,11 @@ bool Draco::isBlacklistedApplication(const QString &exec)
 {
     if (exec.isEmpty()) { return false; }
     QStringList blacklisted;
-    blacklisted << "qtfm-tray" << "powerkit" << "xfce" << "xfdesktop";
+    blacklisted << "qtfm-tray" << "xfce" << "xfdesktop";
     blacklisted << "thunar-settings" << "thunar-volman-settings" << "thunar-volman";
     blacklisted << "xfce4-power-manager" << "xfce4-power-manager-settings";
     blacklisted << "xfce4-appfinder" << "hp-uiscan" << LUtils::isValidBinaryWithPath("hp-uiscan");
-    blacklisted << "obconf-qt" << "xfce4-terminal --preferences" << "powerkit --config";
+    blacklisted << "obconf-qt" << "xfce4-terminal --preferences";
 
     if (blacklisted.contains(exec)) {
         qDebug() << exec << "is a blacklisted application!";
