@@ -34,25 +34,25 @@ set(LIB_NAME Draco)
 set(PUBLISHER dracolinux)
 set(DOMAIN org.${PUBLISHER})
 set(XDG_OPEN ${DOMAIN}.XDG)
-set(POWER_SERVICE_NAME ${DOMAIN}.Power)
-set(POWERD_SERVICE_NAME ${DOMAIN}.Powerd)
+set(POWER_SERVICE_NAME org.freedesktop.PowerKit)
+set(POWERD_SERVICE_NAME org.freedesktop.PowerKit)
 set(STORAGE_SERVICE_NAME ${DOMAIN}.Storage)
 set(DESKTOP_SERVICE_NAME ${DOMAIN}.Desktop)
 set(SETTINGS_SERVICE_NAME ${DOMAIN}.Settings)
-set(
-    POWERD_SERVICE_USER
-    "root"
-    CACHE
-    STRING
-    "Run powerd service as this user (needs access to /sys)."
-)
-set(
-    POWERD_SERVICE_GROUP
-    "power"
-    CACHE
-    STRING
-    "group that have access to powerd service, this should be all desktop users."
-)
+#set(
+#    POWERD_SERVICE_USER
+#    "root"
+#    CACHE
+#    STRING
+#    "Run powerd service as this user (needs access to /sys)."
+#)
+#set(
+#    POWERD_SERVICE_GROUP
+#    "power"
+#    CACHE
+#    STRING
+#    "group that have access to powerd service, this should be all desktop users."
+#)
 
 add_definitions(-DDESKTOP_APP="${PROJECT_NAME}")
 add_definitions(-DDESKTOP_APP_NAME="${LIB_NAME}")
@@ -98,15 +98,15 @@ endif()
 if(NOT X11_Xfixes_FOUND)
     message(FATAL_ERROR "libXfixes not found")
 endif()
-if(${CMAKE_VERSION} VERSION_LESS "3.14.3")
-    if(NOT X11_Xscreensaver_FOUND)
-        message(FATAL_ERROR "libXScrnSaver not found")
-    endif()
-else()
-    if(NOT X11_Xss_FOUND)
-        message(FATAL_ERROR "libXScrnSaver not found")
-    endif()
-endif()
+#if(${CMAKE_VERSION} VERSION_LESS "3.14.3")
+#    if(NOT X11_Xscreensaver_FOUND)
+#        message(FATAL_ERROR "libXScrnSaver not found")
+#    endif()
+#else()
+#    if(NOT X11_Xss_FOUND)
+#        message(FATAL_ERROR "libXScrnSaver not found")
+#    endif()
+#endif()
 
 # libDraco
 add_library(
@@ -116,17 +116,17 @@ add_library(
     src/lib/power_def.h
     src/lib/org.dracolinux.Disks.cpp
     src/lib/org.dracolinux.Power.Client.cpp
-    src/lib/org.dracolinux.Power.Device.cpp
-    src/lib/org.dracolinux.Power.HotPlugX11.cpp
-    src/lib/org.dracolinux.Power.Manager.cpp
-    src/lib/org.dracolinux.Power.ScreenX11.cpp
+    #src/lib/org.dracolinux.Power.Device.cpp
+    #src/lib/org.dracolinux.Power.HotPlugX11.cpp
+    #src/lib/org.dracolinux.Power.Manager.cpp
+    #src/lib/org.dracolinux.Power.ScreenX11.cpp
     src/lib/org.dracolinux.Power.Settings.cpp
     src/lib/org.dracolinux.Powerd.Manager.Backlight.cpp
-    src/lib/org.dracolinux.Powerd.Manager.CPU.cpp
-    src/lib/org.dracolinux.Powerd.Manager.RTC.cpp
-    src/lib/org.dracolinux.Powerd.Manager.cpp
-    src/lib/org.freedesktop.PowerManagement.cpp
-    src/lib/org.freedesktop.ScreenSaver.cpp
+    #src/lib/org.dracolinux.Powerd.Manager.CPU.cpp
+    #src/lib/org.dracolinux.Powerd.Manager.RTC.cpp
+    #src/lib/org.dracolinux.Powerd.Manager.cpp
+    #src/lib/org.freedesktop.PowerManagement.cpp
+    #src/lib/org.freedesktop.ScreenSaver.cpp
     src/lib/org.freedesktop.UDisks2.cpp
     src/lib/hotkey/qhotkey.cpp
     src/lib/hotkey/qhotkey_x11.cpp
@@ -169,13 +169,13 @@ target_include_directories(
     src/lib/qtcopydialog
     src/lib/hotkey
 )
-if(${CMAKE_VERSION} VERSION_LESS "3.14.3")
-    set(XSS_INCLUDE ${X11_Xscreensaver_INCLUDE_PATH})
-    set(XSS_LIB ${X11_Xscreensaver_LIB})
-else()
-    set(XSS_INCLUDE ${X11_Xss_INCLUDE_PATH})
-    set(XSS_LIB ${X11_Xss_LIB})
-endif()
+#if(${CMAKE_VERSION} VERSION_LESS "3.14.3")
+#    set(XSS_INCLUDE ${X11_Xscreensaver_INCLUDE_PATH})
+#    set(XSS_LIB ${X11_Xscreensaver_LIB})
+#else()
+#    set(XSS_INCLUDE ${X11_Xss_INCLUDE_PATH})
+#    set(XSS_LIB ${X11_Xss_LIB})
+#endif()
 target_include_directories(
     ${LIB_NAME}
     PUBLIC
@@ -184,7 +184,7 @@ target_include_directories(
     ${XCB_INCLUDE_DIRS}
     ${X11_Xrandr_INCLUDE_PATH}
     ${X11_Xfixes_INCLUDE_PATH}
-    ${XSS_INCLUDE}
+    #${XSS_INCLUDE}
     ${X11_Xdamage_INCLUDE}
 )
 target_link_libraries(
@@ -193,7 +193,7 @@ target_link_libraries(
     ${XCB_LIBRARIES}
     ${X11_Xrandr_LIB}
     ${X11_Xfixes_LIB}
-    ${XSS_LIB}
+    #${XSS_LIB}
     ${X11_Xdamage_LIB}
     Qt5::Core
     Qt5::DBus
@@ -264,45 +264,45 @@ target_link_libraries(
 )
 
 # org.dracolinux.Powerd
-add_executable(
-    ${POWERD_SERVICE_NAME}
-    src/power/${POWERD_SERVICE_NAME}.cpp
-)
-target_include_directories(
-    ${POWERD_SERVICE_NAME}
-    PRIVATE
-    src/lib
-)
-target_link_libraries(
-    ${POWERD_SERVICE_NAME}
-    Qt5::Core
-    Qt5::DBus
-    ${LIB_NAME}
-)
+#add_executable(
+#    ${POWERD_SERVICE_NAME}
+#    src/power/${POWERD_SERVICE_NAME}.cpp
+#)
+#target_include_directories(
+#    ${POWERD_SERVICE_NAME}
+#    PRIVATE
+#    src/lib
+#)
+#target_link_libraries(
+#    ${POWERD_SERVICE_NAME}
+#    Qt5::Core
+#    Qt5::DBus
+#    ${LIB_NAME}
+#)
 
 # org.dracolinux.Power
-add_executable(
-    ${POWER_SERVICE_NAME}
-    src/power/${POWER_SERVICE_NAME}.cpp
-    src/power/${POWER_SERVICE_NAME}.Tray.cpp
-)
-target_include_directories(
-    ${POWER_SERVICE_NAME}
-    PRIVATE
-    src/lib
-    src/power
-    ${XSS_INCLUDE}
-)
-target_link_libraries(
-    ${POWER_SERVICE_NAME}
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::X11Extras
-    ${XSS_LIB}
-    ${LIB_NAME}
-)
+#add_executable(
+#    ${POWER_SERVICE_NAME}
+#    src/power/${POWER_SERVICE_NAME}.cpp
+#    src/power/${POWER_SERVICE_NAME}.Tray.cpp
+#)
+#target_include_directories(
+#    ${POWER_SERVICE_NAME}
+#    PRIVATE
+#    src/lib
+#    src/power
+#    ${XSS_INCLUDE}
+#)
+#target_link_libraries(
+#    ${POWER_SERVICE_NAME}
+#    Qt5::Core
+#    Qt5::DBus
+#    Qt5::Gui
+#    Qt5::Widgets
+#    Qt5::X11Extras
+#    ${XSS_LIB}
+#    ${LIB_NAME}
+#)
 
 # org.dracolinux.Storage
 add_executable(
@@ -459,21 +459,21 @@ if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
 endif()
 
 # install
-configure_file(
-    share/daemon/conf.in
-    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.conf
-    @ONLY
-)
-configure_file(
-    share/daemon/service.in
-    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.service
-    @ONLY
-)
-configure_file(
-    share/autostart/${POWER_SERVICE_NAME}.desktop.in
-    ${CMAKE_BINARY_DIR}/${POWER_SERVICE_NAME}.desktop
-    @ONLY
-)
+#configure_file(
+#    share/daemon/conf.in
+#    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.conf
+#    @ONLY
+#)
+#configure_file(
+#    share/daemon/service.in
+#    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.service
+#    @ONLY
+#)
+#configure_file(
+#    share/autostart/${POWER_SERVICE_NAME}.desktop.in
+#    ${CMAKE_BINARY_DIR}/${POWER_SERVICE_NAME}.desktop
+#    @ONLY
+#)
 configure_file(
     share/autostart/${STORAGE_SERVICE_NAME}.desktop.in
     ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
@@ -501,18 +501,18 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_LIBEXECDIR}
 )
-install(
-    TARGETS
-    ${POWERD_SERVICE_NAME}
-    DESTINATION
-    ${CMAKE_INSTALL_LIBEXECDIR}
-)
-install(
-    TARGETS
-    ${POWER_SERVICE_NAME}
-    DESTINATION
-    ${CMAKE_INSTALL_LIBEXECDIR}
-)
+#install(
+#    TARGETS
+#    ${POWERD_SERVICE_NAME}
+#    DESTINATION
+#    ${CMAKE_INSTALL_LIBEXECDIR}
+#)
+#install(
+#    TARGETS
+#    ${POWER_SERVICE_NAME}
+#    DESTINATION
+#    ${CMAKE_INSTALL_LIBEXECDIR}
+#)
 install(
     TARGETS
     ${STORAGE_SERVICE_NAME}
@@ -551,7 +551,7 @@ install(
 )
 install(
     FILES
-    ${CMAKE_BINARY_DIR}/${POWER_SERVICE_NAME}.desktop
+    #${CMAKE_BINARY_DIR}/${POWER_SERVICE_NAME}.desktop
     ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
     DESTINATION
     ${DEFAULT_SYSCONFDIR}/xdg/autostart
@@ -563,18 +563,18 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
-install(
-    FILES
-    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.conf
-    DESTINATION
-    ${DEFAULT_SYSCONFDIR}/dbus-1/system.d
-)
-install(
-    FILES
-    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.service
-    DESTINATION
-    ${CMAKE_INSTALL_DATAROOTDIR}/dbus-1/system-services
-)
+#install(
+#    FILES
+#    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.conf
+#    DESTINATION
+#    ${DEFAULT_SYSCONFDIR}/dbus-1/system.d
+#)
+#install(
+#    FILES
+#    ${CMAKE_BINARY_DIR}/${POWERD_SERVICE_NAME}.service
+#    DESTINATION
+#    ${CMAKE_INSTALL_DATAROOTDIR}/dbus-1/system-services
+#)
 install(
     FILES
     share/xinit/xinitrc.draco

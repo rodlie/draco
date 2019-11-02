@@ -51,7 +51,7 @@ const QString Draco::powerdSessionName()
 
 const QString Draco::powerdSessionPath()
 {
-    return QString("/Powerd");
+    return QString("/PowerKit");
 }
 
 const QString Draco::powerdSessionFullPath()
@@ -66,7 +66,7 @@ const QString Draco::powerSessionName()
 
 const QString Draco::powerSessionPath()
 {
-    return QString("/Power");
+    return QString("/PowerKit");
 }
 
 const QString Draco::powerSessionFullPath()
