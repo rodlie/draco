@@ -36,7 +36,7 @@ set(DOMAIN org.${PUBLISHER})
 set(XDG_OPEN ${DOMAIN}.XDG)
 set(POWER_SERVICE_NAME org.freedesktop.PowerKit)
 set(POWERD_SERVICE_NAME org.freedesktop.PowerKit)
-set(STORAGE_SERVICE_NAME ${DOMAIN}.Storage)
+#set(STORAGE_SERVICE_NAME ${DOMAIN}.Storage)
 set(DESKTOP_SERVICE_NAME ${DOMAIN}.Desktop)
 set(SETTINGS_SERVICE_NAME ${DOMAIN}.Settings)
 #set(
@@ -63,7 +63,7 @@ add_definitions(-DDESKTOP_SERVICE_NAME="${DESKTOP_SERVICE_NAME}")
 add_definitions(-DSETTINGS_SERVICE_NAME="${SETTINGS_SERVICE_NAME}")
 add_definitions(-DPOWER_SERVICE_NAME="${POWER_SERVICE_NAME}")
 add_definitions(-DPOWERD_SERVICE_NAME="${POWERD_SERVICE_NAME}")
-add_definitions(-DSTORAGE_SERVICE_NAME="${STORAGE_SERVICE_NAME}")
+#add_definitions(-DSTORAGE_SERVICE_NAME="${STORAGE_SERVICE_NAME}")
 add_definitions(-DDAEMON_APP_NAME="${PUBLISHER}.Powerd")
 add_definitions(-DPUBLISHER="${PUBLISHER}")
 add_definitions(-DXDG_OPEN="${XDG_OPEN}")
@@ -114,20 +114,20 @@ add_library(
     SHARED
     src/lib/draco.cpp
     src/lib/power_def.h
-    src/lib/org.dracolinux.Disks.cpp
+    #src/lib/org.dracolinux.Disks.cpp
     src/lib/org.dracolinux.Power.Client.cpp
     #src/lib/org.dracolinux.Power.Device.cpp
     #src/lib/org.dracolinux.Power.HotPlugX11.cpp
     #src/lib/org.dracolinux.Power.Manager.cpp
     #src/lib/org.dracolinux.Power.ScreenX11.cpp
-    src/lib/org.dracolinux.Power.Settings.cpp
-    src/lib/org.dracolinux.Powerd.Manager.Backlight.cpp
+    #src/lib/org.dracolinux.Power.Settings.cpp
+    #src/lib/org.dracolinux.Powerd.Manager.Backlight.cpp
     #src/lib/org.dracolinux.Powerd.Manager.CPU.cpp
     #src/lib/org.dracolinux.Powerd.Manager.RTC.cpp
     #src/lib/org.dracolinux.Powerd.Manager.cpp
     #src/lib/org.freedesktop.PowerManagement.cpp
     #src/lib/org.freedesktop.ScreenSaver.cpp
-    src/lib/org.freedesktop.UDisks2.cpp
+    #src/lib/org.freedesktop.UDisks2.cpp
     src/lib/hotkey/qhotkey.cpp
     src/lib/hotkey/qhotkey_x11.cpp
     src/lib/hotkey/qhotkey_p.h
@@ -305,25 +305,25 @@ target_link_libraries(
 #)
 
 # org.dracolinux.Storage
-add_executable(
-    ${STORAGE_SERVICE_NAME}
-    src/storage/${STORAGE_SERVICE_NAME}.cpp
-    src/storage/${STORAGE_SERVICE_NAME}.Tray.cpp
-)
-target_include_directories(
-    ${STORAGE_SERVICE_NAME}
-    PRIVATE
-    src/lib
-    src/lib/lumina
-)
-target_link_libraries(
-    ${STORAGE_SERVICE_NAME}
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Gui
-    Qt5::Widgets
-    ${LIB_NAME}
-)
+#add_executable(
+#    ${STORAGE_SERVICE_NAME}
+#    src/storage/${STORAGE_SERVICE_NAME}.cpp
+#    src/storage/${STORAGE_SERVICE_NAME}.Tray.cpp
+#)
+#target_include_directories(
+#    ${STORAGE_SERVICE_NAME}
+#    PRIVATE
+#    src/lib
+#    src/lib/lumina
+#)
+#target_link_libraries(
+#    ${STORAGE_SERVICE_NAME}
+#    Qt5::Core
+#    Qt5::DBus
+#    Qt5::Gui
+#    Qt5::Widgets
+#    ${LIB_NAME}
+#)
 
 # org.dracolinux.XDG
 add_executable(
@@ -400,7 +400,7 @@ add_executable(
     src/settings/config/pages/getPage.cpp
     src/settings/config/pages/getPage.h
     src/settings/config/pages/page_keyboard.cpp
-    src/settings/config/pages/page_power.cpp
+    #src/settings/config/pages/page_power.cpp
     src/settings/config/pages/page_autostart.cpp
     src/settings/config/pages/page_defaultapps.cpp
     src/settings/config/pages/page_interface_panels.cpp
@@ -409,11 +409,11 @@ add_executable(
     #src/settings/config/pages/page_session_locale.cpp
     src/settings/config/pages/page_session_options.cpp
     src/settings/config/pages/page_wallpaper.cpp
-    src/lib/org.dracolinux.Power.SettingsWidget.cpp
+    #src/lib/org.dracolinux.Power.SettingsWidget.cpp
     src/lib/lumina/AppDialog.h
     src/lib/lumina/AppDialog.ui
     src/settings/config/pages/page_keyboard.ui
-    src/settings/config/pages/page_power.ui
+    #src/settings/config/pages/page_power.ui
     src/settings/config/pages/page_autostart.ui
     src/settings/config/pages/page_defaultapps.ui
     src/settings/config/pages/page_interface_panels.ui
@@ -474,11 +474,11 @@ endif()
 #    ${CMAKE_BINARY_DIR}/${POWER_SERVICE_NAME}.desktop
 #    @ONLY
 #)
-configure_file(
-    share/autostart/${STORAGE_SERVICE_NAME}.desktop.in
-    ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
-    @ONLY
-)
+#configure_file(
+#    share/autostart/${STORAGE_SERVICE_NAME}.desktop.in
+#    ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
+#    @ONLY
+#)
 configure_file(
     share/applications/settings.desktop.in
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings.desktop
@@ -513,12 +513,12 @@ install(
 #    DESTINATION
 #    ${CMAKE_INSTALL_LIBEXECDIR}
 #)
-install(
-    TARGETS
-    ${STORAGE_SERVICE_NAME}
-    DESTINATION
-    ${CMAKE_INSTALL_LIBEXECDIR}
-)
+#install(
+#    TARGETS
+#    ${STORAGE_SERVICE_NAME}
+#    DESTINATION
+#    ${CMAKE_INSTALL_LIBEXECDIR}
+#)
 install(
     TARGETS
     ${XDG_OPEN}
@@ -549,13 +549,13 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_DATAROOTDIR}/xsessions
 )
-install(
-    FILES
-    #${CMAKE_BINARY_DIR}/${POWER_SERVICE_NAME}.desktop
-    ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
-    DESTINATION
-    ${DEFAULT_SYSCONFDIR}/xdg/autostart
-)
+#install(
+#    FILES
+#    #${CMAKE_BINARY_DIR}/${POWER_SERVICE_NAME}.desktop
+#    ${CMAKE_BINARY_DIR}/${STORAGE_SERVICE_NAME}.desktop
+#    DESTINATION
+#    ${DEFAULT_SYSCONFDIR}/xdg/autostart
+#)
 install(
     FILES
     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-settings.desktop

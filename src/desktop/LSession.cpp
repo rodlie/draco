@@ -401,7 +401,7 @@ void LSession::StartLogout()
 
 void LSession::StartShutdown()
 {
-    if (pm->isValid()) {
+    if (pm && pm->isValid()) {
         if (PowerClient::poweroff(pm)) {
             CleanupSession();
             QCoreApplication::exit(0);
@@ -411,7 +411,7 @@ void LSession::StartShutdown()
 
 void LSession::StartSuspend(bool hibernate)
 {
-    if (pm->isValid()) {
+    if (pm && pm->isValid()) {
         lockScreen();
         if (hibernate) { PowerClient::hibernate(pm); }
         else { PowerClient::suspend(pm); }
@@ -420,7 +420,7 @@ void LSession::StartSuspend(bool hibernate)
 
 void LSession::StartReboot()
 {
-    if (pm->isValid()) {
+    if (pm && pm->isValid()) {
         if (PowerClient::restart(pm)) {
             CleanupSession();
             QCoreApplication::exit(0);
@@ -443,25 +443,25 @@ void LSession::reloadIconTheme()
 
 bool LSession::canShutdown()
 {
-    if (pm->isValid()) { return PowerClient::canPowerOff(pm); }
+    if (pm && pm->isValid()) { return PowerClient::canPowerOff(pm); }
     return false; //pm->CanPowerOff();
 }
 
 bool LSession::canReboot()
 {
-    if (pm->isValid()) { return PowerClient::canRestart(pm); }
+    if (pm && pm->isValid()) { return PowerClient::canRestart(pm); }
     return false; //pm->CanRestart();
 }
 
 bool LSession::canSuspend()
 {
-    if (pm->isValid()) { return PowerClient::canSuspend(pm); }
+    if (pm && pm->isValid()) { return PowerClient::canSuspend(pm); }
     return false; //pm->CanSuspend();
 }
 
 bool LSession::canHibernate()
 {
-    if (pm->isValid()) { return PowerClient::canHibernate(pm); }
+    if (pm && pm->isValid()) { return PowerClient::canHibernate(pm); }
     return false; //pm->CanHibernate();
 }
 

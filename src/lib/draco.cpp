@@ -96,22 +96,38 @@ const QString Draco::xconfig()
 
 const QString Draco::storageApp()
 {
+#ifdef STORAGE_SERVICE_NAME
     return STORAGE_SERVICE_NAME;
+#else
+    return QString();
+#endif
 }
 
 const QString Draco::powerApp()
 {
+#ifdef POWER_SERVICE_NAME
     return POWER_SERVICE_NAME;
+#else
+    return QString();
+#endif
 }
 
 const QString Draco::desktopApp()
 {
+#ifdef DESKTOP_SERVICE_NAME
     return DESKTOP_SERVICE_NAME;
+#else
+    return QString();
+#endif
 }
 
 const QString Draco::launcherApp()
 {
+#ifdef XDG_OPEN
     return LUtils::isValidBinaryWithPath(XDG_OPEN);
+#else
+    return QString();
+#endif
 }
 
 const QString Draco::terminalApp()

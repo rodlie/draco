@@ -65,7 +65,7 @@
 #include "page_session_options.h"
 #include "page_keyboard.h"
 #include "page_defaultapps.h"
-#include "page_power.h"
+//#include "page_power.h"
 //#include "page_theme.h"
 
 //#include "page_fluxbox_keys.h"
@@ -143,14 +143,14 @@ QList<PAGEINFO> Pages::KnownPages(){
                           "user",
                           QStringList(),
                           QStringList());
-  list << Pages::PageInfo("power",
+  /*list << Pages::PageInfo("power",
                           QObject::tr("Power"),
                           QObject::tr("User Settings"),
                           "ac-adapter",
                           QObject::tr("Change power settings"),
                           "user",
                           QStringList(),
-                          QStringList());
+                          QStringList());*/
   list << Pages::PageInfo("defaultapps",
                           QObject::tr("Applications"),
                           QObject::tr("Mimetype Settings"),
@@ -183,7 +183,7 @@ PageWidget* Pages::GetNewPage(QString id, QWidget *parent){
   else if(id=="interface-panel"){ page = new page_interface_panels(parent); }
   else if(id=="session-options"){ page = new page_session_options(parent); }
   else if(id=="keyboard"){ page = new page_keyboard(parent); }
-  else if(id=="power"){ page = new page_power(parent); }
+  //else if(id=="power"){ page = new page_power(parent); }
   else if(id=="defaultapps"){ page = new page_defaultapps(parent); }
   //else if(id=="theme"){ page = new page_theme(parent); }
 
