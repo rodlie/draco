@@ -12,8 +12,10 @@
 //#include <LuminaSingleApplication.h>
 #include "LuminaXDG.h"
 #include "draco.h"
+#ifndef NO_DBUS
 #include <QDBusConnection>
 #include <QDBusInterface>
+#endif
 
 XDGDesktopList *APPSLIST = nullptr;
 
@@ -22,6 +24,7 @@ int main(int argc, char ** argv)
     // XDG
     LXDG::setEnvironmentVars();
 
+#ifndef NO_DBUS
     // Check for dbus
     if (!QDBusConnection::sessionBus().isConnected()) {
         qWarning("Cannot connect to the D-Bus session bus.");
@@ -43,6 +46,9 @@ int main(int argc, char ** argv)
         qWarning() << QDBusConnection::sessionBus().lastError().message();
         return 1;
     }
+#else
+    // WE SHOULD DO SOMETHING HERE!
+#endif
 
     //LTHEME::LoadCustomEnvSettings();
     QApplication a(argc, argv); //loads translations inside constructor

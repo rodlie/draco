@@ -71,7 +71,9 @@
 #include <QThread>
 #include <QUrl>
 #include <QClipboard>
+#ifndef NO_DBUS
 #include <QDBusInterface>
+#endif
 //#include "powerkit.h"
 #include "AppMenu.h"
 //#include "SettingsMenu.h"
@@ -186,7 +188,9 @@ private:
     bool startupApps;
 
     //PowerKit *pm;
+#ifndef NO_DBUS
     QDBusInterface *pm;
+#endif
 
 public slots:
     void StartLogout();

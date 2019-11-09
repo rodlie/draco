@@ -39,6 +39,9 @@ set(POWERD_SERVICE_NAME org.freedesktop.PowerKit)
 #set(STORAGE_SERVICE_NAME ${DOMAIN}.Storage)
 set(DESKTOP_SERVICE_NAME ${DOMAIN}.Desktop)
 set(SETTINGS_SERVICE_NAME ${DOMAIN}.Settings)
+
+option(DBUS_SUPPORT "D-Bus support, highly recommended" ON)
+
 #set(
 #    POWERD_SERVICE_USER
 #    "root"
@@ -68,6 +71,10 @@ add_definitions(-DDAEMON_APP_NAME="${PUBLISHER}.Powerd")
 add_definitions(-DPUBLISHER="${PUBLISHER}")
 add_definitions(-DXDG_OPEN="${XDG_OPEN}")
 
+if(NOT ${DBUS_SUPPORT})
+    add_definitions(-DNO_DBUS)
+endif()
+
 if(CMAKE_BUILD_TYPE MATCHES "^(release|Release|RELEASE)$")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
 else()
@@ -77,11 +84,15 @@ add_compile_options(-Wall -Wextra)
 
 # qt
 find_package(Qt5Core REQUIRED)
-find_package(Qt5DBus REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5X11Extras REQUIRED)
+
+# dbus should be optional
+if(${DBUS_SUPPORT})
+    find_package(Qt5DBus REQUIRED)
+endif()
 
 # x11
 find_package(X11 REQUIRED)
@@ -113,7 +124,7 @@ add_library(
     ${LIB_NAME}
     SHARED
     src/lib/draco.cpp
-    src/lib/power_def.h
+    #src/lib/power_def.h
     #src/lib/org.dracolinux.Disks.cpp
     src/lib/org.dracolinux.Power.Client.cpp
     #src/lib/org.dracolinux.Power.Device.cpp
@@ -184,7 +195,6 @@ target_include_directories(
     ${XCB_INCLUDE_DIRS}
     ${X11_Xrandr_INCLUDE_PATH}
     ${X11_Xfixes_INCLUDE_PATH}
-    #${XSS_INCLUDE}
     ${X11_Xdamage_INCLUDE}
 )
 target_link_libraries(
@@ -193,15 +203,17 @@ target_link_libraries(
     ${XCB_LIBRARIES}
     ${X11_Xrandr_LIB}
     ${X11_Xfixes_LIB}
-    #${XSS_LIB}
     ${X11_Xdamage_LIB}
     Qt5::Core
-    Qt5::DBus
     Qt5::Gui
     Qt5::Widgets
     Qt5::Concurrent
     Qt5::X11Extras
 )
+if(${DBUS_SUPPORT})
+    target_link_libraries(${LIB_NAME} Qt5::DBus)
+endif()
+
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
 else()
@@ -255,13 +267,15 @@ target_include_directories(
 target_link_libraries(
     ${DESKTOP_SERVICE_NAME}
     Qt5::Core
-    Qt5::DBus
     Qt5::Gui
     Qt5::Widgets
     Qt5::Concurrent
     Qt5::X11Extras
     ${LIB_NAME}
 )
+if(${DBUS_SUPPORT})
+    target_link_libraries(${DESKTOP_SERVICE_NAME} Qt5::DBus)
+endif()
 
 # org.dracolinux.Powerd
 #add_executable(
@@ -362,9 +376,11 @@ target_include_directories(
 target_link_libraries(
     start-${PROJECT_NAME}
     Qt5::Core
-    Qt5::DBus
     ${LIB_NAME}
 )
+if(${DBUS_SUPPORT})
+    target_link_libraries(start-${PROJECT_NAME} Qt5::DBus)
+endif()
 
 # draco-settings-x11
 add_executable(

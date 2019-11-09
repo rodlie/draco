@@ -92,7 +92,9 @@ LSession::LSession(int &argc, char ** argv) :
   , TrayStopping(false)
   , lastActiveWin(0)
   , startupApps(true)
+#ifndef NO_DBUS
   , pm(Q_NULLPTR)
+#endif
 {
     // Get the currently-set theme
     QString cTheme = QIcon::themeName();
@@ -179,10 +181,12 @@ LSession::LSession(int &argc, char ** argv) :
         // PM
         //pm = new PowerKit(this);
 
+#ifndef NO_DBUS
         pm = new QDBusInterface(Draco::powerSessionName(),
                                   Draco::powerSessionPath(),
                                   Draco::powerSessionName(),
                                   QDBusConnection::sessionBus(), this);
+#endif
 
     //} // end check for primary process
 }
@@ -401,31 +405,39 @@ void LSession::StartLogout()
 
 void LSession::StartShutdown()
 {
+#ifndef NO_DBUS
     if (pm && pm->isValid()) {
         if (PowerClient::poweroff(pm)) {
             CleanupSession();
             QCoreApplication::exit(0);
         }
     }
+#endif
 }
 
 void LSession::StartSuspend(bool hibernate)
 {
+#ifndef NO_DBUS
     if (pm && pm->isValid()) {
         lockScreen();
         if (hibernate) { PowerClient::hibernate(pm); }
         else { PowerClient::suspend(pm); }
     }
+#else
+    Q_UNUSED(hibernate)
+#endif
 }
 
 void LSession::StartReboot()
 {
+#ifndef NO_DBUS
     if (pm && pm->isValid()) {
         if (PowerClient::restart(pm)) {
             CleanupSession();
             QCoreApplication::exit(0);
         }
     }
+#endif
 }
 
 void LSession::lockScreen()
@@ -443,25 +455,33 @@ void LSession::reloadIconTheme()
 
 bool LSession::canShutdown()
 {
+#ifndef NO_DBUS
     if (pm && pm->isValid()) { return PowerClient::canPowerOff(pm); }
+#endif
     return false; //pm->CanPowerOff();
 }
 
 bool LSession::canReboot()
 {
+#ifndef NO_DBUS
     if (pm && pm->isValid()) { return PowerClient::canRestart(pm); }
+#endif
     return false; //pm->CanRestart();
 }
 
 bool LSession::canSuspend()
 {
+#ifndef NO_DBUS
     if (pm && pm->isValid()) { return PowerClient::canSuspend(pm); }
+#endif
     return false; //pm->CanSuspend();
 }
 
 bool LSession::canHibernate()
 {
+#ifndef NO_DBUS
     if (pm && pm->isValid()) { return PowerClient::canHibernate(pm); }
+#endif
     return false; //pm->CanHibernate();
 }
 

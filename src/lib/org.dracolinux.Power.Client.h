@@ -19,6 +19,8 @@
 #
 */
 
+#ifndef NO_DBUS
+
 #ifndef POWER_CLIENT_H
 #define POWER_CLIENT_H
 
@@ -44,3 +46,5 @@ public:
 };
 
 #endif // POWER_CLIENT_H
+
+#endif

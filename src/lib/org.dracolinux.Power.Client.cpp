@@ -19,7 +19,10 @@
 #
 */
 
+#ifndef NO_DBUS
+
 #include "org.dracolinux.Power.Client.h"
+#include <QDBusMessage>
 #include <QDebug>
 
 double PowerClient::getBatteryLeft(QDBusInterface *iface)
@@ -158,3 +161,5 @@ bool PowerClient::poweroff(QDBusInterface *iface)
     qDebug() << "reply" << ok;
     return ok;
 }
+
+#endif // NO_DBUS

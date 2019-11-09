@@ -59,8 +59,10 @@
 #include <QProcess>
 #include <QString>
 #include <QX11Info>
+#ifndef NO_DBUS
 #include <QDBusConnection>
 #include <QDBusInterface>
+#endif
 #include <unistd.h>
 
 #include "draco.h"
@@ -107,6 +109,7 @@ int main(int argc, char ** argv)
     }*/
 
     // check for running desktop
+#ifndef NO_DBUS
     QDBusInterface session(Draco::desktopSessionName(),
                            Draco::desktopSessionPath(),
                            Draco::desktopSessionName(),
@@ -115,6 +118,9 @@ int main(int argc, char ** argv)
         qWarning("A desktop session is already running!");
         return 1;
     }
+#else
+    // WE NEED TO DO SOMETHING HERE!
+#endif
 
     // Check configs
     Draco::themeEngineCheckConf();

@@ -55,8 +55,10 @@
 //  See the LICENSE file for full details
 //===========================================
 
+#ifndef NO_DBUS
 #include <QDBusConnection>
 #include <QDBusInterface>
+#endif
 
 #include "LSession.h"
 #include "LuminaXDG.h"
@@ -64,6 +66,7 @@
 
 int main(int argc, char ** argv)
 {
+#ifndef NO_DBUS
     // Check for dbus
     if (!QDBusConnection::sessionBus().isConnected()) {
         qWarning("Cannot connect to the D-Bus session bus.");
@@ -85,6 +88,9 @@ int main(int argc, char ** argv)
         qWarning() << QDBusConnection::sessionBus().lastError().message();
         return 1;
     }
+#else
+    // WE NEED TO DO SOMETHING HERE!
+#endif
 
     // Setup any pre-QApplication initialization values
     LXDG::setEnvironmentVars();
