@@ -90,10 +90,10 @@ page_session_options::page_session_options(QWidget *parent) : PageWidget(parent)
   connect(ui->check_desktop_autolaunchers, SIGNAL(clicked()), this, SLOT(settingChanged()) );
   connect(ui->check_media_icons, SIGNAL(clicked()), this, SLOT(settingChanged()) );
 
-  connect(ui->check_automount_storage, SIGNAL(clicked()), this, SLOT(settingChanged()) );
+  /*connect(ui->check_automount_storage, SIGNAL(clicked()), this, SLOT(settingChanged()) );
   connect(ui->check_autoplay_storage_cd, SIGNAL(clicked()), this, SLOT(settingChanged()) );
   connect(ui->check_show_storage_notify, SIGNAL(clicked()), this, SLOT(settingChanged()) );
-  connect(ui->check_autoplay_storage_dvd, SIGNAL(clicked()), this, SLOT(settingChanged()) );
+  connect(ui->check_autoplay_storage_dvd, SIGNAL(clicked()), this, SLOT(settingChanged()) );*/
 
   updateIcons();
 }
@@ -113,10 +113,10 @@ void page_session_options::SaveSettings()
     sessionsettings.setValue("DateFormat", ui->line_session_date->text());
     sessionsettings.setValue("DateTimeOrder", ui->combo_session_datetimeorder->currentData().toString());
 
-    sessionsettings.setValue("trayNotify", ui->check_show_storage_notify->isChecked());
+    /*sessionsettings.setValue("trayNotify", ui->check_show_storage_notify->isChecked());
     sessionsettings.setValue("trayAutoMount", ui->check_automount_storage->isChecked());
     sessionsettings.setValue("autoPlayAudioCD", ui->check_autoplay_storage_cd->isChecked());
-    sessionsettings.setValue("autoPlayDVD", ui->check_autoplay_storage_dvd->isChecked());
+    sessionsettings.setValue("autoPlayDVD", ui->check_autoplay_storage_dvd->isChecked());*/
 
 
     QSettings desktopsettings(DESKTOP_APP, DE_DESKTOP_SETTINGS);
@@ -143,10 +143,10 @@ void page_session_options::LoadSettings(int screennum)
     int index = ui->combo_session_datetimeorder->findData( sessionsettings.value("DateTimeOrder","timeonly").toString() );
     ui->combo_session_datetimeorder->setCurrentIndex(index);
 
-    ui->check_automount_storage->setChecked(sessionsettings.value("trayAutoMount", false).toBool());
+    /*ui->check_automount_storage->setChecked(sessionsettings.value("trayAutoMount", false).toBool());
     ui->check_autoplay_storage_cd->setChecked(sessionsettings.value("autoPlayAudioCD", false).toBool());
     ui->check_show_storage_notify->setChecked(sessionsettings.value("trayNotify", true).toBool());
-    ui->check_autoplay_storage_dvd->setChecked(sessionsettings.value("autoPlayDVD", false).toBool());
+    ui->check_autoplay_storage_dvd->setChecked(sessionsettings.value("autoPlayDVD", false).toBool());*/
 
     QSettings desktopsettings(DESKTOP_APP, DE_DESKTOP_SETTINGS);
     QString screenID = QApplication::screens().at(cscreen)->name();
