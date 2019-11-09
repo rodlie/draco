@@ -38,11 +38,6 @@ Name=Keyboard Settings
 Icon=input-keyboard
 Exec=@PROJECT_NAME@-settings --page keyboard
 
-[Desktop Action power]
-Name=Power Settings
-Icon=ac-adapter
-Exec=@PROJECT_NAME@-settings --page power
-
 [Desktop Action monitors]
 Name=Monitor Settings
 Icon=video-display
