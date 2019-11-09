@@ -66,7 +66,7 @@
 #include <QtConcurrent>
 #include <QMimeData>
 #include "qhotkey.h"
-
+#include "keyboard_common.h"
 #include <unistd.h> //for usleep() usage
 
 XCBEventFilter *evFilter = Q_NULLPTR;
@@ -290,6 +290,9 @@ void LSession::setupSession()
 
     // Initialize startup applications
     launchStartupApps();
+
+    // keyboard
+    KeyboardCommon::loadKeyboard();
 
     qDebug() << "[DESKTOP INIT FINISHED]";
 }
