@@ -145,6 +145,7 @@ private:
     int suspendWakeupAC;
 
     bool lockScreenOnSuspend;
+    bool lockScreenOnResume;
 
 signals:
     void Update();
@@ -230,11 +231,13 @@ public slots:
     void UpdateConfig();
     QStringList ScreenSaverInhibitors();
     QStringList PowerManagementInhibitors();
+    QMap<quint32, QString> GetInhibitors();
     const QDateTime getWakeAlarm();
     void releaseSuspendLock();
     void setSuspendWakeAlarmOnBattery(int value);
     void setSuspendWakeAlarmOnAC(int value);
     void setLockScreenOnSuspend(bool lock);
+    void setLockScreenOnResume(bool lock);
     bool setDisplayBacklight(QString const &device, int value);
 };
 

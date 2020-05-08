@@ -71,17 +71,13 @@ add_definitions(-DXDG_OPEN="${XDG_OPEN}")
 if(CMAKE_BUILD_TYPE MATCHES "^(release|Release|RELEASE)$")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
 else()
+    add_definitions(-DQT_MESSAGELOGCONTEXT)
     message("-- DRACO DEBUG BUILD")
 endif()
 add_compile_options(-Wall -Wextra)
 
 # qt
-find_package(Qt5Core REQUIRED)
-find_package(Qt5DBus REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Concurrent REQUIRED)
-find_package(Qt5X11Extras REQUIRED)
+find_package(Qt5 REQUIRED Core DBus Gui Widgets Concurrent X11Extras)
 
 # x11
 find_package(X11 REQUIRED)

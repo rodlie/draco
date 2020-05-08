@@ -44,6 +44,7 @@ Power::Power(QObject *parent) : QObject(parent)
   , suspendWakeupBattery(0)
   , suspendWakeupAC(0)
   , lockScreenOnSuspend(true)
+  , lockScreenOnResume(false)
 {
     setup();
     timer.setInterval(TIMEOUT_CHECK);
@@ -424,6 +425,7 @@ void Power::handlePrepareForSuspend(bool prepare)
     }
     else { // resume
         UpdateDevices();
+        if (lockScreenOnResume) { LockScreen(); }
         if (hasWakeAlarm() &&
              wakeAlarmDate.isValid() &&
              CanHibernate())
@@ -842,6 +844,22 @@ QStringList Power::PowerManagementInhibitors()
     return result;
 }
 
+QMap<quint32, QString> Power::GetInhibitors()
+{
+    QMap<quint32, QString> result;
+    QMapIterator<quint32, QString> ss(ssInhibitors);
+    while (ss.hasNext()) {
+        ss.next();
+        result.insert(ss.key(), ss.value());
+    }
+    QMapIterator<quint32, QString> pm(pmInhibitors);
+    while (pm.hasNext()) {
+        pm.next();
+        result.insert(pm.key(), pm.value());
+    }
+    return result;
+}
+
 const QDateTime Power::getWakeAlarm()
 {
     return wakeAlarmDate;
@@ -869,6 +887,11 @@ void Power::setLockScreenOnSuspend(bool lock)
 {
     qDebug() << "set lock screen on suspend" << lock;
     lockScreenOnSuspend = lock;
+}
+
+void Power::setLockScreenOnResume(bool lock)
+{
+    lockScreenOnResume = lock;
 }
 
 bool Power::setDisplayBacklight(const QString &device, int value)
