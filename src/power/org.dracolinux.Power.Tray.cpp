@@ -304,6 +304,8 @@ SysTray::~SysTray()
 // what to do when user clicks systray
 void SysTray::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
+    updateMenu();
+
     switch (reason) {
     case QSystemTrayIcon::Trigger:
     case QSystemTrayIcon::Context:
@@ -800,6 +802,8 @@ void SysTray::timeout()
     if (tray->isSystemTrayAvailable() &&
         !tray->isVisible() &&
         showTray) { tray->show(); }
+
+    updateMenu();
 
     int uIdle = xIdle();
 
