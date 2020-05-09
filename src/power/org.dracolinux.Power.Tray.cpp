@@ -1153,7 +1153,7 @@ void SysTray::populateMenu()
     tray->setContextMenu(powerMenu);
     menuFrame = new QFrame(nullptr);
     inhibitorsMenu = new QMenu(powerMenu);
-    inhibitorsMenu->setTitle(tr("Inhibitors"));
+    inhibitorsMenu->setTitle(tr("Power Inhibitors"));
     inhibitorsMenu->setToolTip(tr("List of active applications that inhibits screen and/or power."));
     inhibitorsGroup = new QActionGroup(this);
 
@@ -1249,6 +1249,11 @@ void SysTray::populateMenu()
         cpuContainerLayout->addWidget(pstateMinWidget);
         cpuContainerLayout->addWidget(pstateMaxWidget);
         cpuContainerLayout->addWidget(pstateTurboCheckbox);
+
+        // DISABLE UNTIL DONE
+        pstateMinWidget->setDisabled(true);
+        pstateMaxWidget->setDisabled(true);
+        pstateTurboCheckbox->setDisabled(true);
     }
 
     batteryContainerLayout->addWidget(labelBatteryIcon);
@@ -1268,7 +1273,7 @@ void SysTray::populateMenu()
 
     powerMenu->addAction(menuHeader);
     actSettings = new QAction(this);
-    actSettings->setText(tr("Settings"));
+    actSettings->setText(tr("Power Settings"));
     connect(actSettings, SIGNAL(triggered(bool)), this, SLOT(openSettings()));
 
     actSettings->setIcon(QIcon::fromTheme(DEFAULT_TRAY_ICON));
