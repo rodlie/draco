@@ -1,12 +1,12 @@
 # Draco 0.9.1 (TBA)
 
-First feature and patch release.
+This is a feature and patch release.
 
  - Fixed keyboard layout detection
  - Fixed autostart settings/launcher
  - Added ``--version`` to ``start-draco``
- - Added new power management widget
- - Added support for pstate/cpufreq
+ - Added new power management tray popup
+ - Integrated support for pstate/cpufreq
  
 # Draco 0.9.0 (20190522)
 

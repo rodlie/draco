@@ -46,13 +46,11 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com), but i
 
 ### Generic (Linux)
 
-Latest release can be found on [GitHub](https://github.com/rodlie/draco/releases/latest).
+Latest releases can be found on [GitHub](https://github.com/rodlie/draco/releases/latest).
 
 ### RHEL/CentOS/Fedora
 
-Packages from the [master]((https://software.opensuse.org//download.html?project=home%3Arodlie%3Adraco-master&package=draco)) branch is available through OBS (Open Build Service).
-
-**Notice! The EPEL repository must be available on RHEL/CentOS before installing Draco.**
+Packages are available at [Open Build Service]((https://software.opensuse.org//download.html?project=home%3Arodlie%3Adraco-master&package=draco)).
 
 ## Usage
 
@@ -98,10 +96,6 @@ Recommended settings are:
 
 A custom configuration tool will be added in the future.
 
-### Backlight
-
-Backlight is supported through ``/sys/class/backlight``. The current brightness can be adjusted with the mouse wheel on the system tray icon.
-
 ### Hibernate
 
 A swap partition (or file) is needed by the kernel to support hibernate/hybrid sleep. Edit the boot loader configuration and add the kernel option ``resume=<swap_partition/swap_file>``, then save and restart.
@@ -132,9 +126,6 @@ Draco is divided into the following components:
    * ``xdg-open`` replacement. Takes care of anything XDG related when running Draco. *You can use this component outside of Draco.*
 
 ## Screenshots
-
-Various screenshots.
-
 
 ### Settings
 
