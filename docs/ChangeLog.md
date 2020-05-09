@@ -4,6 +4,7 @@ Patch release.
 
  - Fixed keyboard layout detection
  - Fixed autostart settings/launcher
+ - Added ``--version`` to ``start-draco``
  
 # Draco 0.9.0 (20190522)
 
