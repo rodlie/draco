@@ -146,6 +146,7 @@ private:
     bool monitorHotplugSupport;
 
     QMenu *powerMenu;
+    bool powerMenuIsActive;
     QMenu *inhibitorsMenu;
     QActionGroup *inhibitorsGroup;
     QAction *actSettings;
@@ -212,6 +213,9 @@ private slots:
     void getInhibitors();
     void openSettings();
     void getCpuFreq();
+    void handlePowerMenuAboutToHide();
+    void handlePowerMenuAboutToShow();
+    void hidePowerMenuIfVisible();
 
 };
 

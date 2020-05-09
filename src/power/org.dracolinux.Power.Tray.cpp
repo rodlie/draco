@@ -75,6 +75,7 @@ SysTray::SysTray(QObject *parent)
     , ignoreKernelResume(false)
     , monitorHotplugSupport(false)
     , powerMenu(nullptr)
+    , powerMenuIsActive(false)
     , inhibitorsMenu(nullptr)
     , inhibitorsGroup(nullptr)
     , actSettings(nullptr)
@@ -304,8 +305,6 @@ SysTray::~SysTray()
 // what to do when user clicks systray
 void SysTray::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    updateMenu();
-
     switch (reason) {
     case QSystemTrayIcon::Trigger:
     case QSystemTrayIcon::Context:
@@ -1284,6 +1283,9 @@ void SysTray::populateMenu()
 
     updateBacklight(QString());
     updateMenu();
+
+    connect(powerMenu, SIGNAL(aboutToHide()), this, SLOT(handlePowerMenuAboutToHide()));
+    connect(powerMenu, SIGNAL(aboutToShow()), this, SLOT(handlePowerMenuAboutToShow()));
 }
 
 void SysTray::updateMenu()
@@ -1424,6 +1426,29 @@ void SysTray::getCpuFreq()
         }
     }
     cpuFreqLabel->setText(QString("<h2 style=\"font-weight:normal;margin-left:5;\">%1GHz %2</h2>").arg(QString::number(currentCpuFreq/1000000, 'f', 2)).arg(temp));
+}
+
+void SysTray::handlePowerMenuAboutToHide()
+{
+    qDebug() << "PowerMenu about to hide";
+    powerMenuIsActive = false;
+}
+
+void SysTray::handlePowerMenuAboutToShow()
+{
+    qDebug() << "Powermenu about to show";
+    updateMenu();
+    powerMenuIsActive = true;
+    QTimer::singleShot(30000, this, SLOT(hidePowerMenuIfVisible()));
+}
+
+void SysTray::hidePowerMenuIfVisible()
+{
+    if (powerMenuIsActive && !powerMenu->isHidden()) {
+        qDebug() << "Hide power menu (timeout)";
+        powerMenu->hide();
+        powerMenuIsActive = false;
+    }
 }
 
 // catch wheel events
