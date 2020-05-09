@@ -8,7 +8,7 @@
 
 Draco is a simple and lightweight desktop environment. While small still features XDG integration, freedesktop services and integration, power and storage management, desktop, panels, multi-monitor support and much more. Draco does not include any user applications.
 
-Draco is developed for and on [Slackware Linux](http://www.slackware.com), but is also compatible with RHEL/CentOS/Fedora and others.
+Draco is developed for and on [Slackware Linux](http://www.slackware.com), but is also compatible with RHEL/CentOS/Fedora and others. Draco is a fork of [Lumina](https://github.com/lumina-desktop/lumina).
 
 ## Features
 
@@ -174,11 +174,6 @@ General desktop configuration:
 Monitor configuration:
 
 ![screenshot](images/screenshot-10.jpg)
-
-
-## History
-
-Draco was an alternative GNU/Linux distribution developed between 2005 and 2015. Since then the OS has been dropped in favor of (upstream, and) creating a desktop environment. The distribution started out as a fork of Slackware Linux, while the desktop started out as a fork of [Lumina](https://github.com/lumina-desktop/lumina) aimed at Slackware Linux. *What goes around comes around ...*
 
 ## Requirements
 
