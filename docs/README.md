@@ -40,7 +40,7 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com), but i
   * Display backlight support
   * Display hotplug support
   * RTC wake support
-  * cpufreq/pstate support **(WIP)**
+  * cpufreq/pstate support
 
 ## Download
 
