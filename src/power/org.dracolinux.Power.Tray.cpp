@@ -1214,7 +1214,11 @@ void SysTray::populateMenu()
     cpuHeaderLayout->addWidget(cpuFreqIcon);
     cpuHeaderLayout->addWidget(cpuFreqLabel);
 
-    if (PowerCpu::hasPState()) {
+    // add cpu gov (more or less pointless with pstate, but add anyway)
+    // TODO
+
+    // cpu speed
+    if (PowerCpu::hasPState()) { // intel pstate (sandy bridge+)
         pstateMinSlider = new QSlider(menuFrame);
         pstateMaxSlider = new QSlider(menuFrame);
         pstateMinSlider->setRange(0, 100);
@@ -1253,6 +1257,8 @@ void SysTray::populateMenu()
         pstateMinWidget->setDisabled(true);
         pstateMaxWidget->setDisabled(true);
         pstateTurboCheckbox->setDisabled(true);
+    } else { // cpufreq (core i first gen and lower)
+
     }
 
     batteryContainerLayout->addWidget(labelBatteryIcon);
