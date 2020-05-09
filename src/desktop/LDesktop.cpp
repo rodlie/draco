@@ -533,9 +533,15 @@ void LDesktop::UpdateDesktop()
         }
     }
 
-    // Also show anything available in the /run/media/USERNAME directory
+    // Also show anything available in the /media/USERNAME or /run/media/USERNAME directory
     if (settings->value(DPREFIX+"generateMediaIcons", true).toBool()) {
-        QDir userMedia(QString("/run/media/%1").arg(QDir::homePath().split("/").takeLast()));
+	const QFileInfo mediaDir("/media/");
+	QDir userMedia;
+	if(mediaDir.exists()){
+        	userMedia = QString("/media/%1").arg(QDir::homePath().split("/").takeLast());
+	} else {
+        	userMedia = QString("/run/media/%1").arg(QDir::homePath().split("/").takeLast());
+	}
         QStringList userMediadirs = userMedia.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
         for (int i=0; i<userMediadirs.length(); i++) {
             filelist << userMedia.absoluteFilePath(userMediadirs[i]);
