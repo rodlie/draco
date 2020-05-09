@@ -23,7 +23,7 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=draco
-VERSION=${VERSION:-`git rev-parse --short HEAD`}
+VERSION=${VERSION:-`printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"`}
 BUILD=${BUILD:-1}
 TAG=${TAG:-}
 
