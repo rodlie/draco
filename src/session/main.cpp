@@ -69,6 +69,8 @@
 #include "LDesktopUtils.h"
 #include "LuminaXDG.h"
 
+#include <iostream>
+
 int findAvailableSession()
 {
     int num = 0;
@@ -78,6 +80,15 @@ int findAvailableSession()
 
 int main(int argc, char ** argv)
 {
+    QApplication a(argc, argv);
+    QStringList args = QCoreApplication::arguments();
+
+    // output version if requested
+    if (args.contains(QString::fromUtf8("--version"), Qt::CaseSensitive)) {
+        std::cout << QString::fromUtf8("Draco %1%2").arg(DESKTOP_APP_VERSION).arg(DESKTOP_APP_VERSION_EXTRA).toStdString() << std::endl;
+        return 0;
+    }
+
     // check for required binaries
     if (!LUtils::isValidBinary(Draco::desktopApp().toUtf8())) {
         qWarning("Desktop manager not found!");
@@ -144,7 +155,6 @@ int main(int argc, char ** argv)
     setenv("XDG_CURRENT_DESKTOP", DESKTOP_APP_NAME, 1);
 
     // Startup the session
-    QApplication a(argc, argv);
     setenv("QT_QPA_PLATFORMTHEME", "qt5ct", 1); // make sure this is after the QApplication - not actually using the theme plugin for **this** process
     LSession sess;
     sess.start();
