@@ -566,7 +566,7 @@ void LSession::setupFallbackDesktop(QSettings *dset)
         dset->setValue(QString("desktop-fallback/generateMediaIcons"), true);
     }
     if (!dset->contains(QString("desktop-fallback/generateDesktopIcons"))) {
-        dset->setValue(QString("desktop-fallback/generateDesktopIcons"), true);
+        dset->setValue(QString("desktop-fallback/generateDesktopIcons"), false);
     }
     if (!dset->contains(QString("desktop-fallback/GridSize"))) {
         dset->setValue(QString("desktop-fallback/GridSize"), 100);
