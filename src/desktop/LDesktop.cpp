@@ -171,6 +171,11 @@ void LDesktop::SystemAbout()
     QProcess::startDetached(QString("%1 --about").arg(Draco::launcherApp()));
 }
 
+void LDesktop::WallpaperSettings()
+{
+    QProcess::startDetached("draco-settings --page wallpaper");
+}
+
 void LDesktop::SystemLock()
 {
     QProcess::startDetached("xscreensaver-command -lock");
@@ -465,6 +470,11 @@ void LDesktop::UpdateMenu(bool fast)
                         tr("About"),
                         this,
                         SLOT(SystemAbout()));
+    deskMenu->addSeparator();
+    deskMenu->addAction(LXDG::findIcon("preferences-desktop-wallpaper",""),
+                        tr("Wallpaper Settings"),
+                        this,
+                        SLOT(WallpaperSettings()));
     deskMenu->addSeparator();
     deskMenu->addAction(LXDG::findIcon("system-lock-screen",""),
                         tr("Lock Session"),
