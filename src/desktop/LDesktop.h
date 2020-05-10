@@ -95,6 +95,7 @@ public:
 
 public slots:
     void SystemAbout();
+    void WallpaperSettings();
     void SystemLock();
     void SystemLogout();
     void SystemTerminal();
