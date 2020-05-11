@@ -436,7 +436,7 @@ void LDesktop::UpdateMenu(bool fast)
     deskMenu->addSeparator();
 
     // Now load the user's menu setup and fill the menu
-    QStringList items = settings->value("menu/itemlist", QStringList() << "applications" << "windowlist" << "settings/monitors" << "settings/wallpaper").toStringList();
+    QStringList items = settings->value("menu/itemlist", QStringList() << "applications" << "windowlist" << "settings/wallpaper").toStringList();
     usewinmenu=false;
     for (int i=0; i<items.length(); i++) {
         if (items[i]=="line") { deskMenu->addSeparator(); }
