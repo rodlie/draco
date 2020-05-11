@@ -19,8 +19,8 @@
 #
 */
 
-#ifndef DEVICE_H
-#define DEVICE_H
+#ifndef POWERDEVICE_H
+#define POWERDEVICE_H
 
 #include <QObject>
 #include <QDBusInterface>
@@ -30,28 +30,28 @@
 #define DBUS_DEVICE "Device"
 #define DBUS_CHANGED "Changed"
 
-class Device : public QObject
+class PowerDevice : public QObject
 {
     Q_OBJECT
 
 public:
-    enum DeviceType {
-        DeviceUnknown,
-        DeviceLinePower,
-        DeviceBattery,
-        DeviceUps,
-        DeviceMonitor,
-        DeviceMouse,
-        DeviceKeyboard,
-        DevicePda,
-        DevicePhone
+    enum PowerDeviceType {
+        PowerDeviceUnknown,
+        PowerDeviceLinePower,
+        PowerDeviceBattery,
+        PowerDeviceUps,
+        PowerDeviceMonitor,
+        PowerDeviceMouse,
+        PowerDeviceKeyboard,
+        PowerDevicePda,
+        PowerDevicePhone
     };
-    explicit Device(const QString block,
+    explicit PowerDevice(const QString block,
                     QObject *parent = NULL);
     QString name;
     QString path;
     QString model;
-    DeviceType type;
+    PowerDeviceType type;
     bool isRechargable;
     bool isPresent;
     double percentage;
@@ -83,4 +83,4 @@ public slots:
     void updateBattery();
 };
 
-#endif // DEVICE_H
+#endif // POWERDEVICE_H

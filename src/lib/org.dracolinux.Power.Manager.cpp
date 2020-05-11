@@ -59,7 +59,7 @@ Power::~Power()
     releaseSuspendLock();
 }
 
-QMap<QString, Device *> Power::getDevices()
+QMap<QString, PowerDevice *> Power::getDevices()
 {
     return devices;
 }
@@ -329,7 +329,7 @@ void Power::scan()
     for (int i=0; i < foundDevices.size(); i++) {
         QString foundDevicePath = foundDevices.at(i);
         if (devices.contains(foundDevicePath)) { continue; }
-        Device *newDevice = new Device(foundDevicePath, this);
+        PowerDevice *newDevice = new PowerDevice(foundDevicePath, this);
         connect(newDevice,
                 SIGNAL(deviceChanged(QString)),
                 this,
@@ -446,7 +446,7 @@ void Power::handlePrepareForSuspend(bool prepare)
 
 void Power::clearDevices()
 {
-    QMapIterator<QString, Device*> device(devices);
+    QMapIterator<QString, PowerDevice*> device(devices);
     while (device.hasNext()) {
         device.next();
         delete device.value();
@@ -733,7 +733,7 @@ double Power::BatteryLeft()
 {
     if (OnBattery()) { UpdateBattery(); }
     double batteryLeft = 0;
-    QMapIterator<QString, Device*> device(devices);
+    QMapIterator<QString, PowerDevice*> device(devices);
     int batteries = 0;
     while (device.hasNext()) {
         device.next();
@@ -759,7 +759,7 @@ void Power::LockScreen()
 
 bool Power::HasBattery()
 {
-    QMapIterator<QString, Device*> device(devices);
+    QMapIterator<QString, PowerDevice*> device(devices);
     while (device.hasNext()) {
         device.next();
         if (device.value()->isBattery) { return true; }
@@ -771,7 +771,7 @@ qlonglong Power::TimeToEmpty()
 {
     if (OnBattery()) { UpdateBattery(); }
     qlonglong result = 0;
-    QMapIterator<QString, Device*> device(devices);
+    QMapIterator<QString, PowerDevice*> device(devices);
     while (device.hasNext()) {
         device.next();
         if (device.value()->isBattery &&
@@ -786,7 +786,7 @@ qlonglong Power::TimeToFull()
 {
     if (OnBattery()) { UpdateBattery(); }
     qlonglong result = 0;
-    QMapIterator<QString, Device*> device(devices);
+    QMapIterator<QString, PowerDevice*> device(devices);
     while (device.hasNext()) {
         device.next();
         if (device.value()->isBattery &&
@@ -799,7 +799,7 @@ qlonglong Power::TimeToFull()
 
 void Power::UpdateDevices()
 {
-    QMapIterator<QString, Device*> device(devices);
+    QMapIterator<QString, PowerDevice*> device(devices);
     while (device.hasNext()) {
         device.next();
         device.value()->update();
@@ -808,7 +808,7 @@ void Power::UpdateDevices()
 
 void Power::UpdateBattery()
 {
-    QMapIterator<QString, Device*> device(devices);
+    QMapIterator<QString, PowerDevice*> device(devices);
     while (device.hasNext()) {
         device.next();
         if (device.value()->isBattery) {

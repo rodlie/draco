@@ -42,7 +42,7 @@
 #define PROP_DEV_VENDOR "Vendor"
 #define PROP_DEV_NATIVEPATH "NativePath"
 
-Device::Device(const QString block, QObject *parent)
+PowerDevice::PowerDevice(const QString block, QObject *parent)
     : QObject(parent)
     , path(block)
     , isRechargable(false)
@@ -88,7 +88,7 @@ Device::Device(const QString block, QObject *parent)
 }
 
 // get device properties
-void Device::updateDeviceProperties()
+void PowerDevice::updateDeviceProperties()
 {
     if (!dbus->isValid()) { return; }
 
@@ -105,12 +105,12 @@ void Device::updateDeviceProperties()
     hasPowerSupply = dbus->property(PROP_DEV_POWER_SUPPLY).toBool();
     timeToEmpty = dbus->property(PROP_DEV_TIME_TO_EMPTY).toLongLong();
     timeToFull = dbus->property(PROP_DEV_TIME_TO_FULL).toLongLong();
-    type = (DeviceType)dbus->property(PROP_DEV_TYPE).toUInt();
+    type = (PowerDeviceType)dbus->property(PROP_DEV_TYPE).toUInt();
 
-    if (type == DeviceBattery) { isBattery = true; }
+    if (type == PowerDeviceBattery) { isBattery = true; }
     else {
         isBattery = false;
-        if (type == DeviceLinePower) { isAC = true; }
+        if (type == PowerDeviceLinePower) { isAC = true; }
         else { isAC = false; }
     }
 
@@ -120,12 +120,12 @@ void Device::updateDeviceProperties()
     emit deviceChanged(path);
 }
 
-void Device::update()
+void PowerDevice::update()
 {
     updateDeviceProperties();
 }
 
-void Device::updateBattery()
+void PowerDevice::updateBattery()
 {
     percentage =  dbus->property(PROP_DEV_PERCENT).toDouble();
     timeToEmpty = dbus->property(PROP_DEV_TIME_TO_EMPTY).toLongLong();

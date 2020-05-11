@@ -456,7 +456,7 @@ void LDesktop::UpdateMenu(bool fast)
                     }
                 }
                 XDGDesktop xdgf(df);
-                if (xdgf.type!=XDGDesktop::BAD) {
+                if (xdgf.type!=XDGDesktop::XDG_BAD) {
                     for (int x = 0; x < xdgf.actions.size(); ++x) {
                         XDGDesktopAction act = xdgf.actions.at(x);
                         if (act.ID == setting) {
@@ -470,7 +470,7 @@ void LDesktop::UpdateMenu(bool fast)
             // Custom *.desktop application
             QString file = items[i].section("::::",1,1).simplified();
             XDGDesktop xdgf(file); // = LXDG::loadDesktopFile(file, ok);
-            if (xdgf.type!=XDGDesktop::BAD) {
+            if (xdgf.type!=XDGDesktop::XDG_BAD) {
                 deskMenu->addAction(LXDG::findIcon(xdgf.icon,""),
                                     xdgf.name)->setWhatsThis(file);
             } else {

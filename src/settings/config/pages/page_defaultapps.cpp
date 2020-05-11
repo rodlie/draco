@@ -155,7 +155,7 @@ void page_defaultapps::LoadSettings(int){
     it->setData(1, Qt::UserRole, def);
     if(def.endsWith(".desktop")){
       XDGDesktop file(def);
-      if(file.type == XDGDesktop::BAD){
+      if(file.type == XDGDesktop::XDG_BAD){
         //Might be a binary - just print out the raw "path"
         it->setText(1, def.section("/",-1));
         it->setIcon(1, LXDG::findIcon("application-x-executable","") );
@@ -202,7 +202,7 @@ void page_defaultapps::updateDefaultButton(QToolButton *button, QString app){
   if( !QFile::exists(app) && !LUtils::isValidBinary(app) ){ qDebug() << "Invalid Settings:" << app; app.clear(); } //invalid settings
   if(app.endsWith(".desktop")){
     XDGDesktop file(app);
-    if(file.type == XDGDesktop::BAD){
+    if(file.type == XDGDesktop::XDG_BAD){
       //Might be a binary - just print out the raw "path"
       button->setText(app.section("/",-1));
       button->setIcon( LXDG::findIcon("application-x-executable","") );

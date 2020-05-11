@@ -53,6 +53,8 @@ set(
     STRING
     "group that have access to powerd service, this should be all desktop users."
 )
+set(ENABLE_MAGICK false CACHE BOOL "Enable support for ImageMagick")
+set(ENABLE_FFMPEG false CACHE BOOL "Enable support for FFmpeg v3")
 
 add_definitions(-DDESKTOP_APP="${PROJECT_NAME}")
 add_definitions(-DDESKTOP_APP_NAME="${LIB_NAME}")
@@ -75,6 +77,22 @@ else()
     message("-- DRACO DEBUG BUILD")
 endif()
 add_compile_options(-Wall -Wextra)
+
+# magick
+if(ENABLE_MAGICK)
+    add_definitions(-DWITH_MAGICK)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(MAGICK REQUIRED Magick++)
+    # ffmpeg
+    if(ENABLE_FFMPEG)
+        pkg_check_modules(AVDEVICE REQUIRED libavdevice)
+        pkg_check_modules(SWSCALE REQUIRED libswscale)
+        pkg_check_modules(AVFORMAT REQUIRED libavformat)
+        pkg_check_modules(AVCODEC REQUIRED libavcodec)
+        pkg_check_modules(AVUTIL REQUIRED libavutil)
+        add_definitions(-DWITH_FFMPEG)
+    endif()
+endif()
 
 # qt
 find_package(Qt5 REQUIRED Core DBus Gui Widgets Concurrent X11Extras)
@@ -143,6 +161,29 @@ add_library(
     src/lib/qtcopydialog/qtcopydialog.ui
     src/lib/qtcopydialog/qtoverwritedialog.ui
     src/lib/qtcopydialog/qtotherdialog.ui
+    src/files/qtfm/libfm/disks.cpp
+    src/files/qtfm/libfm/service.h
+    src/files/qtfm/libfm/udisks2.cpp
+    src/files/qtfm/libfm/applicationdialog.cpp
+    src/files/qtfm/libfm/bookmarkmodel.cpp
+    src/files/qtfm/libfm/common.cpp
+    src/files/qtfm/libfm/completer.cpp
+    src/files/qtfm/libfm/customactionsmanager.cpp
+    src/files/qtfm/libfm/desktopfile.cpp
+    src/files/qtfm/libfm/fileutils.cpp
+    src/files/qtfm/libfm/fm.cpp
+    src/files/qtfm/libfm/icondlg.cpp
+    src/files/qtfm/libfm/iconlist.cpp
+    src/files/qtfm/libfm/iconview.cpp
+    src/files/qtfm/libfm/mimeutils.cpp
+    src/files/qtfm/libfm/mymodel.cpp
+    src/files/qtfm/libfm/mymodelitem.cpp
+    src/files/qtfm/libfm/processdialog.cpp
+    src/files/qtfm/libfm/properties.cpp
+    src/files/qtfm/libfm/propertiesdlg.cpp
+    src/files/qtfm/libfm/sortmodel.cpp
+    src/files/qtfm/libfm/dfmqtreeview.cpp
+    src/files/qtfm/libfm/dfmqstyleditemdelegate.cpp
     share/share.qrc
 )
 set_target_properties(
@@ -164,6 +205,7 @@ target_include_directories(
     src/lib/lumina
     src/lib/qtcopydialog
     src/lib/hotkey
+    src/files/qtfm/libfm
 )
 if(${CMAKE_VERSION} VERSION_LESS "3.14.3")
     set(XSS_INCLUDE ${X11_Xscreensaver_INCLUDE_PATH})
@@ -198,6 +240,24 @@ target_link_libraries(
     Qt5::Concurrent
     Qt5::X11Extras
 )
+
+if(ENABLE_MAGICK)
+    target_compile_definitions(${LIB_NAME} PRIVATE ${MAGICK_CFLAGS_OTHER})
+    target_link_libraries(${LIB_NAME} ${MAGICK_LIBRARIES})
+    if(ENABLE_FFMPEG)
+        target_include_directories(${LIB_NAME
+                                   PRIVATE
+                                   ${MAGICK_INCLUDEDIR}
+                                   ${AVUTIL_INCLUDEDIR})
+        target_link_libraries(${LIB_NAME
+                              ${AVDEVICE_LIBRARIES}
+                              ${SWSCALE_LIBRARIES}
+                              ${AVFORMAT_LIBRARIES}
+                              ${AVCODEC_LIBRARIES}
+                              ${AVUTIL_LIBRARIES})
+    endif()
+endif()
+
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
 else()
@@ -247,6 +307,7 @@ target_include_directories(
     src/lib/lumina
     src/lib/hotkey
     src/lib/qtcopydialog
+    src/files/qtfm/libfm
 )
 target_link_libraries(
     ${DESKTOP_SERVICE_NAME}
@@ -311,6 +372,7 @@ target_include_directories(
     PRIVATE
     src/lib
     src/lib/lumina
+    src/files/qtfm/libfm
 )
 target_link_libraries(
     ${STORAGE_SERVICE_NAME}

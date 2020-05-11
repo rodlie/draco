@@ -38,7 +38,7 @@ public:
 private:
     QSystemTrayIcon *disktray;
     QMenu *menu;
-    Disks *man;
+    StorageDisks *man;
     bool showNotifications;
     //MimeUtils* mimeUtilsPtr;
     bool autoMount;

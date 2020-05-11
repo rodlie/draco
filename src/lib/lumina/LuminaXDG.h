@@ -99,7 +99,7 @@ struct XDGDesktopAction{
 class XDGDesktop : public QObject{
 	Q_OBJECT
 public:
-  enum XDGDesktopType { BAD, APP, LINK, DIR };
+  enum XDGDesktopType { XDG_BAD, XDG_APP, XDG_LINK, XDG_DIR };
 
   //Admin variables
   QString filePath; //which file this structure contains the information for (absolute path)

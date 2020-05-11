@@ -116,7 +116,7 @@ void PanelWidget::LoadSettings(QSettings *settings, int Dnum, int Pnum){
     QString pid = plugs[i].section("---",0,0);
       if(pid.startsWith("applauncher")){
 	XDGDesktop desk(pid.section("::",1,1));
-	if(desk.type!=XDGDesktop::BAD){ //still need to allow invalid apps
+    if(desk.type!=XDGDesktop::XDG_BAD){ //still need to allow invalid apps
 	  QListWidgetItem *it = new QListWidgetItem( LXDG::findIcon(desk.icon,""), desk.name );
 	      it->setWhatsThis(plugs[i]); //make sure to preserve the entire plugin ID (is the unique version)
 	  ui->list_plugins->addItem(it);

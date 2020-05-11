@@ -32,7 +32,7 @@
 #include <QFile>
 #include <QTextStream>
 
-const QString uDisks2::getDrivePath(QString path)
+const QString UDisks2::getDrivePath(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -43,7 +43,7 @@ const QString uDisks2::getDrivePath(QString path)
     return drive.path();
 }
 
-bool uDisks2::hasPartition(QString path)
+bool UDisks2::hasPartition(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -54,7 +54,7 @@ bool uDisks2::hasPartition(QString path)
     return false;
 }
 
-const QString uDisks2::getFileSystem(QString path)
+const QString UDisks2::getFileSystem(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -64,7 +64,7 @@ const QString uDisks2::getFileSystem(QString path)
     return iface.property("IdType").toString();
 }
 
-bool uDisks2::isRemovable(QString path)
+bool UDisks2::isRemovable(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -74,7 +74,7 @@ bool uDisks2::isRemovable(QString path)
     return iface.property("Removable").toBool();
 }
 
-bool uDisks2::isOptical(QString path)
+bool UDisks2::isOptical(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -88,7 +88,7 @@ bool uDisks2::isOptical(QString path)
     return false;
 }
 
-bool uDisks2::hasMedia(QString path)
+bool UDisks2::hasMedia(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -98,7 +98,7 @@ bool uDisks2::hasMedia(QString path)
     return iface.property("MediaAvailable").toBool();
 }
 
-bool uDisks2::hasOpticalMedia(QString path)
+bool UDisks2::hasOpticalMedia(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -110,7 +110,7 @@ bool uDisks2::hasOpticalMedia(QString path)
     return false;
 }
 
-bool uDisks2::canEject(QString path)
+bool UDisks2::canEject(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -120,7 +120,7 @@ bool uDisks2::canEject(QString path)
     return iface.property("Ejectable").toBool();
 }
 
-bool uDisks2::opticalMediaIsBlank(QString path)
+bool UDisks2::opticalMediaIsBlank(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -130,7 +130,7 @@ bool uDisks2::opticalMediaIsBlank(QString path)
     return iface.property("OpticalBlank").toBool();
 }
 
-int uDisks2::opticalDataTracks(QString path)
+int UDisks2::opticalDataTracks(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -140,7 +140,7 @@ int uDisks2::opticalDataTracks(QString path)
     return iface.property("OpticalNumDataTracks").toBool();
 }
 
-int uDisks2::opticalAudioTracks(QString path)
+int UDisks2::opticalAudioTracks(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -150,7 +150,7 @@ int uDisks2::opticalAudioTracks(QString path)
     return iface.property("OpticalNumAudioTracks").toBool();
 }
 
-const QString uDisks2::getMountPointOptical(QString path)
+const QString UDisks2::getMountPointOptical(QString path)
 {
     QString mountpoint;
     QString device = path.split("/").takeLast();
@@ -174,7 +174,7 @@ const QString uDisks2::getMountPointOptical(QString path)
     return mountpoint;
 }
 
-const QString uDisks2::getMountPoint(QString path)
+const QString UDisks2::getMountPoint(QString path)
 {
     QString mountpoint;
     QDBusMessage message = QDBusMessage::createMethodCall(DBUS_SERVICE,
@@ -197,7 +197,7 @@ const QString uDisks2::getMountPoint(QString path)
     return mountpoint;
 }
 
-const QString uDisks2::getDeviceName(QString path)
+const QString UDisks2::getDeviceName(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -210,7 +210,7 @@ const QString uDisks2::getDeviceName(QString path)
     return name;
 }
 
-const QString uDisks2::getDeviceLabel(QString path)
+const QString UDisks2::getDeviceLabel(QString path)
 {
     QDBusInterface iface(DBUS_SERVICE,
                          path,
@@ -220,7 +220,7 @@ const QString uDisks2::getDeviceLabel(QString path)
     return iface.property("IdLabel").toString();
 }
 
-const QString uDisks2::mountDevice(QString path)
+const QString UDisks2::mountDevice(QString path)
 {
     QDBusInterface filesystem(DBUS_SERVICE,
                               path,
@@ -233,7 +233,7 @@ const QString uDisks2::mountDevice(QString path)
     return mountpoint.error().message();
 }
 
-const QString uDisks2::mountOptical(QString path)
+const QString UDisks2::mountOptical(QString path)
 {
     // something is broken somewhere in udev/udisk, whatever ...
     // So we need to handle opticals using udisks cmd
@@ -245,7 +245,7 @@ const QString uDisks2::mountOptical(QString path)
     return QString();
 }
 
-const QString uDisks2::unmountDevice(QString path)
+const QString UDisks2::unmountDevice(QString path)
 {
     QDBusInterface filesystem(DBUS_SERVICE,
                               path,
@@ -256,7 +256,7 @@ const QString uDisks2::unmountDevice(QString path)
     return reply.arguments().first().toString();
 }
 
-const QString uDisks2::unmountOptical(QString path)
+const QString UDisks2::unmountOptical(QString path)
 {
     // something is broken somewhere in udev/udisk, whatever ...
     // So we need to handle opticals using udisks cmd
@@ -268,7 +268,7 @@ const QString uDisks2::unmountOptical(QString path)
     return QString();
 }
 
-const QString uDisks2::ejectDevice(QString path)
+const QString UDisks2::ejectDevice(QString path)
 {
     QDBusInterface filesystem(DBUS_SERVICE,
                               path,
@@ -279,7 +279,7 @@ const QString uDisks2::ejectDevice(QString path)
     return reply.arguments().first().toString();
 }
 
-const QStringList uDisks2::getDevices()
+const QStringList UDisks2::getDevices()
 {
     QStringList result;
     QDBusMessage call = QDBusMessage::createMethodCall(DBUS_SERVICE,

@@ -79,7 +79,7 @@ XDGDesktop::XDGDesktop(QString file, QObject *parent) : QObject(parent){
   useTerminal=false;
   startupNotify=false;
   useVGL = false;
-  type = XDGDesktop::BAD;
+  type = XDGDesktop::XDG_BAD;
   filePath = file;
   exec = tryexec = "";   // just to make sure this is initialized
   if(!filePath.isEmpty()){ sync(); } //if an input file is given - go ahead and sync now
@@ -90,7 +90,7 @@ void XDGDesktop::sync(){
   isHidden=false;
   useTerminal=false;
   startupNotify=false;
-  type = XDGDesktop::BAD;
+  type = XDGDesktop::XDG_BAD;
   exec = tryexec = "";
   //Read in the File
   if(!filePath.endsWith(".desktop")){ return; }
@@ -98,7 +98,7 @@ void XDGDesktop::sync(){
   QStringList file = LUtils::readFile(filePath);
   if(file.isEmpty()){ return; } //done with init right here - nothing to load
   //Get the current localization code
-  type = XDGDesktop::APP; //assume this initially if we read the file properly
+  type = XDGDesktop::XDG_APP; //assume this initially if we read the file properly
   QString lang = QLocale::system().name(); //lang code
   QString slang = lang.section("_",0,0); //short lang code
   //Now start looping over the information
@@ -186,10 +186,10 @@ void XDGDesktop::sync(){
     else if(var=="StartupWMClass" && insection){ startupWM = val; }
     else if(var=="URL" && insection){ url = val;}
     else if(var=="Type" && insection){
-      if(val.toLower()=="application"){ type = XDGDesktop::APP; }
-      else if(val.toLower()=="link"){ type = XDGDesktop::LINK; }
-      else if(val.toLower().startsWith("dir")){ type = XDGDesktop::DIR; } //older specs are "Dir", newer specs are "Directory"
-      else{ type = XDGDesktop::BAD; } //Unknown type
+      if(val.toLower()=="application"){ type = XDGDesktop::XDG_APP; }
+      else if(val.toLower()=="link"){ type = XDGDesktop::XDG_LINK; }
+      else if(val.toLower().startsWith("dir")){ type = XDGDesktop::XDG_DIR; } //older specs are "Dir", newer specs are "Directory"
+      else{ type = XDGDesktop::XDG_BAD; } //Unknown type
     }
   } //end reading file
   if(!CDA.ID.isEmpty()){ actions << CDA; CDA = XDGDesktopAction(); } //if an action was still being read, add that to the list now
@@ -226,7 +226,7 @@ void XDGDesktop::sync(){
     }
     if (Draco::isBlacklistedApplication(exec)) {
         isHidden = true;
-        type = XDGDesktop::BAD;
+        type = XDGDesktop::XDG_BAD;
     }
 }
 
@@ -236,20 +236,20 @@ bool XDGDesktop::isValid(bool showAll){
   //bool DEBUG = false;
   //qDebug() << "[LXDG] Check File validity:" << dFile.name << dFile.filePath;
   switch (type){
-    case XDGDesktop::BAD:
+    case XDGDesktop::XDG_BAD:
       ok=false;
       qDebug() << " - Bad file type";
       break;
-    case XDGDesktop::APP:
+    case XDGDesktop::XDG_APP:
       if(!tryexec.isEmpty() && !LXDG::checkExec(tryexec)){ ok=false; }//if(DEBUG){ qDebug() << " - tryexec does not exist";} }
       else if(exec.isEmpty() || name.isEmpty()){ ok=false; }//if(DEBUG){ qDebug() << " - exec or name is empty";} }
       else if(!LXDG::checkExec(exec.section(" ",0,0,QString::SectionSkipEmpty)) ){ ok=false; }//if(DEBUG){ qDebug() << " - first exec binary does not exist";} }
       break;
-    case XDGDesktop::LINK:
+    case XDGDesktop::XDG_LINK:
       ok = !url.isEmpty();
       qDebug() << " - Link with missing URL";
       break;
-    case XDGDesktop::DIR:
+    case XDGDesktop::XDG_DIR:
       ok = !path.isEmpty() && QFile::exists(path);
       qDebug() << " - Dir with missing path";
       break;
@@ -430,9 +430,9 @@ bool XDGDesktop::saveDesktopFile(bool merge){
     // (pre-set some values here which are always required)
     info << "[Desktop Entry]";
     info << "Version=1.0";
-    if(type==XDGDesktop::APP){ info << "Type=Application"; }
-    else if(type==XDGDesktop::LINK){ info << "Type=Link"; }
-    else if(type==XDGDesktop::DIR){ info << "Type=Dir"; }
+    if(type==XDGDesktop::XDG_APP){ info << "Type=Application"; }
+    else if(type==XDGDesktop::XDG_LINK){ info << "Type=Link"; }
+    else if(type==XDGDesktop::XDG_DIR){ info << "Type=Dir"; }
   }
 
   if(insertloc<0){ insertloc = info.size(); }//put it at the end
@@ -495,7 +495,7 @@ bool XDGDesktop::setAutoStarted(bool autostart){
       if(name.isEmpty()){ name = filePath.section("/",-1); }
       if(icon.isEmpty()){ icon = LXDG::findAppMimeForFile(filePath); icon.replace("/","-"); }
       filePath = upath+filePath.section("/",-1)+".desktop";
-      type = XDGDesktop::APP;
+      type = XDGDesktop::XDG_APP;
     }else{
       //Some other *.desktop file on the system (keep almost all the existing settings/values)
       // - setup a redirect to the other file
@@ -611,7 +611,7 @@ void XDGDesktopList::updateList(){
       }else{
         if(files.contains(path)){ appschanged = true; files.take(path)->deleteLater(); }
       	XDGDesktop *dFile = new XDGDesktop(path, this);
-        if(dFile->type!=XDGDesktop::BAD){
+        if(dFile->type!=XDGDesktop::XDG_BAD){
           appschanged = true; //flag that something changed - needed to load a file
           if(!oldkeys.contains(path)){ newfiles << path; } //brand new file (not an update to a previously-read file)
           files.insert(path, dFile);
@@ -1542,7 +1542,7 @@ QList<XDGDesktop*> LXDG::findAutoStartFiles(bool includeInvalid)
     for(int t=0; t<tmp.length(); t++){
         qDebug() << "AUTOSTART DESKTOP?" << tmp[t] << dir.absoluteFilePath(tmp[t]);
       XDGDesktop *desk = new XDGDesktop(dir.absoluteFilePath(tmp[t]));
-      if(desk->type == XDGDesktop::BAD){
+      if(desk->type == XDGDesktop::XDG_BAD){
           qDebug() << "bad desktop" << dir.absoluteFilePath(tmp[t]);
           continue;
       } //could not read file

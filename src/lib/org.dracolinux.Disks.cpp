@@ -49,10 +49,10 @@ void StorageDevice::mount()
     if (!dbus->isValid() || !mountpoint.isEmpty()) { return; }
     QString reply;
     if (isOptical) {
-        reply = uDisks2::mountOptical(path);
-        qDebug() << "optical=" << uDisks2::getMountPointOptical(path);
+        reply = UDisks2::mountOptical(path);
+        qDebug() << "optical=" << UDisks2::getMountPointOptical(path);
     }
-    else { reply = uDisks2::mountDevice(path); }
+    else { reply = UDisks2::mountDevice(path); }
     if (!reply.isEmpty()) {
         emit errorMessage(path, reply);
         return;
@@ -64,8 +64,8 @@ void StorageDevice::unmount()
 {
     if (!dbus->isValid() || (mountpoint.isEmpty() && !isOptical)) { return; }
     QString reply;
-    if (isOptical) { reply = uDisks2::unmountOptical(path); }
-    else { reply = uDisks2::unmountDevice(path); }
+    if (isOptical) { reply = UDisks2::unmountOptical(path); }
+    else { reply = UDisks2::unmountDevice(path); }
     updateDeviceProperties();
     if (!reply.isEmpty() || (!mountpoint.isEmpty())) {
         if (reply.isEmpty()) { reply = QObject::tr("Failed to umount %1").arg(name); }
@@ -78,7 +78,7 @@ void StorageDevice::unmount()
 void StorageDevice::eject()
 {
     if (!dbus->isValid()) { return; }
-    QString reply = uDisks2::ejectDevice(drive);
+    QString reply = UDisks2::ejectDevice(drive);
     updateDeviceProperties();
     if (!reply.isEmpty()/* || hasMedia*/) {
         if (reply.isEmpty()) { reply = QObject::tr("Failed to eject %1").arg(name); }
@@ -94,26 +94,26 @@ void StorageDevice::updateDeviceProperties()
     QString lastMountpoint = mountpoint;
     QString lastName = name;
 
-    drive = uDisks2::getDrivePath(path);
-    name = uDisks2::getDeviceLabel(path);
+    drive = UDisks2::getDrivePath(path);
+    name = UDisks2::getDeviceLabel(path);
 
-    if (name.isEmpty()) { name = uDisks2::getDeviceName(drive); }
+    if (name.isEmpty()) { name = UDisks2::getDeviceName(drive); }
     if (name.isEmpty()) { name = QObject::tr("Storage"); }
 
     dev = path.split("/").takeLast();
-    isRemovable = uDisks2::isRemovable(drive);
-    filesystem = uDisks2::getFileSystem(path);
-    isOptical = uDisks2::isOptical(drive);
+    isRemovable = UDisks2::isRemovable(drive);
+    filesystem = UDisks2::getFileSystem(path);
+    isOptical = UDisks2::isOptical(drive);
     if (isOptical) {
-        mountpoint = uDisks2::getMountPointOptical(path);
+        mountpoint = UDisks2::getMountPointOptical(path);
     } else {
-        mountpoint = uDisks2::getMountPoint(path);
+        mountpoint = UDisks2::getMountPoint(path);
     }
-    hasMedia = uDisks2::hasMedia(drive);
-    opticalDataTracks = uDisks2::opticalDataTracks(drive);
-    opticalAudioTracks = uDisks2::opticalAudioTracks(drive);
-    isBlankDisc = uDisks2::opticalMediaIsBlank(drive);
-    hasPartition = uDisks2::hasPartition(path);
+    hasMedia = UDisks2::hasMedia(drive);
+    opticalDataTracks = UDisks2::opticalDataTracks(drive);
+    opticalAudioTracks = UDisks2::opticalAudioTracks(drive);
+    isBlankDisc = UDisks2::opticalMediaIsBlank(drive);
+    hasPartition = UDisks2::hasPartition(path);
 
     if (hadMedia != hasMedia) {
         emit mediaChanged(path, hasMedia);
@@ -133,7 +133,7 @@ void StorageDevice::handlePropertiesChanged(const QString &interfaceType, const 
     updateDeviceProperties();
 }
 
-Disks::Disks(QObject *parent)
+StorageDisks::StorageDisks(QObject *parent)
     : QObject(parent)
     , dbus(Q_NULLPTR)
 {
@@ -143,7 +143,7 @@ Disks::Disks(QObject *parent)
     timer.start();
 }
 
-void Disks::setupDBus()
+void StorageDisks::setupDBus()
 {
     QDBusConnection system = QDBusConnection::systemBus();
     if (system.isConnected()) {
@@ -154,12 +154,12 @@ void Disks::setupDBus()
     }
 }
 
-void Disks::scanDevices()
+void StorageDisks::scanDevices()
 {
     if (!dbus) { return; }
     if (!dbus->isValid()) { return; }
     qDebug() << "scanDevices";
-    QStringList foundDevices = uDisks2::getDevices();
+    QStringList foundDevices = UDisks2::getDevices();
     for (int i=0;i<foundDevices.size();i++) {
         QString foundDevicePath = foundDevices.at(i);
         bool hasDevice = devices.contains(foundDevicePath);
@@ -173,7 +173,7 @@ void Disks::scanDevices()
     emit updatedDevices();
 }
 
-void Disks::deviceAdded(const QDBusObjectPath &obj)
+void StorageDisks::deviceAdded(const QDBusObjectPath &obj)
 {
     if (!dbus) { return; }
     if (!dbus->isValid()) { return; }
@@ -184,7 +184,7 @@ void Disks::deviceAdded(const QDBusObjectPath &obj)
     emit foundNewDevice(path);
 }
 
-void Disks::deviceRemoved(const QDBusObjectPath &obj)
+void StorageDisks::deviceRemoved(const QDBusObjectPath &obj)
 {
     if (!dbus) { return; }
     if (!dbus->isValid()) { return; }
@@ -193,29 +193,29 @@ void Disks::deviceRemoved(const QDBusObjectPath &obj)
     if (path.startsWith(QString("%1/jobs").arg(DBUS_PATH))) { return; }
 
     if (deviceExists) {
-        if (uDisks2::getDevices().contains(path)) { return; }
+        if (UDisks2::getDevices().contains(path)) { return; }
         delete devices.take(path);
     }
     scanDevices();
     emit removedDevice(path);
 }
 
-void Disks::handleDeviceMediaChanged(QString devicePath, bool mediaPresent)
+void StorageDisks::handleDeviceMediaChanged(QString devicePath, bool mediaPresent)
 {
     emit mediaChanged(devicePath, mediaPresent);
 }
 
-void Disks::handleDeviceMountpointChanged(QString devicePath, QString deviceMountpoint)
+void StorageDisks::handleDeviceMountpointChanged(QString devicePath, QString deviceMountpoint)
 {
     emit mountpointChanged(devicePath, deviceMountpoint);
 }
 
-void Disks::handleDeviceErrorMessage(QString devicePath, QString deviceError)
+void StorageDisks::handleDeviceErrorMessage(QString devicePath, QString deviceError)
 {
     emit deviceErrorMessage(devicePath, deviceError);
 }
 
-void Disks::checkUDisks()
+void StorageDisks::checkUDisks()
 {
     if (!QDBusConnection::systemBus().isConnected()) {
         setupDBus();

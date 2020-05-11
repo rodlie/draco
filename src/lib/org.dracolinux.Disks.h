@@ -19,8 +19,8 @@
 #
 */
 
-#ifndef DISKS_H
-#define DISKS_H
+#ifndef STORAGEDISKS_H
+#define STORAGEDISKS_H
 
 #include <QObject>
 #include <QMap>
@@ -67,12 +67,12 @@ private slots:
     void handlePropertiesChanged(const QString &interfaceType, const QMap<QString, QVariant> &changedProperties);
 };
 
-class Disks : public QObject
+class StorageDisks : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Disks(QObject *parent = Q_NULLPTR);
+    explicit StorageDisks(QObject *parent = Q_NULLPTR);
     QMap<QString, StorageDevice*> devices;
 
 private:
@@ -98,4 +98,4 @@ private slots:
     void checkUDisks();
 };
 
-#endif // DISKS_H
+#endif // STORAGEDISKS_H

@@ -60,7 +60,7 @@ SysTray::SysTray(QObject *parent)
             this,
             SLOT(handleDisktrayMessageClicked()));
 
-    man = new Disks(this);
+    man = new StorageDisks(this);
     connect(man,
             SIGNAL(updatedDevices()),
             this,

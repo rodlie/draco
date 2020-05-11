@@ -329,7 +329,7 @@ QString LUtils::GenerateOpenTerminalExec(QString term, QString dirpath){
     if(term.endsWith(".desktop")){
       //Pull the binary name out of the shortcut
       XDGDesktop DF(term);
-      if(DF.type == XDGDesktop::BAD){ term = "xterm"; }
+      if(DF.type == XDGDesktop::XDG_BAD){ term = "xterm"; }
       else{ term= DF.exec.section(" ",0,0); } //only take the binary name - not any other flags
     }else{
 	term = "xterm"; //fallback

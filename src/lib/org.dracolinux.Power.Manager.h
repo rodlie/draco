@@ -118,10 +118,10 @@ public:
 
     explicit Power(QObject *parent = nullptr);
     ~Power();
-    QMap<QString, Device*> getDevices();
+    QMap<QString, PowerDevice*> getDevices();
 
 private:
-    QMap<QString, Device*> devices;
+    QMap<QString, PowerDevice*> devices;
     QMap<quint32,QString> ssInhibitors;
     QMap<quint32,QString> pmInhibitors;
 

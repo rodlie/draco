@@ -55,7 +55,7 @@ void LFileInfo::loadExtraInfo(){
   }else if( this->suffix()=="desktop"){
     mime = "application/x-desktop";
     desk = new XDGDesktop(this->absoluteFilePath(), 0);
-    if(desk->type!=XDGDesktop::BAD){
+    if(desk->type!=XDGDesktop::XDG_BAD){
       //use the specific desktop file info (if possible)
       if(!desk->icon.isEmpty()){ iconList << desk->icon; }
     }

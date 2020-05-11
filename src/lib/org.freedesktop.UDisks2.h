@@ -32,7 +32,7 @@
 #define DBUS_DEVICE_ADDED "InterfacesAdded"
 #define DBUS_DEVICE_REMOVED "InterfacesRemoved"
 
-class uDisks2
+class UDisks2
 {
 public:
     static const QString getDrivePath(QString path);
