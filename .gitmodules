@@ -1,0 +1,3 @@
+[submodule "src/files/qtfm"]
+	path = src/files/qtfm
+	url = https://github.com/rodlie/qtfm
