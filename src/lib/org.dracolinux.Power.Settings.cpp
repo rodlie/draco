@@ -49,50 +49,30 @@ bool PowerSettings::isValid(const QString &type)
 
 void PowerSettings::saveDefault()
 {
-    setValue(CONF_LID_BATTERY_ACTION,
-                      LID_BATTERY_DEFAULT);
-    setValue(CONF_LID_AC_ACTION,
-                      LID_AC_DEFAULT);
-    setValue(CONF_CRITICAL_BATTERY_ACTION,
-                      CRITICAL_DEFAULT);
-    setValue(CONF_CRITICAL_BATTERY_TIMEOUT,
-                      CRITICAL_BATTERY);
-    setValue(CONF_SUSPEND_BATTERY_TIMEOUT,
-                      AUTO_SLEEP_BATTERY);
-    setValue(CONF_FREEDESKTOP_SS,
-                      true);
-    setValue(CONF_FREEDESKTOP_PM,
-                      true);
-    setValue(CONF_TRAY_NOTIFY,
-                      true);
-    setValue(CONF_TRAY_SHOW,
-                      true);
-    setValue(CONF_LID_DISABLE_IF_EXTERNAL,
-                      false);
-    setValue(CONF_SUSPEND_BATTERY_ACTION,
-                      suspendSleep);
-    setValue(CONF_SUSPEND_AC_ACTION,
-                      suspendNone);
-    setValue(CONF_BACKLIGHT_BATTERY_ENABLE,
-                      false);
-    setValue(CONF_BACKLIGHT_AC_ENABLE,
-                      false);
-    setValue(CONF_BACKLIGHT_BATTERY_DISABLE_IF_LOWER,
-                      false);
-    setValue(CONF_BACKLIGHT_AC_DISABLE_IF_HIGHER,
-                      false);
-    setValue(CONF_WARN_ON_LOW_BATTERY,
-                      true);
-    setValue(CONF_WARN_ON_VERYLOW_BATTERY,
-                      true);
-    setValue(CONF_NOTIFY_ON_BATTERY,
-                      true);
-    setValue(CONF_NOTIFY_ON_AC,
-                      true);
-    setValue(CONF_BACKLIGHT_MOUSE_WHEEL,
-                      true);
-    setValue(CONF_SUSPEND_LOCK_SCREEN,
-                      true);
+    setValue(CONF_LID_BATTERY_ACTION, LID_BATTERY_DEFAULT);
+    setValue(CONF_LID_AC_ACTION, LID_AC_DEFAULT);
+    setValue(CONF_CRITICAL_BATTERY_ACTION, CRITICAL_DEFAULT);
+    setValue(CONF_CRITICAL_BATTERY_TIMEOUT, CRITICAL_BATTERY);
+    setValue(CONF_SUSPEND_BATTERY_TIMEOUT, AUTO_SLEEP_BATTERY);
+    setValue(CONF_FREEDESKTOP_SS, true);
+    setValue(CONF_FREEDESKTOP_PM, true);
+    setValue(CONF_TRAY_NOTIFY, true);
+    setValue(CONF_TRAY_SHOW, true);
+    setValue(CONF_LID_DISABLE_IF_EXTERNAL, false);
+    setValue(CONF_SUSPEND_BATTERY_ACTION, suspendSleep);
+    setValue(CONF_SUSPEND_AC_ACTION, suspendNone);
+    setValue(CONF_BACKLIGHT_BATTERY_ENABLE, false);
+    setValue(CONF_BACKLIGHT_AC_ENABLE, false);
+    setValue(CONF_BACKLIGHT_BATTERY_DISABLE_IF_LOWER, false);
+    setValue(CONF_BACKLIGHT_AC_DISABLE_IF_HIGHER, false);
+    setValue(CONF_WARN_ON_LOW_BATTERY, true);
+    setValue(CONF_WARN_ON_VERYLOW_BATTERY, true);
+    setValue(CONF_NOTIFY_ON_BATTERY, true);
+    setValue(CONF_NOTIFY_ON_AC, true);
+    setValue(CONF_BACKLIGHT_MOUSE_WHEEL, true);
+    setValue(CONF_SUSPEND_LOCK_SCREEN, true);
+    setValue(CONF_PSTATE_MAX_BATTERY, 100);
+    setValue(CONF_PSTATE_MAX_AC, 100);
 }
 
 const QString PowerSettings::getConf()

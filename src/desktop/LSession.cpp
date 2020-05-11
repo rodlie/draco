@@ -115,18 +115,21 @@ LSession::LSession(int &argc, char ** argv) :
         setQuitOnLastWindowClosed(false); // since the LDesktop's are not necessarily "window"s
 
         // set "global" shortcuts
-        auto hotkey1 = new QHotkey(QKeySequence("alt+F1"), true, this);
+        QSettings shortcutSettings(DESKTOP_APP, QString(DE_SESSION_SETTINGS));
+        shortcutSettings.beginGroup("shortcuts");
+        auto hotkey1 = new QHotkey(QKeySequence(shortcutSettings.value("terminal", "alt+F1").toString()), true, this);
         if (hotkey1->isRegistered()) {
             QObject::connect(hotkey1, &QHotkey::activated, this, [&](){
                 QProcess::startDetached(Draco::terminalApp()); // launch terminal on ALT+F1
             });
         }
-        auto hotkey2 = new QHotkey(QKeySequence("alt+F2"), true, this);
+        auto hotkey2 = new QHotkey(QKeySequence(shortcutSettings.value("launcher", "alt+F2").toString()), true, this);
         if (hotkey2->isRegistered()) {
             QObject::connect(hotkey2, &QHotkey::activated, this, [&](){
                 QProcess::startDetached(QString("%1 --dialog").arg(Draco::launcherApp())); // app launcher on ALT+F2
             });
         }
+        shortcutSettings.endGroup();
 
         //setAttribute(Qt::AA_UseDesktopOpenGL);
         setAttribute(Qt::AA_UseHighDpiPixmaps); // allow pixmaps to be scaled up as well as down

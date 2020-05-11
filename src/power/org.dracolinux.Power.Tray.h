@@ -37,6 +37,12 @@
 #include <QEvent>
 #include <QWheelEvent>
 #include <QProcess>
+#include <QMenu>
+#include <QLabel>
+#include <QFrame>
+#include <QWidgetAction>
+#include <QSlider>
+#include <QCheckBox>
 
 #include "org.freedesktop.PowerManagement.h"
 #include "org.freedesktop.ScreenSaver.h"
@@ -117,8 +123,8 @@ private:
     int autoSuspendACAction;
     QProcess *xscreensaver;
     bool startupScreensaver;
-    QMap<quint32,QString> ssInhibitors;
-    QMap<quint32,QString> pmInhibitors;
+    //QMap<quint32,QString> ssInhibitors;
+    //QMap<quint32,QString> pmInhibitors;
     QString internalMonitor;
     QFileSystemWatcher *watcher;
     bool lidWasClosed;
@@ -138,6 +144,24 @@ private:
     bool ignoreKernelResume;
     QMap<QString, bool> monitors;
     bool monitorHotplugSupport;
+    int pstateMaxBattery;
+    int pstateMaxAC;
+
+    QMenu *powerMenu;
+    bool powerMenuIsActive;
+    //QMenu *inhibitorsMenu;
+    //QActionGroup *inhibitorsGroup;
+    QAction *actSettings;
+    QLabel *labelBatteryStatus;
+    QLabel *labelBatteryIcon;
+    QFrame *menuFrame;
+    QWidgetAction *menuHeader;
+    QSlider *backlightSlider;
+    QLabel *backlightLabel;
+    QFileSystemWatcher *backlightWatcher;
+    QLabel *cpuFreqLabel;
+
+    //QSlider *performanceSlider;
 
 private slots:
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
@@ -181,6 +205,19 @@ private slots:
     void switchInternalMonitor(bool toggle);
     void handleTrayWheel(TrayIcon::WheelAction action);
     void handleDeviceChanged(const QString &path);
+
+    void populateMenu();
+    void updateMenu();
+    void updateBacklight(const QString &file);
+    void handleBacklightSlider(int value);
+    //void getInhibitors();
+    void openSettings();
+    void getCpuFreq(bool force = false);
+    void handlePowerMenuAboutToHide();
+    void handlePowerMenuAboutToShow();
+    void hidePowerMenuIfVisible();
+    //void updatePerformanceSlider(bool force = false);
+    void updatePStateMax(bool battery);
 };
 
 #endif // SYSTRAY_H

@@ -198,9 +198,13 @@ void LDesktop::SystemApplication(QAction* act)
 {
     if (!act->whatsThis().isEmpty() && act->parent()==deskMenu) {
         qDebug() << "system application" << act;
-        LSession::LaunchApplication(QString("%1 \"%2\"")
-                                    .arg(Draco::launcherApp())
-                                    .arg(act->whatsThis()));
+        if (act->whatsThis().endsWith(".desktop")) {
+            LSession::LaunchApplication(QString("%1 \"%2\"")
+                                        .arg(Draco::launcherApp())
+                                        .arg(act->whatsThis()));
+        } else {
+            QProcess::startDetached(act->whatsThis());
+        }
     }
 }
 
@@ -432,7 +436,7 @@ void LDesktop::UpdateMenu(bool fast)
     deskMenu->addSeparator();
 
     // Now load the user's menu setup and fill the menu
-    QStringList items = settings->value("menu/itemlist", QStringList() << "applications" << "windowlist").toStringList();
+    QStringList items = settings->value("menu/itemlist", QStringList() << "applications" << "windowlist" << "settings/wallpaper").toStringList();
     usewinmenu=false;
     for (int i=0; i<items.length(); i++) {
         if (items[i]=="line") { deskMenu->addSeparator(); }
@@ -440,6 +444,28 @@ void LDesktop::UpdateMenu(bool fast)
         else if (items[i]=="windowlist") {
             deskMenu->addMenu( winMenu);
             usewinmenu=true;
+        } else if (QString(items[i]).startsWith("settings/")) {
+            QString setting = QString(items[i]).split("/").takeLast();
+            if (!setting.isEmpty()) {
+                QString df = "draco-settings.desktop";
+                QStringList loc = Draco::applicationLocations(qApp->applicationDirPath());
+                for (int z = 0; z < loc.size(); ++z) {
+                    if (QFile::exists(QString("%1/%2").arg(loc.at(z)).arg(df))) {
+                        df = QString("%1/%2").arg(loc.at(z)).arg(df);
+                        break;
+                    }
+                }
+                XDGDesktop xdgf(df);
+                if (xdgf.type!=XDGDesktop::BAD) {
+                    for (int x = 0; x < xdgf.actions.size(); ++x) {
+                        XDGDesktopAction act = xdgf.actions.at(x);
+                        if (act.ID == setting) {
+                            deskMenu->addAction(LXDG::findIcon(act.icon, ""), act.name)->setWhatsThis(act.exec);
+                            break;
+                        }
+                    }
+                }
+            }
         } else if (items[i].startsWith("app::::") && items[i].endsWith(".desktop")) {
             // Custom *.desktop application
             QString file = items[i].section("::::",1,1).simplified();

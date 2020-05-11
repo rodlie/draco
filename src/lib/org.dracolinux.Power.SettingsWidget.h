@@ -89,6 +89,9 @@ private:
 
     QCheckBox *monitorHotplug;
 
+    QSpinBox *pstateMaxBattery;
+    QSpinBox *pstateMaxAC;
+
 private slots:
     void setupWidgets();
     void populate();
@@ -132,6 +135,8 @@ private slots:
     void handleSuspendWakeACTimer(int value);
     void handleMonitorHotplug(bool triggered);
     void enableWakeTimer(bool enabled);
+    void handlePstateMaxBattery(int value);
+    void handlePstateMaxAC(int value);
 };
 
 #endif // POWER_SETTINGS_WIDGET_H

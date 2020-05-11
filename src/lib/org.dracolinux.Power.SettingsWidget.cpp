@@ -22,6 +22,7 @@
 #include "org.dracolinux.Power.Settings.h"
 #include "org.dracolinux.Powerd.Manager.Backlight.h"
 #include "org.dracolinux.Power.Client.h"
+#include "org.dracolinux.Powerd.Manager.CPU.h"
 
 #include "power_def.h"
 #include "draco.h"
@@ -65,6 +66,8 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
     , suspendACWakeTimer(nullptr)
     , suspendACWakeTimerLabel(nullptr)
     , monitorHotplug(nullptr)
+    , pstateMaxBattery(nullptr)
+    , pstateMaxAC(nullptr)
 {
     // setup dbus
     QDBusConnection session = QDBusConnection::sessionBus();
@@ -142,6 +145,10 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
                 this, SLOT(handleSuspendWakeACTimer(int)));
         connect(monitorHotplug, SIGNAL(toggled(bool)),
                 this, SLOT(handleMonitorHotplug(bool)));
+        connect(pstateMaxBattery, SIGNAL(valueChanged(int)),
+                this, SLOT(handlePstateMaxBattery(int)));
+        connect(pstateMaxAC, SIGNAL(valueChanged(int)),
+                this, SLOT(handlePstateMaxAC(int)));
     }
 }
 
@@ -270,6 +277,33 @@ void PowerSettingsWidget::setupWidgets()
     sleepActionBatteryContainerLayout->addWidget(suspendBatteryWakeTimerLabel);
     sleepActionBatteryContainerLayout->addWidget(suspendBatteryWakeTimer);
 
+    // pstate on battery
+    QWidget *pstateBatteryContainer = new QWidget(this);
+    QHBoxLayout *pstateBatteryLayout = new QHBoxLayout(pstateBatteryContainer);
+
+    pstateMaxBattery = new QSpinBox(this);
+    pstateMaxBattery->setMinimum(0);
+    pstateMaxBattery->setMaximum(100);
+    pstateMaxBattery->setSuffix(" %");
+    pstateMaxBattery->setMaximumWidth(MAX_WIDTH);
+    pstateMaxBattery->setMinimumWidth(MAX_WIDTH);
+
+    QLabel *pstateMaxBatteryIcon = new QLabel(this);
+    pstateMaxBatteryIcon->setMaximumSize(48, 48);
+    pstateMaxBatteryIcon->setMinimumSize(48, 48);
+    pstateMaxBatteryIcon->setPixmap(QIcon::fromTheme(DEFAULT_APP_ICON)
+                                    .pixmap(QSize(48, 48)));
+    QLabel *pstateMaxBatteryLabel = new QLabel(this);
+    pstateMaxBatteryLabel->setText(QString("<h3 style=\"font-weight:normal;\">%1</h3>")
+                                   .arg(tr("CPU Performance")));
+    pstateMaxBatteryLabel->setToolTip(tr("Set CPU performance (PSTATE) on battery."));
+
+    pstateBatteryLayout->addWidget(pstateMaxBatteryIcon);
+    pstateBatteryLayout->addWidget(pstateMaxBatteryLabel);
+    pstateBatteryLayout->addStretch();
+    pstateBatteryLayout->addWidget(pstateMaxBattery);
+    pstateBatteryContainer->setEnabled(PowerCpu::hasPState());
+
     // backlight battery
     backlightSliderBattery = new QSlider(this);
     backlightSliderBattery->setOrientation(Qt::Horizontal);
@@ -321,6 +355,7 @@ void PowerSettingsWidget::setupWidgets()
     // add battery widgets to container
     batteryContainerLayout->addWidget(sleepBatteryContainer);
     batteryContainerLayout->addWidget(criticalBatteryContainer);
+    batteryContainerLayout->addWidget(pstateBatteryContainer);
     batteryContainerLayout->addWidget(batteryBacklightContainer);
     batteryContainerLayout->addStretch();
 
@@ -405,6 +440,33 @@ void PowerSettingsWidget::setupWidgets()
     sleepActionACContainerLayout->addWidget(suspendACWakeTimerLabel);
     sleepActionACContainerLayout->addWidget(suspendACWakeTimer);
 
+    // pstate on ac
+    QWidget *pstateACContainer = new QWidget(this);
+    QHBoxLayout *pstateACLayout = new QHBoxLayout(pstateACContainer);
+
+    pstateMaxAC = new QSpinBox(this);
+    pstateMaxAC->setMinimum(0);
+    pstateMaxAC->setMaximum(100);
+    pstateMaxAC->setSuffix(" %");
+    pstateMaxAC->setMaximumWidth(MAX_WIDTH);
+    pstateMaxAC->setMinimumWidth(MAX_WIDTH);
+
+    QLabel *pstateMaxACIcon = new QLabel(this);
+    pstateMaxACIcon->setMaximumSize(48, 48);
+    pstateMaxACIcon->setMinimumSize(48, 48);
+    pstateMaxACIcon->setPixmap(QIcon::fromTheme(DEFAULT_APP_ICON)
+                               .pixmap(QSize(48, 48)));
+    QLabel *pstateMaxACLabel = new QLabel(this);
+    pstateMaxACLabel->setText(QString("<h3 style=\"font-weight:normal;\">%1</h3>")
+                              .arg(tr("CPU Performance")));
+    pstateMaxACLabel->setToolTip(tr("Set CPU performance (PSTATE) on AC."));
+
+    pstateACLayout->addWidget(pstateMaxACIcon);
+    pstateACLayout->addWidget(pstateMaxACLabel);
+    pstateACLayout->addStretch();
+    pstateACLayout->addWidget(pstateMaxAC);
+    pstateACContainer->setEnabled(PowerCpu::hasPState());
+
     // backlight ac
     backlightSliderAC = new QSlider(this);
     backlightSliderAC->setOrientation(Qt::Horizontal);
@@ -455,6 +517,7 @@ void PowerSettingsWidget::setupWidgets()
 
     // add widgets to ac
     acContainerLayout->addWidget(sleepACContainer);
+    acContainerLayout->addWidget(pstateACContainer);
     acContainerLayout->addWidget(acBacklightContainer);
     acContainerLayout->addStretch();
 
@@ -789,6 +852,19 @@ void PowerSettingsWidget::loadSettings()
     }
     monitorHotplug->setChecked(defaultMonitorHotplug);
 
+    int defaultPstateMaxBattery = 100;
+    if (PowerSettings::isValid(CONF_PSTATE_MAX_BATTERY)) {
+        defaultPstateMaxBattery = PowerSettings::getValue(CONF_PSTATE_MAX_BATTERY).toInt();
+    }
+    setDefaultAction(pstateMaxBattery, defaultPstateMaxBattery);
+
+    int defaultPstateMaxAC = 100;
+    if (PowerSettings::isValid(CONF_PSTATE_MAX_AC)) {
+        defaultPstateMaxAC = PowerSettings::getValue(CONF_PSTATE_MAX_AC).toInt();
+    }
+    setDefaultAction(pstateMaxAC, defaultPstateMaxAC);
+
+
     // check
     checkPerms();
 
@@ -902,6 +978,8 @@ void PowerSettingsWidget::saveSettings()
                             suspendACWakeTimer->value());
     PowerSettings::setValue(CONF_MONITOR_HOTPLUG,
                             monitorHotplug->isChecked());
+    PowerSettings::setValue(CONF_PSTATE_MAX_BATTERY, pstateMaxBattery->value());
+    PowerSettings::setValue(CONF_PSTATE_MAX_AC, pstateMaxAC->value());
 }
 
 // set default action in combobox
@@ -918,6 +996,7 @@ void PowerSettingsWidget::setDefaultAction(QComboBox *box, int action)
 // set default value in spinbox
 void PowerSettingsWidget::setDefaultAction(QSpinBox *box, int action)
 {
+    if (!box) { return; }
     box->setValue(action);
 }
 
@@ -1212,4 +1291,14 @@ void PowerSettingsWidget::enableWakeTimer(bool enabled)
     suspendACWakeTimerLabel->setEnabled(enabled);
     suspendBatteryWakeTimer->setEnabled(enabled);
     suspendBatteryWakeTimerLabel->setEnabled(enabled);
+}
+
+void PowerSettingsWidget::handlePstateMaxBattery(int value)
+{
+    PowerSettings::setValue(CONF_PSTATE_MAX_BATTERY, value);
+}
+
+void PowerSettingsWidget::handlePstateMaxAC(int value)
+{
+    PowerSettings::setValue(CONF_PSTATE_MAX_AC, value);
 }
