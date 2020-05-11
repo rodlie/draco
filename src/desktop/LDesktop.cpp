@@ -447,10 +447,18 @@ void LDesktop::UpdateMenu(bool fast)
         } else if (QString(items[i]).startsWith("settings/")) {
             QString setting = QString(items[i]).split("/").takeLast();
             if (!setting.isEmpty()) {
-                XDGDesktop xdgf("draco-settings.desktop");
+                QString df = "draco-settings.desktop";
+                QStringList loc = Draco::applicationLocations(qApp->applicationDirPath());
+                for (int z = 0; z < loc.size(); ++z) {
+                    if (QFile::exists(QString("%1/%2").arg(loc.at(z)).arg(df))) {
+                        df = QString("%1/%2").arg(loc.at(z)).arg(df);
+                        break;
+                    }
+                }
+                XDGDesktop xdgf(df);
                 if (xdgf.type!=XDGDesktop::BAD) {
-                    for (int i = 0; i < xdgf.actions.size(); ++i) {
-                        XDGDesktopAction act = xdgf.actions.at(i);
+                    for (int x = 0; x < xdgf.actions.size(); ++x) {
+                        XDGDesktopAction act = xdgf.actions.at(x);
                         if (act.ID == setting) {
                             deskMenu->addAction(LXDG::findIcon(act.icon, ""), act.name)->setWhatsThis(act.exec);
                             break;
