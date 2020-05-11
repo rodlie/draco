@@ -166,5 +166,7 @@ enum criticalAction
 #define CONF_CPU_BATTERY_PSTATE_MAX "cpu_battery_pstate_max"
 #define CONF_CPU_AC_PSTATE_MAX "cpu_ac_pstate_min"
 #define CONF_MONITOR_HOTPLUG "monitor_hotplug"
+#define CONF_PSTATE_MAX_BATTERY "pstate_max_battery"
+#define CONF_PSTATE_MAX_AC "pstate_max_ac"
 
 #endif // POWER_DEF_H

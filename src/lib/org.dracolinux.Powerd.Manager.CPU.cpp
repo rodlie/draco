@@ -141,6 +141,17 @@ const QStringList PowerCpu::getFrequencies()
     return result;
 }
 
+int PowerCpu::getMaxFrequencies()
+{
+    int result = 0;
+    QStringList avail = getFrequencies();
+    for (int i = 0; i < avail.size(); ++i) {
+        int value = avail.at(i).toInt();
+        if (value > result) { result = value; }
+    }
+    return result;
+}
+
 const QStringList PowerCpu::getAvailableFrequency()
 {
     QStringList result;
@@ -154,6 +165,28 @@ const QStringList PowerCpu::getAvailableFrequency()
         QString value = gov.readAll().trimmed();
         result = value.split(" ", QString::SkipEmptyParts);
         gov.close();
+    }
+    return result;
+}
+
+int PowerCpu::getMaxFrequency()
+{
+    int result = 0;
+    QStringList avail = getAvailableFrequency();
+    for (int i = 0; i < avail.size(); ++i) {
+        int value = avail.at(i).toInt();
+        if (value > result) { result = value; }
+    }
+    return result;
+}
+
+int PowerCpu::getMinFrequency()
+{
+    int result = getMaxFrequencies();
+    QStringList avail = getAvailableFrequency();
+    for (int i = 0; i < avail.size(); ++i) {
+        int value = avail.at(i).toInt();
+        if (value < result) { result = value; }
     }
     return result;
 }

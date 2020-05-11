@@ -144,6 +144,8 @@ private:
     bool ignoreKernelResume;
     QMap<QString, bool> monitors;
     bool monitorHotplugSupport;
+    int pstateMaxBattery;
+    int pstateMaxAC;
 
     QMenu *powerMenu;
     bool powerMenuIsActive;
@@ -159,9 +161,9 @@ private:
     QFileSystemWatcher *backlightWatcher;
     QLabel *cpuFreqLabel;
 
-    QSlider *pstateMinSlider;
-    QSlider *pstateMaxSlider;
-    QCheckBox *pstateTurboCheckbox;
+    //QSlider *pstateMinSlider;
+    QSlider *performanceSlider;
+    //QCheckBox *pstateTurboCheckbox;
 
 private slots:
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
@@ -212,11 +214,11 @@ private slots:
     void handleBacklightSlider(int value);
     void getInhibitors();
     void openSettings();
-    void getCpuFreq();
+    void getCpuFreq(bool force = false);
     void handlePowerMenuAboutToHide();
     void handlePowerMenuAboutToShow();
     void hidePowerMenuIfVisible();
-
+    void updatePerformanceSlider(bool force = false);
 };
 
 #endif // SYSTRAY_H

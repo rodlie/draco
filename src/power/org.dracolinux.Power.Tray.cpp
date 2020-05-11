@@ -74,6 +74,8 @@ SysTray::SysTray(QObject *parent)
     , backlightMouseWheel(true)
     , ignoreKernelResume(false)
     , monitorHotplugSupport(false)
+    , pstateMaxBattery(100)
+    , pstateMaxAC(100)
     , powerMenu(nullptr)
     , powerMenuIsActive(false)
     , inhibitorsMenu(nullptr)
@@ -87,9 +89,9 @@ SysTray::SysTray(QObject *parent)
     , backlightLabel(nullptr)
     , backlightWatcher(nullptr)
     , cpuFreqLabel(nullptr)
-    , pstateMinSlider(nullptr)
-    , pstateMaxSlider(nullptr)
-    , pstateTurboCheckbox(nullptr)
+    //, pstateMinSlider(nullptr)
+    , performanceSlider(nullptr)
+    //, pstateTurboCheckbox(nullptr)
 {
     // set (dark) colors
     QPalette palette;
@@ -467,6 +469,15 @@ void SysTray::handleOnBattery()
             man->setDisplayBacklight(backlightDevice, backlightBatteryValue);
         //}
     }
+
+    // pstate max
+    if (PowerCpu::hasPState()) {
+        int state = PowerCpu::getPStateMax();
+        if (state != pstateMaxBattery) {
+            qDebug() << "SET PSTATE FOR BATTERY" << pstateMaxAC << "WAS" << state;
+            PowerCpu::setPStateMax(pstateMaxBattery);
+        }
+    }
 }
 
 // do something when switched to ac power
@@ -495,6 +506,15 @@ void SysTray::handleOnAC()
         } else {*/
             man->setDisplayBacklight(backlightDevice, backlightACValue);
         //}
+    }
+
+    // pstate max
+    if (PowerCpu::hasPState()) {
+        int state = PowerCpu::getPStateMax();
+        if (state != pstateMaxAC) {
+            qDebug() << "SET PSTATE FOR AC" << pstateMaxAC << "WAS" << state;
+            PowerCpu::setPStateMax(pstateMaxAC);
+        }
     }
 }
 
@@ -586,6 +606,15 @@ void SysTray::loadSettings()
     }
     if (PowerSettings::isValid(CONF_SUSPEND_WAKEUP_HIBERNATE_AC)) {
         man->setSuspendWakeAlarmOnAC(PowerSettings::getValue(CONF_SUSPEND_WAKEUP_HIBERNATE_AC).toInt());
+    }
+
+    if (PowerCpu::hasPState()) {
+        if (PowerSettings::isValid(CONF_PSTATE_MAX_BATTERY)) {
+            pstateMaxBattery = PowerSettings::getValue(CONF_PSTATE_MAX_BATTERY).toInt();
+        }
+        if (PowerSettings::isValid(CONF_PSTATE_MAX_AC)) {
+            pstateMaxAC = PowerSettings::getValue(CONF_PSTATE_MAX_AC).toInt();
+        }
     }
 
     if (PowerSettings::isValid(CONF_MONITOR_HOTPLUG)) {
@@ -1214,52 +1243,25 @@ void SysTray::populateMenu()
     cpuHeaderLayout->addWidget(cpuFreqIcon);
     cpuHeaderLayout->addWidget(cpuFreqLabel);
 
-    // add cpu gov (more or less pointless with pstate, but add anyway)
-    // TODO
-
     // cpu speed
-    if (PowerCpu::hasPState()) { // intel pstate (sandy bridge+)
-        pstateMinSlider = new QSlider(menuFrame);
-        pstateMaxSlider = new QSlider(menuFrame);
-        pstateMinSlider->setRange(0, 100);
-        pstateMaxSlider->setRange(0,100);
-        pstateMinSlider->setOrientation(Qt::Horizontal);
-        pstateMaxSlider->setOrientation(Qt::Horizontal);
-        pstateMinSlider->setValue(PowerCpu::getPStateMin());
-        pstateMaxSlider->setValue(PowerCpu::getPStateMax());
+    performanceSlider = new QSlider(menuFrame);
+    performanceSlider->setOrientation(Qt::Horizontal);
+    updatePerformanceSlider();
+    QLabel *performanceLabel = new QLabel(menuFrame);
+    performanceLabel->setText(tr("Performance"));
+    performanceLabel->setHidden(true);
 
-        pstateTurboCheckbox = new QCheckBox(menuFrame);
-        pstateTurboCheckbox->setText(tr("Turbo Boost"));
-        pstateTurboCheckbox->setCheckable(true);
-        pstateTurboCheckbox->setChecked(PowerCpu::hasPStateTurbo());
+    QWidget *performanceWidget = new QWidget(menuFrame);
+    performanceWidget->setContentsMargins(0,0,0,0);
+    QHBoxLayout *performanceLayout = new QHBoxLayout(performanceWidget);
+    performanceLayout->setContentsMargins(0,0,0,0);
+    performanceLayout->setSpacing(0);
+    performanceLayout->addWidget(performanceLabel);
+    performanceLayout->addWidget(performanceSlider);
+    cpuContainerLayout->addWidget(performanceWidget);
 
-        QLabel *pstateMinLabel = new QLabel(menuFrame);
-        QLabel *pstateMaxLabel = new QLabel(menuFrame);
-        pstateMinLabel->setText(tr("Min"));
-        pstateMaxLabel->setText(tr("Max"));
-
-        QWidget *pstateMinWidget = new QWidget(menuFrame);
-        QWidget *pstateMaxWidget = new QWidget(menuFrame);
-
-        QHBoxLayout *pstateMinLayout = new QHBoxLayout(pstateMinWidget);
-        QHBoxLayout *pstateMaxLayout = new QHBoxLayout(pstateMaxWidget);
-
-        pstateMinLayout->addWidget(pstateMinLabel);
-        pstateMinLayout->addWidget(pstateMinSlider);
-        pstateMaxLayout->addWidget(pstateMaxLabel);
-        pstateMaxLayout->addWidget(pstateMaxSlider);
-
-        cpuContainerLayout->addWidget(pstateMinWidget);
-        cpuContainerLayout->addWidget(pstateMaxWidget);
-        cpuContainerLayout->addWidget(pstateTurboCheckbox);
-
-        // DISABLE UNTIL DONE
-        pstateMinWidget->setDisabled(true);
-        pstateMaxWidget->setDisabled(true);
-        pstateTurboCheckbox->setDisabled(true);
-    } else { // cpufreq (core i first gen and lower)
-
-    }
+    // DISABLE UNTIL DONE
+    performanceWidget->setDisabled(true);
 
     batteryContainerLayout->addWidget(labelBatteryIcon);
     batteryContainerLayout->addWidget(labelBatteryStatus);
@@ -1331,16 +1333,17 @@ void SysTray::updateMenu()
     labelBatteryIcon->setPixmap(icon.pixmap(QSize(32, 32)));
     inhibitorsMenu->setEnabled(man->GetInhibitors().size()>0);
 
-    qDebug() << "has pstate?" << PowerCpu::hasPState();
+    /*qDebug() << "has pstate?" << PowerCpu::hasPState();
     qDebug() << "pstate turbo?" << PowerCpu::hasPStateTurbo();
     qDebug() << "pstate min?" << PowerCpu::getPStateMin();
     qDebug() << "pstate max?" << PowerCpu::getPStateMax();
     qDebug() << "cpu freq?" << PowerCpu::getFrequencies();
     qDebug() << "cpu freq avail?" << PowerCpu::getAvailableFrequency();
     qDebug() << "cpu total?" << PowerCpu::getTotal();
-    qDebug() << "cpu gov?" << PowerCpu::getGovernors();
+    qDebug() << "cpu gov?" << PowerCpu::getGovernors();*/
 
-    getCpuFreq();
+    getCpuFreq(true);
+    updatePerformanceSlider(true);
 }
 
 void SysTray::updateBacklight(const QString &file)
@@ -1414,8 +1417,9 @@ void SysTray::openSettings()
     QProcess::startDetached(QString("%1-settings --page power").arg(DESKTOP_APP));
 }
 
-void SysTray::getCpuFreq()
+void SysTray::getCpuFreq(bool force)
 {
+    if (!cpuFreqLabel->isVisible() && !force) { return; }
     QStringList freqs = PowerCpu::getFrequencies();
     double currentCpuFreq = 0.0;
     for (int i=0;i<freqs.size();++i) {
@@ -1455,6 +1459,14 @@ void SysTray::hidePowerMenuIfVisible()
         powerMenu->hide();
         powerMenuIsActive = false;
     }
+}
+
+void SysTray::updatePerformanceSlider(bool force)
+{
+    if (!performanceSlider->isVisible() && !force) { return; }
+    performanceSlider->setRange(PowerCpu::hasPState()?0:PowerCpu::getMinFrequency(), PowerCpu::hasPState()?100:PowerCpu::getMaxFrequency());
+    performanceSlider->setValue(PowerCpu::hasPState()?PowerCpu::getPStateMax():PowerCpu::getMaxFrequencies());
+    qDebug() << performanceSlider->minimum() << performanceSlider->maximum() << performanceSlider->value();
 }
 
 // catch wheel events
