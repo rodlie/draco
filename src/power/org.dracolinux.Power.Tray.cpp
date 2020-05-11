@@ -89,9 +89,7 @@ SysTray::SysTray(QObject *parent)
     , backlightLabel(nullptr)
     , backlightWatcher(nullptr)
     , cpuFreqLabel(nullptr)
-    //, pstateMinSlider(nullptr)
-    , performanceSlider(nullptr)
-    //, pstateTurboCheckbox(nullptr)
+    //, performanceSlider(nullptr)
 {
     // set (dark) colors
     QPalette palette;
@@ -1244,7 +1242,7 @@ void SysTray::populateMenu()
     cpuHeaderLayout->addWidget(cpuFreqLabel);
 
     // cpu speed
-    performanceSlider = new QSlider(menuFrame);
+    /*performanceSlider = new QSlider(menuFrame);
     performanceSlider->setOrientation(Qt::Horizontal);
     updatePerformanceSlider();
     QLabel *performanceLabel = new QLabel(menuFrame);
@@ -1261,7 +1259,7 @@ void SysTray::populateMenu()
     cpuContainerLayout->addWidget(performanceWidget);
 
     // DISABLE UNTIL DONE
-    performanceWidget->setDisabled(true);
+    performanceWidget->setDisabled(true);*/
 
     batteryContainerLayout->addWidget(labelBatteryIcon);
     batteryContainerLayout->addWidget(labelBatteryStatus);
@@ -1343,7 +1341,7 @@ void SysTray::updateMenu()
     qDebug() << "cpu gov?" << PowerCpu::getGovernors();*/
 
     getCpuFreq(true);
-    updatePerformanceSlider(true);
+    //updatePerformanceSlider(true);
 }
 
 void SysTray::updateBacklight(const QString &file)
@@ -1461,13 +1459,13 @@ void SysTray::hidePowerMenuIfVisible()
     }
 }
 
-void SysTray::updatePerformanceSlider(bool force)
+/*void SysTray::updatePerformanceSlider(bool force)
 {
     if (!performanceSlider->isVisible() && !force) { return; }
     performanceSlider->setRange(PowerCpu::hasPState()?0:PowerCpu::getMinFrequency(), PowerCpu::hasPState()?100:PowerCpu::getMaxFrequency());
     performanceSlider->setValue(PowerCpu::hasPState()?PowerCpu::getPStateMax():PowerCpu::getMaxFrequencies());
     qDebug() << performanceSlider->minimum() << performanceSlider->maximum() << performanceSlider->value();
-}
+}*/
 
 // catch wheel events
 bool TrayIcon::event(QEvent *e)

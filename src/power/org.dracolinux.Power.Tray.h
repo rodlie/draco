@@ -161,9 +161,7 @@ private:
     QFileSystemWatcher *backlightWatcher;
     QLabel *cpuFreqLabel;
 
-    //QSlider *pstateMinSlider;
-    QSlider *performanceSlider;
-    //QCheckBox *pstateTurboCheckbox;
+    //QSlider *performanceSlider;
 
 private slots:
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
@@ -218,7 +216,7 @@ private slots:
     void handlePowerMenuAboutToHide();
     void handlePowerMenuAboutToShow();
     void hidePowerMenuIfVisible();
-    void updatePerformanceSlider(bool force = false);
+    //void updatePerformanceSlider(bool force = false);
 };
 
 #endif // SYSTRAY_H
