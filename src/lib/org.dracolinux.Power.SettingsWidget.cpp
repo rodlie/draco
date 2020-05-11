@@ -145,9 +145,9 @@ PowerSettingsWidget::PowerSettingsWidget(QWidget *parent)
                 this, SLOT(handleSuspendWakeACTimer(int)));
         connect(monitorHotplug, SIGNAL(toggled(bool)),
                 this, SLOT(handleMonitorHotplug(bool)));
-        connect(pstateMaxBattery, SLOT(valueChanged(int)),
+        connect(pstateMaxBattery, SIGNAL(valueChanged(int)),
                 this, SLOT(handlePstateMaxBattery(int)));
-        connect(pstateMaxAC, SLOT(valueChanged(int)),
+        connect(pstateMaxAC, SIGNAL(valueChanged(int)),
                 this, SLOT(handlePstateMaxAC(int)));
     }
 }

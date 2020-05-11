@@ -217,6 +217,7 @@ private slots:
     void handlePowerMenuAboutToShow();
     void hidePowerMenuIfVisible();
     //void updatePerformanceSlider(bool force = false);
+    void updatePStateMax(bool battery);
 };
 
 #endif // SYSTRAY_H

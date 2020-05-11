@@ -905,3 +905,13 @@ bool Power::setDisplayBacklight(const QString &device, int value)
     qDebug() << "BACKLIGHT OK?" << backlight << reply.errorMessage();
     return backlight;
 }
+
+bool Power::SetPStateMax(int value)
+{
+    if (!pmd) { return false; }
+    if (!pmd->isValid()) { return false; }
+    QDBusMessage reply = pmd->call("SetPStateMax", value);
+    bool ret = reply.arguments().first().toBool() && reply.errorMessage().isEmpty();
+    qDebug() << "PSTATE MAX OK?" << ret << reply.errorMessage();
+    return ret;
+}

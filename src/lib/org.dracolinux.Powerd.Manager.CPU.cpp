@@ -354,7 +354,7 @@ int PowerCpu::getCoreTemp()
         if (file.open(QIODevice::ReadOnly)) {
             double ctemp = file.readAll().trimmed().toDouble();
             if (ctemp>temp) { temp = ctemp; }
-            qDebug() << "CORE TEMP" << i << ctemp;
+            //qDebug() << "CORE TEMP" << i << ctemp;
             file.close();
         }
     }

@@ -291,6 +291,9 @@ SysTray::SysTray(QObject *parent)
             SIGNAL(directoryChanged(QString)),
             this,
             SLOT(handleConfChanged(QString)));
+
+    // pstate
+    updatePStateMax(man->OnBattery());
 }
 
 SysTray::~SysTray()
@@ -469,13 +472,7 @@ void SysTray::handleOnBattery()
     }
 
     // pstate max
-    if (PowerCpu::hasPState()) {
-        int state = PowerCpu::getPStateMax();
-        if (state != pstateMaxBattery) {
-            qDebug() << "SET PSTATE FOR BATTERY" << pstateMaxAC << "WAS" << state;
-            PowerCpu::setPStateMax(pstateMaxBattery);
-        }
-    }
+    updatePStateMax(true);
 }
 
 // do something when switched to ac power
@@ -507,13 +504,7 @@ void SysTray::handleOnAC()
     }
 
     // pstate max
-    if (PowerCpu::hasPState()) {
-        int state = PowerCpu::getPStateMax();
-        if (state != pstateMaxAC) {
-            qDebug() << "SET PSTATE FOR AC" << pstateMaxAC << "WAS" << state;
-            PowerCpu::setPStateMax(pstateMaxAC);
-        }
-    }
+    updatePStateMax(false);
 }
 
 // load default settings
@@ -1456,6 +1447,18 @@ void SysTray::hidePowerMenuIfVisible()
         qDebug() << "Hide power menu (timeout)";
         powerMenu->hide();
         powerMenuIsActive = false;
+    }
+}
+
+void SysTray::updatePStateMax(bool battery)
+{
+    if (!PowerCpu::hasPState()) { return; }
+    int state = PowerCpu::getPStateMax();
+    int pstate = battery?pstateMaxBattery:pstateMaxAC;
+    qDebug() << "CURRENT PSTATE MAX" << state;
+    if (state != pstate) {
+        qDebug() << "SET NEW PSTATE" << pstate << "WAS" << state;
+        man->SetPStateMax(pstate);
     }
 }
 
