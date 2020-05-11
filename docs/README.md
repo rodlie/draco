@@ -12,15 +12,15 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com), but i
 
 ## Features
 
-...
+TODO...
 
 ### Desktop
 
-...
+TODO...
 
 ### Panel
 
-...
+TODO...
 
 ### Storage management
 
@@ -40,21 +40,11 @@ Draco is developed for and on [Slackware Linux](http://www.slackware.com), but i
   * Display backlight support
   * Display hotplug support
   * RTC wake support
-  * cpufreq/pstate support
-
-## Download
-
-### Generic (Linux)
-
-Latest releases can be found on [GitHub](https://github.com/rodlie/draco/releases/latest).
-
-### RHEL/CentOS/Fedora
-
-Packages are available at [Open Build Service]((https://software.opensuse.org//download.html?project=home%3Arodlie%3Adraco-master&package=draco)).
+  * Intel ``pstate`` (Sandy Bridge+) support
 
 ## Usage
 
-...
+TODO...
 
 ### Default shortcuts
 
@@ -214,6 +204,7 @@ Optional recommended applications.
   * **``qtfm``** *(file manager)*
   * **``pnmixer``** *(audio system tray)*
   * **``obconf``** *(window manager config)*
+  * **``nm-applet``** *(network manager)*
 
 ## Build
 
@@ -291,7 +282,6 @@ Known issues:
 
 
 See RPM [spec](../share/obs/draco.spec) file for build instructions.
-
 
 ## License
 
