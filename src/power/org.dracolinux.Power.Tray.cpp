@@ -291,9 +291,6 @@ SysTray::SysTray(QObject *parent)
             SIGNAL(directoryChanged(QString)),
             this,
             SLOT(handleConfChanged(QString)));
-
-    // pstate
-    updatePStateMax(man->OnBattery());
 }
 
 SysTray::~SysTray()
@@ -604,6 +601,7 @@ void SysTray::loadSettings()
         if (PowerSettings::isValid(CONF_PSTATE_MAX_AC)) {
             pstateMaxAC = PowerSettings::getValue(CONF_PSTATE_MAX_AC).toInt();
         }
+        updatePStateMax(man->OnBattery());
     }
 
     if (PowerSettings::isValid(CONF_MONITOR_HOTPLUG)) {
