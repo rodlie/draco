@@ -149,8 +149,8 @@ private:
 
     QMenu *powerMenu;
     bool powerMenuIsActive;
-    QMenu *inhibitorsMenu;
-    QActionGroup *inhibitorsGroup;
+    //QMenu *inhibitorsMenu;
+    //QActionGroup *inhibitorsGroup;
     QAction *actSettings;
     QLabel *labelBatteryStatus;
     QLabel *labelBatteryIcon;
@@ -210,7 +210,7 @@ private slots:
     void updateMenu();
     void updateBacklight(const QString &file);
     void handleBacklightSlider(int value);
-    void getInhibitors();
+    //void getInhibitors();
     void openSettings();
     void getCpuFreq(bool force = false);
     void handlePowerMenuAboutToHide();

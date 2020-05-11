@@ -78,8 +78,8 @@ SysTray::SysTray(QObject *parent)
     , pstateMaxAC(100)
     , powerMenu(nullptr)
     , powerMenuIsActive(false)
-    , inhibitorsMenu(nullptr)
-    , inhibitorsGroup(nullptr)
+    //, inhibitorsMenu(nullptr)
+    //, inhibitorsGroup(nullptr)
     , actSettings(nullptr)
     , labelBatteryStatus(nullptr)
     , labelBatteryIcon(nullptr)
@@ -163,10 +163,10 @@ SysTray::SysTray(QObject *parent)
             SIGNAL(Update()),
             this,
             SLOT(loadSettings()));
-    connect(man,
+    /*connect(man,
             SIGNAL(UpdatedInhibitors()),
             this,
-            SLOT(getInhibitors()));
+            SLOT(getInhibitors()));*/
 
     // setup org.freedesktop.PowerManagement
     pm = new PowerManagement(this);
@@ -991,7 +991,7 @@ void SysTray::handleNewInhibitScreenSaver(const QString &application,
     Q_UNUSED(cookie)
     //ssInhibitors[cookie] = application;
     checkDevices();
-    getInhibitors();
+    //getInhibitors();
 }
 
 void SysTray::handleNewInhibitPowerManagement(const QString &application,
@@ -1004,7 +1004,7 @@ void SysTray::handleNewInhibitPowerManagement(const QString &application,
     Q_UNUSED(cookie)
     //pmInhibitors[cookie] = application;
     checkDevices();
-    getInhibitors();
+    //getInhibitors();
 }
 
 void SysTray::handleDelInhibitScreenSaver(quint32 cookie)
@@ -1014,7 +1014,7 @@ void SysTray::handleDelInhibitScreenSaver(quint32 cookie)
         qDebug() << "removed screensaver inhibitor" << ssInhibitors[cookie];
         ssInhibitors.remove(cookie);*/
         checkDevices();
-        getInhibitors();
+        //getInhibitors();
     //}
 }
 
@@ -1025,7 +1025,7 @@ void SysTray::handleDelInhibitPowerManagement(quint32 cookie)
         qDebug() << "removed powermanagement inhibitor" << pmInhibitors[cookie];
         pmInhibitors.remove(cookie);*/
         checkDevices();
-        getInhibitors();
+        //getInhibitors();
     //}
 }
 
@@ -1178,10 +1178,10 @@ void SysTray::populateMenu()
 #endif*/
     tray->setContextMenu(powerMenu);
     menuFrame = new QFrame(nullptr);
-    inhibitorsMenu = new QMenu(powerMenu);
+    /*inhibitorsMenu = new QMenu(powerMenu);
     inhibitorsMenu->setTitle(tr("Power Inhibitors"));
     inhibitorsMenu->setToolTip(tr("List of active applications that inhibits screen and/or power."));
-    inhibitorsGroup = new QActionGroup(this);
+    inhibitorsGroup = new QActionGroup(this);*/
 
     QWidget *cpuWidget = new QWidget(menuFrame);
     QWidget *cpuHeaderWidget = new QWidget(menuFrame);
@@ -1278,13 +1278,13 @@ void SysTray::populateMenu()
 
     powerMenu->addAction(menuHeader);
     actSettings = new QAction(this);
-    actSettings->setText(tr("Power Settings"));
+    actSettings->setText(tr("Preferences"));
     connect(actSettings, SIGNAL(triggered(bool)), this, SLOT(openSettings()));
 
     actSettings->setIcon(QIcon::fromTheme(DEFAULT_TRAY_ICON));
-    inhibitorsMenu->setIcon(QIcon::fromTheme(DEFAULT_INHIBITOR_ICON));
+    //inhibitorsMenu->setIcon(QIcon::fromTheme(DEFAULT_INHIBITOR_ICON));
 
-    powerMenu->addMenu(inhibitorsMenu);
+    //powerMenu->addMenu(inhibitorsMenu);
     powerMenu->addAction(actSettings);
 
     updateBacklight(QString());
@@ -1329,7 +1329,7 @@ void SysTray::updateMenu()
     }
 
     labelBatteryIcon->setPixmap(icon.pixmap(QSize(32, 32)));
-    inhibitorsMenu->setEnabled(man->GetInhibitors().size()>0);
+    //inhibitorsMenu->setEnabled(man->GetInhibitors().size()>0);
 
     /*qDebug() << "has pstate?" << PowerCpu::hasPState();
     qDebug() << "pstate turbo?" << PowerCpu::hasPStateTurbo();
@@ -1362,7 +1362,7 @@ void SysTray::handleBacklightSlider(int value)
     }
 }
 
-void SysTray::getInhibitors()
+/*void SysTray::getInhibitors()
 {
     qDebug() << "GET INHIBITORS" << man->GetInhibitors();
 
@@ -1408,7 +1408,7 @@ void SysTray::getInhibitors()
     }
 
     //updateMenu();
-}
+}*/
 
 void SysTray::openSettings()
 {
