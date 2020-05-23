@@ -137,7 +137,7 @@ void page_session_options::LoadSettings(int screennum)
     loading = true;
 
     QSettings sessionsettings(DESKTOP_APP, DE_SESSION_SETTINGS);
-    ui->check_autoapplinks->setChecked( sessionsettings.value("AutomaticDesktopAppLinks",true).toBool() );
+    ui->check_autoapplinks->setChecked( sessionsettings.value("AutomaticDesktopAppLinks",false).toBool() );
     ui->line_session_time->setText( sessionsettings.value("TimeFormat","").toString() );
     ui->line_session_date->setText( sessionsettings.value("DateFormat","").toString() );
     int index = ui->combo_session_datetimeorder->findData( sessionsettings.value("DateTimeOrder","timeonly").toString() );
